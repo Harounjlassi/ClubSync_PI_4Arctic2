@@ -144,8 +144,8 @@
       }
     },
     "material-dashboard-angular-e2e": {
-      "root": "",
-      "sourceRoot": "",
+      "root": "e2e",
+      "sourceRoot": "e2e/src",
       "projectType": "application",
       "architect": {
         "e2e": {
@@ -167,11 +167,10 @@
       }
     }
   },
-  "defaultProject": "material-dashboard-angular",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "scss"
+      "style": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "app"
