@@ -1,4 +1,4 @@
 package tn.esprit.clubsync.Repo;
 
-public interface MessageRepo {
+public interface ReportRepository {
 }
