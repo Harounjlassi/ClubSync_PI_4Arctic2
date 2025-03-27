@@ -37,7 +37,7 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "tache_id")
-    private Tache tache;
+    private ProjetTache tache;
 
 /**
     public Long getId_report() {

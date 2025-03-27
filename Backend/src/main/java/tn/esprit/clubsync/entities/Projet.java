@@ -42,7 +42,7 @@ public class Projet {
     private Users createur;
 
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
-    private Set<Tache> taches ;
+    private Set<ProjetTache> taches ;
 
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
     private Set<Message> messages;

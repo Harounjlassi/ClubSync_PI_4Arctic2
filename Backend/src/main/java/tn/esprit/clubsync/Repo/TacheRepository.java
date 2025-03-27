@@ -1,4 +1,7 @@
 package tn.esprit.clubsync.Repo;
 
-public interface TacheRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import tn.esprit.clubsync.entities.ProjetTache;
+
+public interface TacheRepository extends JpaRepository<ProjetTache, Long> {
 }
