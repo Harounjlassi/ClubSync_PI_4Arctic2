@@ -1,47 +1,45 @@
+
 package tn.esprit.clubsync.entities;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
-import java.util.*;
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import java.util.Date;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "table-report")
+@Table(name = "projetReport")
+@Data
 public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_report;
+    @Column(name="id")
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "reporter_id")
+    @JoinColumn(name = "user_id")
     private Users reporter;
 
+    @Column(name="title")
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name="description", columnDefinition = "TEXT")
     private String description;
 
-    private LocalDateTime report_date;
-    private String location;
+    @Column(name="date_created")
+    @CreationTimestamp
+    private Date dateCreated;
+
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Projet project;
+    @JoinColumn(name = "projet_id")
+    private Projet projet;
 
     @ManyToOne
     @JoinColumn(name = "tache_id")
     private Tache tache;
 
+/**
     public Long getId_report() {
         return id_report;
     }
@@ -123,5 +121,5 @@ public class Report {
     private List<Users> participants = new ArrayList<>();
 
 
-
+*/
 }

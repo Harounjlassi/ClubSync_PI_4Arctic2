@@ -1,46 +1,58 @@
 package tn.esprit.clubsync.entities;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
-import java.util.*;
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "table-projet")
+@Table(name="projet")
+@Data
 public class Projet {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_projet;
+    @Column(name="id")
+    private Long id;
 
+    @Column(name="nom")
     private String nom;
+
+    @Column(name="description")
     private String description;
-    private LocalDateTime date_debut;
+
+    @Column(name="image_url")
+    private String imageUrl;
+
+    @Column(name="date_created")
+    @CreationTimestamp
+    private Date dateCreated;
+
+    @Column(name="last_updated")
+    @UpdateTimestamp
+    private Date lastUpdated;
+
+    @Column(name="status")
     private String status;
 
     @ManyToOne
-    @JoinColumn(name = "createur_id")
+    @JoinColumn(name = "user_id")
     private Users createur;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Tache> taches = new ArrayList<>();
+    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
+    private Set<Tache> taches ;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Message> messages = new ArrayList<>();
+    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
+    private Set<Message> messages;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Report> reports = new ArrayList<>();
+    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
+    private Set<Report> reports ;
+
 
     // Methods
-
+/**
     public Long getId_projet() {
         return id_projet;
     }
@@ -112,4 +124,6 @@ public class Projet {
     public void setReports(List<Report> reports) {
         this.reports = reports;
     }
+*/
+
 }

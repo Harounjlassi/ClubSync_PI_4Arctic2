@@ -23,15 +23,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(
-        name = "user"
-)
+@Table(name = "user")
 @EntityListeners({AuditingEntityListener.class})
 public class Users implements UserDetails, Principal {
+
+
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     private String firstname;
     private String lastname;
