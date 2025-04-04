@@ -1,0 +1,146 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "crud": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/crud",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css",
+              "src/styles.css",
+              "src/assets/css/styles.css",
+              "src/assets/css/bootstrap.min.css",
+              "src/assets/css/owl.carousel.min.css",
+              "src/assets/css/slicknav.css",
+              "src/assets/css/flaticon.css",
+              "src/assets/css/gijgo.css",
+              "src/assets/css/animate.min.css",
+              "src/assets/css/animated-headline.css",
+              "src/assets/css/magnific-popup.css",
+              "src/assets/css/fontawesome-all.min.css",
+              "src/assets/css/themify-icons.css",
+              "src/assets/css/slick.css",
+              "src/assets/css/nice-select.css",
+              "src/assets/css/style.css",
+              "src/styles.scss"
+            ],
+            "scripts": [
+              "src/assets/js/scripts.js",
+              "src/assets/demo/chart-area-demo.js",
+              "src/assets/demo/chart-bar-demo.js",
+              "src/assets/js/datatables-simple-demo.js",
+              "src/assets/js/vendor/modernizr-3.5.0.min.js",
+              "src/assets/js/vendor/jquery-1.12.4.min.js",
+              "src/assets/js/popper.min.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/js/jquery.slicknav.min.js",
+              "src/assets/js/owl.carousel.min.js",
+              "src/assets/js/slick.min.js",
+              "src/assets/js/wow.min.js",
+              "src/assets/js/animated.headline.js",
+              "src/assets/js/jquery.magnific-popup.js",
+              "src/assets/js/gijgo.min.js",
+              "src/assets/js/jquery.nice-select.min.js",
+              "src/assets/js/jquery.sticky.js",
+              "src/assets/js/jquery.counterup.min.js",
+              "src/assets/js/waypoints.min.js",
+              "src/assets/js/jquery.countdown.min.js",
+              "src/assets/js/hover-direction-snake.min.js",
+              "src/assets/js/contact.js",
+              "src/assets/js/jquery.form.js",
+              "src/assets/js/jquery.validate.min.js",
+              "src/assets/js/mail-script.js",
+              "src/assets/js/jquery.ajaxchimp.min.js",
+              "src/assets/js/plugins.js",
+              "src/assets/js/main.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "crud:build:production"
+            },
+            "development": {
+              "browserTarget": "crud:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "crud:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "bd2719a3-9c09-4677-bae2-cde322e12d86"
+  }
+}
