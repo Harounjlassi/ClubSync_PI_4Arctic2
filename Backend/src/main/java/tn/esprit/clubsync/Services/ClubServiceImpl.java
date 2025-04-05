@@ -7,12 +7,11 @@ import org.springframework.stereotype.Service;
 import tn.esprit.clubsync.Repo.ClubRepo;
 import tn.esprit.clubsync.Repo.UserRepo;
 
-import tn.esprit.clubsync.Services.iClubService;
 import tn.esprit.clubsync.entities.Club;
 import tn.esprit.clubsync.entities.Users;
 
 import java.util.List;
-import tn.esprit.clubsync.Services.EmailService;
+
 @Service
 @AllArgsConstructor
 @Transactional
@@ -25,8 +24,6 @@ public class ClubServiceImpl implements iClubService {
     @Autowired
     private UserRepo userRepo;
 
-    @Autowired
-    private EmailService emailService; // Ajouter l'injection du service EmailService
     @Override
     public List<Club> retrieveAllClub() {
         return ClubRepo.findAll();
@@ -71,8 +68,6 @@ public class ClubServiceImpl implements iClubService {
         // Ajouter l'utilisateur à la liste des membres du club
         club.getMembers().add(user);
 
-        emailService.sendEmail(user.getEmail(), "Bienvenue au club",
-                "Bonjour " + user.getFirstname() + ",\nVous avez été ajouté au club " + club.getName() + " avec succès!");
 
 
         // Sauvegarder les modifications du club
