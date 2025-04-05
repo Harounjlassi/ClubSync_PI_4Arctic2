@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-declare const $: any;
+
+import * as $ from 'jquery';
 declare interface RouteInfo {
     path: string;
     title: string;
@@ -15,8 +16,9 @@ export const ROUTES: RouteInfo[] = [
     { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
     { path: '/maps', title: 'Maps',  icon:'location_on', class: '' },
     { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
-    { path: '/test', title: 'test',  icon:'notifications', class: '' },
     { path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
+    { path: '/club-list', title: 'Club List', icon: 'groups', class: '' } // Ajout du bouton Club List
+
 ];
 
 @Component({

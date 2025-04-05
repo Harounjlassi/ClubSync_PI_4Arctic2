@@ -1,27 +1,26 @@
 package tn.esprit.clubsync.entities;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "projetMessage")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "table-Message")
 public class Message {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private Long id;
+    private Long id_message;
 
-    @Column(name="contenu", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String contenu;
 
-    @ManyToOne
-    @JoinColumn(name = "projet_id")
-    private Projet projet;
-
-
-    /**
     public Long getId_message() {
         return id_message;
     }
@@ -73,6 +72,4 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "tache_id")
     private Tache tache;
-
-   */
 }

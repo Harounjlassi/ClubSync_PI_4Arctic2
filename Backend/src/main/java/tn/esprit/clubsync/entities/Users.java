@@ -1,17 +1,11 @@
 package tn.esprit.clubsync.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.security.auth.Subject;
@@ -19,18 +13,17 @@ import lombok.Generated;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "user")
+@Table(
+        name = "user"
+)
 @EntityListeners({AuditingEntityListener.class})
-public class Users implements UserDetails, Principal {
-
-
+public class Users implements  Principal {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
     private Long id;
     private String firstname;
     private String lastname;
@@ -42,6 +35,9 @@ public class Users implements UserDetails, Principal {
     private String password;
     private boolean accountLocked;
     private boolean enabled;
+    @ManyToMany(mappedBy = "members")
+    private List<Club> clubs = new ArrayList<>();  // Ensure this is initialized to avoid NPE
+
     @CreatedDate
     @Column(
             nullable = false,
@@ -68,9 +64,6 @@ public class Users implements UserDetails, Principal {
         return Principal.super.implies(subject);
     }
 
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
 
     public String getPassword() {
         return this.password;
