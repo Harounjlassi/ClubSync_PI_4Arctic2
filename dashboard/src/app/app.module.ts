@@ -7,10 +7,23 @@ import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { FrontLayoutComponent } from './layouts/front-layout/front-layout.component';
+import { HomeComponent } from './pages/home/home.component';
+import { AboutComponent } from './pages/about/about.component';
+import { ServicesComponent } from './pages/services/services.component';
+import { BlogComponent } from './pages/blog/blog.component';
+import { ScheduleComponent } from './pages/schedule/schedule.component';
+import { FromComponent } from './pages/from/from.component';
+import { TestComponent } from './test/test.component';
+import { ProjetListComponent } from './projet-list/projet-list.component';
+import { ProjectTaskListComponent } from './project-task-list/project-task-list.component';
+import { ProjectReportListComponent } from './project-report-list/project-report-list.component';
 
 @NgModule({
   imports: [
-    BrowserAnimationsModule,
+    
+
+    BrowserAnimationsModule as any,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -21,6 +34,17 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
   declarations: [
     AppComponent,
     AdminLayoutComponent,
+    FrontLayoutComponent,
+    HomeComponent,
+    AboutComponent,
+    ServicesComponent,
+    BlogComponent,
+    ScheduleComponent,
+    FromComponent,
+    TestComponent,
+    ProjetListComponent,
+    ProjectTaskListComponent,
+    ProjectReportListComponent,
 
   ],
   providers: [],
