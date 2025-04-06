@@ -67,7 +67,7 @@
     <!-- Grid View -->
     <div class="clubs-grid" *ngIf="viewMode === 'grid' && !isLoading && filteredClubs.length > 0">
       <div class="club-card" *ngFor="let club of filteredClubs" (click)="navigateToClubDetails(club.id_club)">
-        <div class="club-category" [style.background-color]="getCategoryColor(club.categorie)">
+        <div class="club-category" [ngClass]="'category-' + club.categorie.toLowerCase()">
           {{club.categorie}}
         </div>
         <div class="club-logo" *ngIf="club.logo">

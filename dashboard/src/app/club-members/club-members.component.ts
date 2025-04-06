@@ -17,6 +17,7 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
   clubId!: number;
   members: User[] = [];
   availableUsers: User[] = [];
+  clubName: string ;
 
   displayedColumns: string[] = ['firstname', 'lastname', 'email', 'actions'];
   displayedColumnsWithActions: string[] = ['firstname', 'lastname', 'email', 'actions'];
