@@ -4,6 +4,5 @@ public enum RoleName {
     ADMIN,
     USER;
 
-    private RoleName() {
-    }
+
 }
