@@ -43,6 +43,8 @@ const routes: Routes =[
      
     ]
   },
+  { path: 'clubs', component: ClubsComponent },
+
 ];
 
 @NgModule({

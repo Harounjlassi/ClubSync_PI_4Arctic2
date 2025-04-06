@@ -26,11 +26,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { EditClubDialogComponent } from './edit-club-dialog/edit-club-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ClubsComponent } from './clubs/clubs.component';
-import { MatSelectModule } from '@angular/material/select';
 import { ClubMembersComponent } from './club-members/club-members.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -53,7 +55,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
      MatSnackBarModule,
      MatIconModule,
      MatTableModule,       // Ajout du module pour les tables Angular Material
-     MatPaginatorModule
+     MatPaginatorModule,
+     MatCardModule,
+     MatSelectModule,
+     MatProgressSpinnerModule,
+     MatTooltipModule
+
+     
 
   ],
   declarations: [
