@@ -61,8 +61,7 @@ export class ClubsComponent implements OnInit {
   filterClubs(searchText: string): void {
     this.filteredClubs = this.clubs.filter(club => {
       const matchesSearch = searchText
-        ? club.name.toLowerCase().includes(searchText.toLowerCase()) ||
-          (club.description && club.description.toLowerCase().includes(searchText.toLowerCase()))
+        ? club.name.toLowerCase().includes(searchText.toLowerCase())
         : true;
       
       const matchesCategory = this.selectedCategory
@@ -91,8 +90,8 @@ export class ClubsComponent implements OnInit {
       'Musique': '#9C27B0',
       'Technologie': '#00BCD4',
       'Science': '#4CAF50',
-      'Littérature': '#795548',
-      'Autre': '#9E9E9E'
+      'Littérature': '#8D6E63',
+      'Autre': '#795548'
     };
     
     return colors[category] || '#9E9E9E';

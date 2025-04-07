@@ -5,29 +5,57 @@
   padding: 0 16px 32px;
 }
 
-/* Hero Section améliorée */
-.clubs-container .hero-section {
-  position: relative;
-  height: 220px;
-  margin-bottom: 32px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: linear-gradient(135deg, #3f51b5, #7e57c2, #2196f3);
-  background-size: 300% 300%;
-  animation: gradientAnimation 15s ease infinite;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-}
-
+/* Animation de fond en dégradé */
 @keyframes gradientAnimation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
+/* Animation de mouvement du motif de fond */
+@keyframes patternMove {
+  0% { transform: translateX(0) translateY(0); }
+  100% { transform: translateX(10px) translateY(-10px); }
+}
+
+/* Animation de l'effet de lumière sur le fond */
+@keyframes lightEffect {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.6; }
+  100% { opacity: 0.4; }
+}
+
+/* Conteneur principal de la section */
+/* Conteneur principal de la section */
+.clubs-container .hero-section {
+  position: relative;
+  height: 220px;
+  margin-bottom: 32px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ff4081, #ffeb3b, #00e676);
+  background-size: 200% 200%;
+  animation: gradientAnimation 20s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateZ(0);
+  will-change: background-position;
+}
+.clubs-container .hero-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  animation: lightEffect 5s ease-in-out infinite;
+  pointer-events: none;
+}
+/* Effet sur le motif d'arrière-plan */
 .clubs-container .hero-section::before {
   content: '';
   position: absolute;
@@ -38,31 +66,76 @@
   background: url('/assets/images/club-pattern.svg') center/cover;
   opacity: 0.15;
   animation: patternMove 30s linear infinite alternate;
+  filter: blur(2px); /* Ajoute un flou léger pour donner un effet moderne */
 }
 
-@keyframes patternMove {
-  0% { transform: translateX(0) translateY(0); }
-  100% { transform: translateX(10px) translateY(-10px); }
-}
-
+/* Contenu principal de la section */
 .clubs-container .hero-content {
   position: relative;
   color: white;
   padding: 0 20px;
+  opacity: 0;
+  animation: fadeIn 2s ease forwards;
 }
 
+/* Animation du fade-in du contenu */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Titre principal */
 .clubs-container .hero-content h1 {
-  font-size: 2.5rem;
+  font-family: 'Roboto', sans-serif;
+  font-size: 3rem;
   margin-bottom: 8px;
   font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  animation: textSlideIn 1s ease-out forwards;
+  opacity: 0;
 }
 
+/* Animation du texte du titre */
+@keyframes textSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Effet de survol sur le titre */
+.clubs-container .hero-content h1:hover {
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Description (texte) */
 .clubs-container .hero-content p {
-  font-size: 1.2rem;
+  font-family: 'Lora', serif;
+  font-size: 2rem;
   max-width: 600px;
   margin: 0 auto;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.85);
+  animation: textSlideIn 1.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Effet de survol sur le texte */
+.clubs-container .hero-content p:hover {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
 }
 
 /* Search & Filter Bar améliorée */
@@ -410,7 +483,7 @@ mat-card-actions button:hover {
 .category-sport { background-color: #42a5f5; }
 .category-art { background-color: #ec407a; }
 .category-science { background-color: #66bb6a; }
-.category-litterature { background-color: #ab47bc; }
+.category-littérature { background-color: #ab47bc; }
 .category-technologie { background-color: #26c6da; }
 .category-musique { background-color: #ffca28; }
 .category-langues { background-color: #ff7043; }

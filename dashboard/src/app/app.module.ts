@@ -33,6 +33,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';  // <-- Ajout
 
 @NgModule({
   imports: [
@@ -46,6 +47,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatSelectModule,
+    MatAutocompleteModule,  // <-- Ajout
+
 
      // Angular Material modules
      MatDialogModule,
