@@ -1,65 +1,36 @@
 package tn.esprit.clubsync.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "token")
 public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    private Long id;
 
-    @Column(name = "access_token")
-    private String accessToken;
+    @Column(unique = true, nullable = false)
+    private String token;
 
-    @Column(name = "refresh_token")
-    private String refreshToken;
+    private LocalDateTime createdAt;
+    private LocalDateTime expiresAt;
 
-    @Column(name = "is_logged_out")
-    private boolean loggedOut;
+    @Column(nullable = false)
+    private boolean isValid; // bch na3rf el token actif wale
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users user;
+    @JoinColumn(name = "userId", nullable = false)
+    private User user;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String token) {
-        this.accessToken = token;
-    }
-
-    public boolean isLoggedOut() {
-        return loggedOut;
-    }
-
-    public void setLoggedOut(boolean loggedOut) {
-        this.loggedOut = loggedOut;
-    }
-
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
 }

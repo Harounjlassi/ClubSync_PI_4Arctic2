@@ -28,7 +28,7 @@ public class Projet {
 
     @ManyToOne
     @JoinColumn(name = "createur_id")
-    private Users createur;
+    private User createur;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Tache> taches = new ArrayList<>();
@@ -81,11 +81,11 @@ public class Projet {
         this.status = status;
     }
 
-    public Users getCreateur() {
+    public User getCreateur() {
         return createur;
     }
 
-    public void setCreateur(Users createur) {
+    public void setCreateur(User createur) {
         this.createur = createur;
     }
 

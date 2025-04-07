@@ -4,107 +4,97 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import tn.esprit.clubsync.Repo.TokenRepo;
-import tn.esprit.clubsync.entities.Users;
+import tn.esprit.clubsync.entities.Token;
+import tn.esprit.clubsync.entities.User;
+import tn.esprit.clubsync.Repo.TokenRepository;
+import tn.esprit.clubsync.Repo.UserRepository;
 
-import javax.crypto.SecretKey;
+import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.function.Function;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class JwtService {
 
-    @Value("${application.security.jwt.secret-key}")
-    private String secretKey;
+    @Value("${security.jwt.secret-key}")
+    private String secretkey;
 
-    @Value("${application.security.jwt.access-token-expiration}")
-    private long accessTokenExpire;
+    @Value("${security.jwt.expiration}")
+    private long jwtExpiration;
 
-    @Value("${application.security.jwt.refresh-token-expiration}")
-    private long refreshTokenExpire;
+    @Autowired
+    private TokenRepository tokenRepository;
 
+    @Autowired
+    private UserRepository userRepository;
 
-    private final TokenRepo tokenRepository;
+    private Key getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
 
-    public JwtService(TokenRepo tokenRepository) {
-        this.tokenRepository = tokenRepository;
+    public String generateToken(UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        tokenRepository.findByUser(user).ifPresent(tokenRepository::delete);
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole().getRoleType().name());
+
+        String token = Jwts.builder()
+                .setClaims(claims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSigningKey())
+                .compact();
+
+        Token newToken = Token.builder()
+                .token(token)
+                .createdAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusSeconds(jwtExpiration / 1000))
+                .isValid(true)
+                .user(user)
+                .build();
+
+        tokenRepository.save(newToken);
+        return token;
     }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-
-    public boolean isValid(String token, UserDetails user) {
-        String username = extractUsername(token);
-
-        boolean validToken = tokenRepository
-                .findByAccessToken(token)
-                .map(t -> !t.isLoggedOut())
-                .orElse(false);
-
-        return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
-    }
-
-    public boolean isValidRefreshToken(String token, Users user) {
-        String username = extractUsername(token);
-
-        boolean validRefreshToken = tokenRepository
-                .findByRefreshToken(token)
-                .map(t -> !t.isLoggedOut())
-                .orElse(false);
-
-        return (username.equals(user.getUsername())) && !isTokenExpired(token) && validRefreshToken;
-    }
-
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
-
-    public <T> T extractClaim(String token, Function<Claims, T> resolver) {
-        Claims claims = extractAllClaims(token);
-        return resolver.apply(claims);
+    public <T> T extractClaim(String token, java.util.function.Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getSigninKey())
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
     }
 
-
-    public String generateAccessToken(Users user) {
-        return generateToken(user, accessTokenExpire);
+    public void revokeToken(String token) {
+        tokenRepository.findByToken(token).ifPresent(tokenRepository::delete);
     }
 
-    public String generateRefreshToken(Users user) {
-        return generateToken(user, refreshTokenExpire );
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    private String generateToken(Users user, long expireTime) {
-        String token = Jwts
-                .builder()
-                .subject(user.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expireTime ))
-                .signWith(getSigninKey())
-                .compact();
-
-        return token;
-    }
-
-    private SecretKey getSigninKey() {
-        byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    private boolean isTokenExpired(String token) {
+        return extractAllClaims(token).getExpiration().before(new Date());
     }
 }

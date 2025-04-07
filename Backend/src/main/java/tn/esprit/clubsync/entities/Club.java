@@ -27,7 +27,7 @@ public class Club {
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
-    private Users creator;
+    private User creator;
 
     public Long getId_club() {
         return id_club;
@@ -53,27 +53,27 @@ public class Club {
         this.description = description;
     }
 
-    public Users getCreator() {
+    public User getCreator() {
         return creator;
     }
 
-    public void setCreator(Users creator) {
+    public void setCreator(User creator) {
         this.creator = creator;
     }
 
-    public Users getAdmin() {
+    public User getAdmin() {
         return admin;
     }
 
-    public void setAdmin(Users admin) {
+    public void setAdmin(User admin) {
         this.admin = admin;
     }
 
-    public List<Users> getMembers() {
+    public List<User> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Users> members) {
+    public void setMembers(List<User> members) {
         this.members = members;
     }
 
@@ -95,7 +95,7 @@ public class Club {
 
     @ManyToOne
     @JoinColumn(name = "admin_id")
-    private Users admin;
+    private User admin;
 
     @ManyToMany
     @JoinTable(
@@ -103,7 +103,7 @@ public class Club {
             joinColumns = @JoinColumn(name = "club_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<Users> members = new ArrayList<>();
+    private List<User> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "organize", cascade = CascadeType.ALL)
     private List<Event> events = new ArrayList<>();

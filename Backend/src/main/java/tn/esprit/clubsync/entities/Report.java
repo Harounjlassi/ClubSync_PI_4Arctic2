@@ -24,7 +24,7 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "reporter_id")
-    private Users reporter;
+    private User reporter;
 
     private String title;
 
@@ -50,11 +50,11 @@ public class Report {
         this.id_report = id_report;
     }
 
-    public Users getReporter() {
+    public User getReporter() {
         return reporter;
     }
 
-    public void setReporter(Users reporter) {
+    public void setReporter(User reporter) {
         this.reporter = reporter;
     }
 
@@ -106,11 +106,11 @@ public class Report {
         this.tache = tache;
     }
 
-    public List<Users> getParticipants() {
+    public List<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<Users> participants) {
+    public void setParticipants(List<User> participants) {
         this.participants = participants;
     }
 
@@ -120,7 +120,7 @@ public class Report {
             joinColumns = @JoinColumn(name = "report_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
             )
-    private List<Users> participants = new ArrayList<>();
+    private List<User> participants = new ArrayList<>();
 
 
 

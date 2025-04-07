@@ -41,13 +41,6 @@ public class ForumPost {
         this.content = content;
     }
 
-    public Users getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Users author) {
-        this.author = author;
-    }
 
     public LocalDateTime getPost_date() {
         return post_date;
@@ -75,7 +68,7 @@ public class ForumPost {
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private Users author;
+    private User author;
 
     private LocalDateTime post_date;
 
