@@ -14,7 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id_user")
-
+@ToString(exclude = {"tokens", "activite"})
 public class User implements UserDetails {
 
     @Id
@@ -49,13 +49,6 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getMotDePasse() {
-        return motDePasse;
-    }
-
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
-    }
 
     public Date getDateNaissance() {
         return dateNaissance;
