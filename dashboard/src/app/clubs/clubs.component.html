@@ -82,8 +82,10 @@
               <mat-icon>people</mat-icon>
               {{getMemberCountText(club.members?.length || 0)}}
             </span>
-            <button mat-button color="primary">En savoir plus</button>
-          </div>
+            <div>
+              <button mat-button color="primary">En savoir plus</button>
+              <button mat-button color="accent" (click)="joinClub($event, club.id_club)">Rejoindre</button>
+            </div>
         </div>
       </div>
     </div>

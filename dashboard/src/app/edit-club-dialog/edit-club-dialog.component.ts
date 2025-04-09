@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ClubService } from '../services/club.service';
 import { Club } from '../models/club.model';
@@ -26,11 +26,31 @@ export class EditClubDialogComponent implements OnInit {
   ) {
     // Ajouter les nouveaux champs (logo, slogan, categorie) au formulaire
     this.clubForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
+      name: ['', [
+        Validators.required, 
+        Validators.pattern('^[a-zA-ZÀ-ÿ\\s\'-]+$'), // Pattern pour n'accepter que des lettres, espaces, apostrophes et tirets
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        this.noConsecutiveSpaces
+
+
+
+      ]], 
+      description: ['', [
+        Validators.required,
+        Validators.minLength(10), // Minimum 10 characters for description
+        Validators.maxLength(500),
+        this.noConsecutiveSpaces
+
+      ]],
       logo: ['', [Validators.required]],  // Nouveau champ
-      slogan: ['', [Validators.required]],  // Nouveau champ
-      categorie: ['', [Validators.required]]  // Nouveau champ
+      slogan: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(100),
+        this.noConsecutiveSpaces
+
+      ]],       categorie: ['', [Validators.required]]  // Nouveau champ
     });
   }
 
@@ -106,5 +126,13 @@ export class EditClubDialogComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+    // Validation personnalisée pour éviter les espaces multiples consécutifs
+  noConsecutiveSpaces(control: FormControl): {[key: string]: any} | null {
+    const value = control.value || '';
+    if (value.includes('  ')) {
+      return { 'consecutiveSpaces': true };
+    }
+    return null;
   }
 }

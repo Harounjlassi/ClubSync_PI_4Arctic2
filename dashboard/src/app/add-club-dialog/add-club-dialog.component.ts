@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ClubService } from '../services/club.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,11 +25,32 @@ export class AddClubDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.clubForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
+      name: ['', [
+        Validators.required, 
+        Validators.pattern('^[a-zA-ZÀ-ÿ\\s\'-]+$'), // Pattern pour n'accepter que des lettres, espaces, apostrophes et tirets
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        this.noConsecutiveSpaces
+
+
+
+      ]],      
+      description: ['', [
+        Validators.required,
+        Validators.minLength(10), // Minimum 10 characters for description
+        Validators.maxLength(500),
+        this.noConsecutiveSpaces
+
+      ]],
       logo: ['', Validators.required],
-      slogan: ['', Validators.required],
-      categorie: ['', Validators.required]
+      slogan: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(100),
+        this.noConsecutiveSpaces
+
+      ]],      categorie: ['', Validators.required],
+      
     });
   }
 
@@ -93,4 +114,12 @@ export class AddClubDialogComponent implements OnInit {
   onCancel(): void {
     this.dialogRef.close();
   }
+  // Validation personnalisée pour éviter les espaces multiples consécutifs
+noConsecutiveSpaces(control: FormControl): {[key: string]: any} | null {
+  const value = control.value || '';
+  if (value.includes('  ')) {
+    return { 'consecutiveSpaces': true };
+  }
+  return null;
+}
 }

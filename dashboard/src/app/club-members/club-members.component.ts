@@ -37,9 +37,21 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.clubId = Number(this.route.snapshot.paramMap.get('clubId'));
+    this.loadClubInfo(); // 👈 Ajouté
+
     this.loadMembers();
     this.loadAvailableUsers();
     document.querySelector('.fixed-plugin')?.remove();
+  }
+  loadClubInfo(): void {
+    this.clubService.getClubById(this.clubId).subscribe(
+      (club) => {
+        this.clubName = club.name; // ou club.nom selon ton backend
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des infos du club', error);
+      }
+    );
   }
 
   ngAfterViewInit() {

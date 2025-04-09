@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header card-header-primary d-flex justify-content-between align-items-center">
-          <h4 class="card-title"> CLUB {{ clubId }} MANAGMENT</h4>
+          <h4 class="card-title">{{ clubName }}</h4>
         </div>
         <div class="card-body">
           <!-- Filtre pour les membres -->
@@ -14,7 +14,7 @@
             </mat-form-field>
           </div>
           <div class="card-header card-header-primary d-flex justify-content-between align-items-center">
-            <h4 class="card-title">Members of Club {{ clubId }}</h4>
+            <h4 class="card-title">Members of Club {{ clubName }}</h4>
             <button mat-button color="primary" (click)="exportToPDF()">
               Export to PDF
             </button>
@@ -56,7 +56,7 @@
             </table>
             
             <mat-paginator #membersPaginator 
-                          [pageSize]="5"
+                          [pageSize]="8"
                           [pageSizeOptions]="[5, 10, 25]"
                           showFirstLastButtons>
             </mat-paginator>
@@ -115,7 +115,7 @@
             </table>
             
             <mat-paginator #usersPaginator 
-                          [pageSize]="5"
+                          [pageSize]="8"
                           [pageSizeOptions]="[5, 10, 25]"
                           showFirstLastButtons>
             </mat-paginator>

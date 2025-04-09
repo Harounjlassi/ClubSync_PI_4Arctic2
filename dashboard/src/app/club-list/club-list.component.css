@@ -1,10 +1,98 @@
-/* 🌟 Centrer et limiter la largeur du champ de recherche - version compacte */
+/* 🌟 Nouveau champ de recherche moderne - occupant toute la largeur à gauche */
 .search-field {
     width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
+    margin-bottom: 15px;
+}
+
+.search-input-container {
+    position: relative;
     display: flex;
     align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    color: #666;
+    font-size: 20px;
+    z-index: 2;
+}
+
+.search-field .mat-input-element {
+    padding-left: 40px !important;
+    padding-right: 36px;
+    height: 45px;
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    transition: all 0.3s ease;
+}
+
+.search-field .mat-input-element:focus {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-field .mat-form-field-outline {
+    border-radius: 8px;
+}
+
+.clear-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.clear-button:hover {
+    color: #d9534f;
+}
+
+/* 🌟 Bouton ADD CLUB harmonisé */
+.add-club-btn {
+    font-size: 13px;
+    padding: 6px 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    color: white;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.add-club-btn:hover {
+    background-color: #449d44;
+    border-color: #398439;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.add-club-btn .mat-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+    margin-right: 6px;
+}
+
+.badge-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #f8f9fa;
+    color: #333;
+    border-radius: 50%;
+    min-width: 20px;
+    height: 20px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 /* 🌟 Réduire l'espacement */
@@ -182,23 +270,119 @@
 .mat-form-field {
     font-size: 14px;
 }
+
 /* Styles pour les notifications SnackBar */
 ::ng-deep .success-snackbar {
     background-color: #4caf50;
     color: white;
     border-radius: 8px;
-  }
+}
   
-  ::ng-deep .error-snackbar {
+::ng-deep .error-snackbar {
     background-color: #f44336;
     color: white;
     border-radius: 8px;
-  }
+}
   
-  ::ng-deep .mat-simple-snackbar-action {
+::ng-deep .mat-simple-snackbar-action {
     color: white;
-  }
+}
   
-  ::ng-deep .mat-snack-bar-container {
+::ng-deep .mat-snack-bar-container {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  }
+}
+
+/* 🌟 Export buttons container */
+.export-buttons-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between buttons */
+}
+
+/* Common styles for both export buttons */
+.export-btn {
+    font-size: 13px;
+    padding: 6px 12px;
+    font-weight: 600;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    min-width: 130px;
+    transition: all 0.2s ease;
+}
+
+/* PDF button specific styles */
+.export-btn-pdf {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    color: white;
+}
+
+.export-btn-pdf:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+}
+
+/* Excel button specific styles */
+.export-btn-excel {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    color: white;
+}
+
+.export-btn-excel:hover {
+    background-color: #449d44;
+    border-color: #398439;
+}
+
+/* Adjust the icon within the buttons */
+.export-btn .mat-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+    margin-right: 6px;
+}
+
+/* Make the buttons more responsive */
+@media (max-width: 768px) {
+    .export-buttons-container {
+        margin-top: 10px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .export-btn {
+        min-width: 48%;
+        font-size: 12px;
+    }
+}
+
+/* Override Angular Material styles for search field */
+::ng-deep .search-field .mat-form-field-wrapper {
+    padding-bottom: 0;
+}
+
+::ng-deep .search-field .mat-form-field-flex {
+    padding: 0 !important;
+    background: #f5f5f5 !important;
+    border-radius: 8px !important;
+}
+
+::ng-deep .search-field .mat-form-field-underline {
+    display: none;
+}
+
+::ng-deep .search-field .mat-form-field-outline {
+    color: #ddd;
+}
+
+::ng-deep .search-field.mat-focused .mat-form-field-outline {
+    color: #d9534f;
+}
+
+::ng-deep .search-field .mat-form-field-infix {
+    padding: 0.5em 0;
+    border-top: 0;
+}

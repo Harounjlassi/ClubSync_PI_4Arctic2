@@ -2,15 +2,17 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <!-- Champ de recherche avec autocomplétion -->
-        <div class="mb-3 d-flex justify-content-end">
-          <mat-form-field appearance="outline" class="search-field" style="width: 300px;">
-            <mat-label>Search Club</mat-label>
-            <input matInput placeholder="Write club name here..." [(ngModel)]="searchText" (ngModelChange)="applyFilter()" [matAutocomplete]="auto">
-            <mat-icon matPrefix class="mr-2">search</mat-icon>
-            <button mat-icon-button matSuffix *ngIf="searchText" aria-label="Effacer" (click)="searchText=''; applyFilter();">
-              <mat-icon>close</mat-icon>
-            </button>
+        <!-- Champ de recherche avec autocomplétion - Repositionné à gauche et élargi -->
+        <div class="mb-3 d-flex">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label></mat-label>
+            <div class="search-input-container">
+              <mat-icon class="search-icon">search</mat-icon>
+              <input matInput placeholder="Write club name here..." [(ngModel)]="searchText" (ngModelChange)="applyFilter()" [matAutocomplete]="auto">
+              <button mat-icon-button class="clear-button" *ngIf="searchText" aria-label="Effacer" (click)="searchText=''; applyFilter();">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
             <mat-autocomplete #auto="matAutocomplete">
               <mat-option *ngFor="let club of filteredClubs" [value]="club.name">
                 {{ club.name }}
@@ -26,15 +28,10 @@
               <h4 class="card-title mb-0">CLUB LIST</h4>
               <p class="card-category mb-0">Here is a list of all clubs</p>
             </div>
-            <button class="btn btn-success btn-lg px-4 py-2 position-relative" style="font-weight: bold; font-size: 1.1rem;" (click)="openAddClubDialog()">
-              <mat-icon style="font-size: 1.5rem; margin-right: 8px;">add_circle</mat-icon>
+            <button class="btn add-club-btn" (click)="openAddClubDialog()">
+              <mat-icon>add_circle</mat-icon>
               ADD CLUB
-            
-              <span 
-                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
-                style="font-size: 0.8rem;">
-                {{ clubs.length }}
-              </span>
+              <span class="badge-count">{{ clubs.length }}</span>
             </button>
           </div>
 
@@ -45,7 +42,7 @@
             <div *ngIf="filteredClubs.length === 0 && !error" class="alert alert-info py-1 mb-1">
               Aucun club trouvé.
             </div>
-            <div class="mb-3 d-flex justify-content-between">
+            <div class="mb-3 d-flex justify-content-between flex-wrap">
               <div>
                 <mat-form-field appearance="outline" class="category-filter" style="width: 300px; margin-right: 15px;">
                   <mat-label>Filter by Category</mat-label>
@@ -57,13 +54,13 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="d-flex">
-                <button class="btn btn-danger btn-lg px-3 py-2 me-2" (click)="exportToPDF()">
-                  <mat-icon style="font-size: 1.5rem; margin-right: 8px;">picture_as_pdf</mat-icon>
+              <div class="export-buttons-container">
+                <button class="btn export-btn export-btn-pdf" (click)="exportToPDF()">
+                  <mat-icon>picture_as_pdf</mat-icon>
                   Export PDF
                 </button>
-                <button class="btn btn-success btn-lg px-3 py-1" (click)="exportToExcel()">
-                  <mat-icon style="font-size: 1.5rem; margin-right: 8px;">table_chart</mat-icon>
+                <button class="btn export-btn export-btn-excel" (click)="exportToExcel()">
+                  <mat-icon>table_chart</mat-icon>
                   Export Excel
                 </button>
               </div>

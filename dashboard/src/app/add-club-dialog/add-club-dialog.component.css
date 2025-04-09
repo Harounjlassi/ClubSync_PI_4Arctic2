@@ -160,6 +160,10 @@
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
   }
+  .error-snackbar {
+    background-color: #f44336;
+    color: white;
+  }
   
   /* Message d'erreur avec animation subtile */
   mat-error {

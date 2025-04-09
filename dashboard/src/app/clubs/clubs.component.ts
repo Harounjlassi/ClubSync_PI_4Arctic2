@@ -109,4 +109,67 @@ export class ClubsComponent implements OnInit {
     if (!count) return 'Aucun membre';
     return count === 1 ? '1 membre' : `${count} membres`;
   }
+
+  joinClub(event: Event, clubId: number): void {
+    event.stopPropagation(); // Empêche la navigation vers les détails du club
+    
+    // Liste des utilisateurs disponibles dans la base de données
+    const availableUsers = [
+      { id: 3, nom: 'Doe', prenom: 'John' },
+      { id: 8, nom: 'Doe', prenom: 'John' },
+      { id: 9, nom: 'Johnson', prenom: 'Alice' },
+      { id: 10, nom: 'Smith', prenom: 'Bob' },
+      { id: 32, nom: 'System', prenom: 'Admin' },
+      { id: 33, nom: 'Admin', prenom: 'Jane' },
+      { id: 34, nom: 'Smith', prenom: 'Alice' },
+      { id: 35, nom: 'Johnson', prenom: 'Bob' },
+      { id: 36, nom: 'Wilson', prenom: 'Emma' },
+      { id: 37, nom: 'Brown', prenom: 'Michael' },
+      { id: 38, nom: 'Davis', prenom: 'Sarah' },
+      { id: 39, nom: 'Miller', prenom: 'David' },
+      { id: 40, nom: 'Wilson', prenom: 'Lisa' },
+      { id: 41, nom: 'Moore', prenom: 'James' },
+      { id: 42, nom: 'Taylor', prenom: 'Olivia' },
+      { id: 43, nom: 'Anderson', prenom: 'William' },
+      { id: 44, nom: 'Thomas', prenom: 'Ava' },
+      { id: 45, nom: 'Jackson', prenom: 'Benjamin' },
+      { id: 46, nom: 'White', prenom: 'Mia' },
+      { id: 47, nom: 'Harris', prenom: 'Ethan' },
+      { id: 48, nom: 'Martin', prenom: 'Sophia' },
+      { id: 49, nom: 'Clark', prenom: 'Alexander' },
+      { id: 50, nom: 'Rodriguez', prenom: 'Charlotte' },
+      { id: 51, nom: 'Mejri', prenom: 'Wassim' }
+    ];
+    
+    // Construire les options pour le menu déroulant
+    const userOptions = availableUsers.map(user => `${user.id}: ${user.prenom} ${user.nom}`);
+    
+    // Afficher une boîte de dialogue avec les options
+    const userChoice = prompt(
+      'Choisissez un utilisateur pour rejoindre ce club:\n\n' + 
+      userOptions.join('\n') + 
+      '\n\nEntrez l\'ID de l\'utilisateur:'
+    );
+    
+    if (userChoice && !isNaN(Number(userChoice))) {
+      const userId = Number(userChoice);
+      
+      // Vérifier si l'ID entré correspond à un utilisateur disponible
+      if (availableUsers.some(user => user.id === userId)) {
+        this.clubService.addMemberToClub(clubId, userId).subscribe(
+          response => {
+            console.log('Club rejoint avec succès:', response);
+            this.fetchClubs(); // Rafraîchir la liste des clubs pour mettre à jour le nombre de membres
+            alert(`Club rejoint avec succès par l'utilisateur ${availableUsers.find(u => u.id === userId)?.prenom} ${availableUsers.find(u => u.id === userId)?.nom}!`);
+          },
+          error => {
+            console.error('Erreur lors de la tentative de rejoindre le club:', error);
+            alert('Erreur lors de la tentative de rejoindre le club');
+          }
+        );
+      } else {
+        alert('ID utilisateur invalide. Veuillez choisir un ID dans la liste.');
+      }
+    }
+  }
 }
