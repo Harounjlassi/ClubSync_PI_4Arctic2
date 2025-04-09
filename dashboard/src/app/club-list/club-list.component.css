@@ -1,0 +1,204 @@
+/* 🌟 Centrer et limiter la largeur du champ de recherche - version compacte */
+.search-field {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+/* 🌟 Réduire l'espacement */
+.mb-3 {
+    margin-bottom: 0.75rem;
+}
+
+/* 🌟 Table compacte */
+.table {
+    font-size: 14px; /* Taille de police réduite */
+    border-collapse: collapse;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Ombre plus subtile */
+}
+
+/* 🌟 En-têtes compacts */
+.table thead {
+    background-color: #d9534f;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px; /* Réduit */
+}
+
+.table thead th {
+    font-size: 14px; /* Taille réduite */
+    padding: 8px 10px; /* Padding réduit */
+    text-align: center;
+    color: #ffffff !important;
+    border-bottom: 2px solid #fff;
+}
+
+/* 🌟 Cellules compactes */
+.table tbody td {
+    padding: 6px 8px; /* Padding réduit */
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
+}
+
+/* 🌟 Description column - larger with ellipsis */
+.table td.description-cell {
+    max-width: 250px; /* Plus grand que les autres colonnes */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left; /* Alignement à gauche pour une meilleure lisibilité */
+}
+
+/* 🌟 Optionel: montrer plus de texte au survol */
+.table td.description-cell:hover {
+    white-space: normal;
+    word-wrap: break-word;
+    max-height: 100px;
+    overflow: auto;
+    z-index: 1;
+    position: relative;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 🌟 Slogan column - compact with ellipsis */
+.table td.slogan-cell {
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 🌟 Colonne d'actions plus compacte */
+.table td.actions-cell {
+    white-space: nowrap;
+    width: 1%; /* Réduit la largeur au minimum nécessaire */
+}
+
+/* 🌟 Configurer les largeurs relatives des colonnes */
+.table th.col-id {
+    width: 5%;
+}
+
+.table th.col-name {
+    width: 12%;
+}
+
+.table th.col-description {
+    width: 25%; /* Donner plus d'espace à la description */
+}
+
+.table th.col-logo {
+    width: 8%;
+}
+
+.table th.col-slogan {
+    width: 10%;
+}
+
+.table th.col-category {
+    width: 10%;
+}
+
+.table th.col-creator {
+    width: 15%;
+}
+
+.table th.col-members {
+    width: 7%;
+}
+
+.table th.col-actions {
+    width: 8%;
+}
+
+/* 🌟 Style des boutons - version compacte */
+.btn-danger {
+    font-size: 12px;
+    padding: 4px 8px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.btn-success {
+    font-size: 14px;
+    padding: 6px 10px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+/* 🌟 Réduire la taille des icônes Material */
+.mat-icon-button {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+
+/* 🌟 Réduire la taille des images de logo */
+.table img {
+    width: 30px;
+    height: 30px;
+}
+
+/* 🌟 Réduire la hauteur des lignes */
+.table-sm tr {
+    height: 36px;
+}
+
+/* 🌟 Card header plus compact */
+.card-header {
+    padding: 8px 15px;
+}
+
+.card-header h4 {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.card-header p {
+    font-size: 12px;
+    margin-bottom: 0; 
+}
+
+/* 🌟 Card body plus compact */
+.card-body {
+    padding: 10px;
+}
+
+/* 🌟 Champ de recherche plus compact */
+.mat-form-field {
+    font-size: 14px;
+}
+/* Styles pour les notifications SnackBar */
+::ng-deep .success-snackbar {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 8px;
+  }
+  
+  ::ng-deep .error-snackbar {
+    background-color: #f44336;
+    color: white;
+    border-radius: 8px;
+  }
+  
+  ::ng-deep .mat-simple-snackbar-action {
+    color: white;
+  }
+  
+  ::ng-deep .mat-snack-bar-container {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }

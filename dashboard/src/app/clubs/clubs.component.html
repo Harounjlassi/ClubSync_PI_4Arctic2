@@ -1,0 +1,111 @@
+<div class="clubs-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-content">
+        <h1>Découvrez nos clubs</h1>
+        <p>Rejoignez une communauté passionnée et partagez vos intérêts</p>
+      </div>
+    </div>
+    
+    <!-- Search & Filter Bar -->
+    <div class="search-filter-bar">
+      <div class="search-box">
+        <mat-form-field appearance="outline">
+          <mat-label>Rechercher un club</mat-label>
+          <input matInput [formControl]="searchControl" placeholder="Nom, description...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+      
+      <div class="category-filter">
+        <mat-form-field appearance="outline">
+          <mat-label>Catégorie</mat-label>
+          <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange()">
+            <mat-option value="">Toutes les catégories</mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category">
+              {{category}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <div class="actions">
+        <button mat-button color="primary" (click)="clearFilters()" *ngIf="selectedCategory || searchControl.value">
+          <mat-icon>clear</mat-icon> Effacer les filtres
+        </button>
+        <button mat-icon-button (click)="toggleView()" matTooltip="Changer de vue">
+          <mat-icon>{{viewMode === 'grid' ? 'view_list' : 'view_module'}}</mat-icon>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Results Counter -->
+    <div class="results-counter">
+      <p>{{filteredClubs.length}} club(s) trouvé(s)</p>
+    </div>
+    
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" *ngIf="isLoading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Chargement des clubs...</p>
+    </div>
+    
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="error">
+      <mat-icon color="warn">error</mat-icon>
+      <p>Une erreur est survenue lors du chargement des clubs.</p>
+      <button mat-raised-button color="primary" (click)="fetchClubs()">Réessayer</button>
+    </div>
+    
+    <!-- No Results Message -->
+    <div class="no-results" *ngIf="!isLoading && !error && filteredClubs.length === 0">
+      <mat-icon>search_off</mat-icon>
+      <p>Aucun club ne correspond à votre recherche.</p>
+      <button mat-button color="primary" (click)="clearFilters()">Réinitialiser les filtres</button>
+    </div>
+    
+    <!-- Grid View -->
+    <div class="clubs-grid" *ngIf="viewMode === 'grid' && !isLoading && filteredClubs.length > 0">
+      <div class="club-card" *ngFor="let club of filteredClubs" (click)="navigateToClubDetails(club.id_club)">
+        <div class="club-category" [ngClass]="'category-' + club.categorie.toLowerCase()">
+          {{club.categorie}}
+        </div>
+        <div class="club-logo" *ngIf="club.logo">
+            <img [src]="club.logo" alt="Logo {{club.name}}">
+        </div>
+        <div class="club-content">
+          <h3>{{club.name}}</h3>
+          <p class="club-slogan" *ngIf="club.slogan">{{club.slogan}}</p>
+          <p class="club-description">{{club.description | slice:0:100}}{{club.description?.length > 100 ? '...' : ''}}</p>
+          <div class="club-footer">
+            <span class="members-count">
+              <mat-icon>people</mat-icon>
+              {{getMemberCountText(club.members?.length || 0)}}
+            </span>
+            <button mat-button color="primary">En savoir plus</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- List View -->
+    <div class="clubs-list" *ngIf="viewMode === 'list' && !isLoading && filteredClubs.length > 0">
+      <mat-card *ngFor="let club of filteredClubs" (click)="navigateToClubDetails(club.id_club)">
+        <mat-card-header>
+          <div mat-card-avatar [style.background-color]="getCategoryColor(club.categorie)" class="category-avatar">
+            {{club.categorie.charAt(0)}}
+          </div>
+          <mat-card-title>{{club.name}}</mat-card-title>
+          <mat-card-subtitle>{{club.categorie}} · {{getMemberCountText(club.members?.length || 0)}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p *ngIf="club.slogan" class="slogan">"{{club.slogan}}"</p>
+          <p>{{club.description}}</p>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button color="primary">VOIR DÉTAILS</button>
+          <button mat-button color="accent">REJOINDRE</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>

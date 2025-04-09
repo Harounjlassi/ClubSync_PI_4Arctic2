@@ -30,7 +30,7 @@ import java.util.Random;
 @RestController
 @RequestMapping("/auth")
 @SecurityRequirement(name = "BearerAuth")
-
+@CrossOrigin(origins = "http://localhost:4200") // Permet à Angular d'accéder au backend
 public class AuthController {
     private final Map<String, String> verificationCodes = new HashMap<>();
 
@@ -54,9 +54,6 @@ private IUserService userService;
     public ResponseEntity<Object> saveUser(@RequestBody UserRequest userRequest) {
         System.out.println("Requête POST reçue sur /auth/registration : " + userRequest.getEmail());
 
-        if (!userRequest.getEmail().matches("^[a-zA-Z]+\\.[a-zA-Z]+@esprit\\.tn$")) {
-            return ResponseEntity.status(400).body("Invalid email format. Use nom.prenom@esprit.tn");
-        }
 
         if (userService.isEmailTaken(userRequest.getEmail())) {
             return ResponseEntity.status(400).body("Email already in use.");

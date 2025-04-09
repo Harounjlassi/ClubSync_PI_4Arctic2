@@ -1,0 +1,60 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+              <h4 class="card-title">USER LIST</h4>
+              <p class="card-category">Here is a list of all users</p>
+            </div>
+  
+            <div class="card-body">
+              <div *ngIf="loading" class="d-flex justify-content-center my-4">
+                <mat-spinner diameter="40"></mat-spinner>
+              </div>
+  
+              <div *ngIf="!loading && users.length === 0" class="alert alert-info py-1 mb-1">
+                No users found.
+              </div>
+  
+              <div class="table-responsive" *ngIf="users.length > 0 && !loading">
+                <table class="table table-striped table-bordered table-sm">
+                  <thead class="text-primary">
+                    <tr>
+                      <th>ID</th>
+                      <th>Last Name</th>
+                      <th>First Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Phone</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of users; trackBy: trackById">
+                      <td>{{ user.idUser }}</td>
+                      <td>{{ user.nom }}</td>
+                      <td>{{ user.prenom }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.role?.roleType || 'User' }}</td>
+                      <td>{{ user.numeroDeTelephone || 'N/A' }}</td>
+                      <td>
+                        <button 
+                          class="btn btn-sm btn-warning mr-1" 
+                          (click)="onEdit(user.idUser)">
+                          Edit
+                        </button>
+                        <button mat-icon-button color="warn" (click)="onDelete(user.idUser)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -21,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 @SecurityRequirement(name = "BearerAuth")
+@CrossOrigin(origins = "http://localhost:4200") // Permet à Angular d'accéder au backend
 public class UserController {
 
 

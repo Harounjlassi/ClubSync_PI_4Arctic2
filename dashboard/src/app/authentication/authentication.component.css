@@ -1,0 +1,82 @@
+.main-content {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, #3a7bd5, #00d2ff);
+    padding: 40px 0;
+  }
+  
+  .card {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+  
+  .card-header {
+    padding: 25px 15px;
+    background: linear-gradient(60deg, #7b1fa2, #913f9e);
+    color: white;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
+  }
+  
+  .card-title {
+    font-weight: 500;
+    margin-bottom: 5px;
+    font-size: 1.75rem;
+  }
+  
+  .card-body {
+    padding: 30px;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(60deg, #7b1fa2, #913f9e);
+    border: none;
+    box-shadow: 0 2px 2px 0 rgba(156, 39, 176, 0.14), 0 3px 1px -2px rgba(156, 39, 176, 0.2), 0 1px 5px 0 rgba(156, 39, 176, 0.12);
+    transition: all 0.2s ease-in-out;
+    height: 50px;
+    font-weight: 500;
+  }
+  
+  .btn-primary:hover,
+  .btn-primary:focus,
+  .btn-primary:active {
+    background: linear-gradient(60deg, #913f9e, #7b1fa2);
+    box-shadow: 0 4px 5px 0 rgba(156, 39, 176, 0.14), 0 1px 10px 0 rgba(156, 39, 176, 0.12), 0 2px 4px -1px rgba(156, 39, 176, 0.2);
+  }
+  
+  a {
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Animation for form transitions */
+  form {
+    animation: fadeIn 0.5s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .card-body {
+      padding: 20px;
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+    }
+  }

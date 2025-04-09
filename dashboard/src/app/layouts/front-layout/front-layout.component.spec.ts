@@ -6,10 +6,12 @@ describe('FrontLayoutComponent', () => {
   let component: FrontLayoutComponent;
   let fixture: ComponentFixture<FrontLayoutComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [FrontLayoutComponent]
-    });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ FrontLayoutComponent ]
+    })
+    .compileComponents();
+
     fixture = TestBed.createComponent(FrontLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

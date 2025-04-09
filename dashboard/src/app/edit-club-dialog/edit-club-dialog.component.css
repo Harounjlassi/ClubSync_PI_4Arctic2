@@ -1,0 +1,196 @@
+/* Style général des dialogues avec une approche moderne */
+.dialog-container {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Style du titre avec une touche moderne */
+.dialog-container h2 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+  color: #2a3eb1;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 12px;
+}
+
+.dialog-icon {
+  margin-right: 12px;
+  vertical-align: middle;
+  color: #5c6bc0;
+}
+
+/* Style des champs de formulaire avec une touche moderne */
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+/* Style des éléments du mat-form-field pour un look plus moderne */
+::ng-deep .mat-form-field-outline {
+  border-radius: 8px !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: #5c6bc0;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #3f51b5;
+}
+
+/* Style des zones de texte */
+textarea {
+  min-height: 120px;
+  resize: vertical;
+  border-radius: 8px;
+}
+
+/* Style moderne pour le container de logo */
+.logo-upload-container {
+  margin-bottom: 28px;
+  padding: 20px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.logo-upload-container:hover {
+  background-color: #f5f5f5;
+  border-color: #bdbdbd;
+}
+
+.upload-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #616161;
+  letter-spacing: 0.2px;
+}
+
+/* Style moderne pour la prévisualisation du logo */
+.preview-container {
+  margin: 20px 0;
+  text-align: center;
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.logo-preview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.logo-preview:hover {
+  transform: scale(1.02);
+}
+
+/* Style moderne pour le bouton d'upload */
+.logo-upload-container button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.logo-upload-container button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.logo-upload-container mat-icon {
+  margin-right: 8px;
+}
+
+/* Style des boutons d'actions avec un design moderne */
+mat-dialog-actions {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+mat-dialog-actions button {
+  min-width: 120px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+mat-dialog-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+button[mat-stroked-button] {
+  border: 2px solid #e0e0e0;
+}
+
+button[mat-flat-button] {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+}
+
+/* Style du spinner de chargement modernisé */
+.spinner {
+  animation: spin 1.2s infinite cubic-bezier(0.76, 0.24, 0.42, 0.7);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Message d'erreur avec animation subtile */
+mat-error {
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+  margin-top: 4px;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* Style responsive pour les petits écrans */
+@media (max-width: 599px) {
+  .dialog-container {
+    padding: 16px;
+  }
+  
+  mat-dialog-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  mat-dialog-actions button {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  
+  .logo-upload-container {
+    padding: 16px;
+  }
+}
