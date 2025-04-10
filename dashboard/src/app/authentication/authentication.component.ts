@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-authentication',
@@ -9,129 +9,60 @@ import { UserService } from '../services/user.service';
   styleUrls: ['./authentication.component.css']
 })
 export class AuthenticationComponent implements OnInit {
-  loginForm: FormGroup;
-  verificationForm: FormGroup;
-  isLoading = false;
-  hidePassword = true;
-  showVerificationForm = false;
+  form: any = {
+    email: null,
+    password: null
+  };
+  isLoggedIn = false;
+  isLoginFailed = false;
   errorMessage = '';
-  successMessage = '';
+  roles: string[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
-    private router: Router
-  ) {
-    // Initialize login form
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
-    });
+  private authService: UserService;
+  private storageService: StorageService;
+  private router: Router;
 
-    // Initialize verification form
-    this.verificationForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      code: ['', Validators.required]
-    });
+  constructor(authService: UserService, storageService: StorageService, router: Router) {
+    this.authService = authService;
+    this.storageService = storageService;
+    this.router = router;
   }
 
   ngOnInit(): void {
-    // Check if user is already logged in
-    this.checkLoggedInStatus();
-  }
-
-  checkLoggedInStatus(): void {
-    // You can implement a token check or session check here
-    // If user is already logged in, redirect to dashboard
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.router.navigate(['/dashboard']);
+    if (this.storageService.isLoggedIn()) {
+      this.isLoggedIn = true;
+      this.roles = this.storageService.getUser().role;
+      
     }
   }
 
-  onLogin(): void {
-    if (this.loginForm.invalid) {
-      return;
-    }
+  onSubmit(): void {
+    const { email, password } = this.form;
 
-    this.isLoading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.authService.login({ email, password }).subscribe({
+      next: data => {
+        this.storageService.saveUser(data);
 
-    const loginRequest = {
-      email: this.loginForm.get('email')?.value,
-      password: this.loginForm.get('password')?.value
-    };
-
-    this.userService.login(loginRequest).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        
-        // Check if verification is required
-        if (response.requiresVerification) {
-          this.successMessage = 'Please verify your account with the code sent to your email.';
-          this.showVerificationForm = true;
-          this.verificationForm.patchValue({ email: loginRequest.email });
-        } else {
-          // Handle successful login
-          this.handleSuccessfulLogin(response);
-        }
+        this.isLoginFailed = false;
+        this.isLoggedIn = true;
+        this.roles = this.storageService.getUser().role;
+        this.reloadPage();
       },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Login failed. Please check your credentials.';
-        console.error('Login error:', error);
+      error: err => {
+        this.errorMessage = err.error.message;
+        this.isLoginFailed = true;
       }
     });
   }
 
-  onVerify(): void {
-    if (this.verificationForm.invalid) {
-      return;
-    }
-
-    this.isLoading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    const verifyRequest = {
-      email: this.verificationForm.get('email')?.value,
-      code: this.verificationForm.get('code')?.value
-    };
-
-    this.userService.verifyCode(verifyRequest).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.handleSuccessfulLogin(response);
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Verification failed. Please try again.';
-        console.error('Verification error:', error);
-      }
-    });
+  logout(): void {
+    this.storageService.clean();
+    this.isLoggedIn = false;
+    this.roles = [];
+    this.router.navigate(['/login']); // Change '/login' selon ta route de login
   }
 
-  handleSuccessfulLogin(response: any): void {
-    // Save token to localStorage
-    localStorage.setItem('token', response.token);
-    
-    // Save user info if available
-    if (response.user) {
-      localStorage.setItem('user', JSON.stringify(response.user));
-    }
-    
-    this.successMessage = 'Login successful! Redirecting...';
-    
-    // Redirect to dashboard after a short delay
-    setTimeout(() => {
-      this.router.navigate(['/dashboard']);
-    }, 1000);
-  }
-
-  forgotPassword(): void {
-    // Implement forgot password functionality
-    // This could open a dialog or navigate to a password reset page
-    alert('Forgot password feature coming soon!');
+  reloadPage(): void {
+    window.location.reload();
   }
 }

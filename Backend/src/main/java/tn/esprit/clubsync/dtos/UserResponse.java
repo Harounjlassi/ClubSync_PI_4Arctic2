@@ -8,6 +8,7 @@ import lombok.Setter;
 import tn.esprit.clubsync.entities.Sexe;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +23,6 @@ public class UserResponse {
     private Sexe sexe;
     private Integer numeroDeTelephone;
     private String photoProfil;
-    private String role;
+    private List<String> role;
 }
 

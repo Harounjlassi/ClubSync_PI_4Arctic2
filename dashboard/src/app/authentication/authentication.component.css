@@ -1,82 +1,146 @@
-.main-content {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    background: linear-gradient(to right, #3a7bd5, #00d2ff);
-    padding: 40px 0;
-  }
-  
-  .card {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 0;
-  }
-  
-  .card-header {
-    padding: 25px 15px;
-    background: linear-gradient(60deg, #7b1fa2, #913f9e);
-    color: white;
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
-  }
-  
-  .card-title {
-    font-weight: 500;
-    margin-bottom: 5px;
-    font-size: 1.75rem;
-  }
-  
-  .card-body {
+/* authentication.component.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.login-container {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  padding: 40px;
+  text-align: center;
+}
+
+.profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: block;
+  border: 5px solid #f8f9fa;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #667eea;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.login-btn {
+  background: linear-gradient(to right, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.alert-danger {
+  background-color: #ffe0e3;
+  color: #d62a3b;
+  border: 1px solid #ffcad0;
+}
+
+.alert-success {
+  background-color: #e0ffe2;
+  color: #28a745;
+  border: 1px solid #c3e6cb;
+}
+
+.forgot-password {
+  display: block;
+  text-align: right;
+  color: #667eea;
+  text-decoration: none;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.register-link {
+  margin-top: 30px;
+  font-size: 14px;
+  color: #666;
+}
+
+.register-link a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px;
+  margin-top: 15px;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    width: 320px;
     padding: 30px;
   }
-  
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  
-  .btn-primary {
-    background: linear-gradient(60deg, #7b1fa2, #913f9e);
-    border: none;
-    box-shadow: 0 2px 2px 0 rgba(156, 39, 176, 0.14), 0 3px 1px -2px rgba(156, 39, 176, 0.2), 0 1px 5px 0 rgba(156, 39, 176, 0.12);
-    transition: all 0.2s ease-in-out;
-    height: 50px;
-    font-weight: 500;
-  }
-  
-  .btn-primary:hover,
-  .btn-primary:focus,
-  .btn-primary:active {
-    background: linear-gradient(60deg, #913f9e, #7b1fa2);
-    box-shadow: 0 4px 5px 0 rgba(156, 39, 176, 0.14), 0 1px 10px 0 rgba(156, 39, 176, 0.12), 0 2px 4px -1px rgba(156, 39, 176, 0.2);
-  }
-  
-  a {
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  /* Animation for form transitions */
-  form {
-    animation: fadeIn 0.5s ease;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 576px) {
-    .card-body {
-      padding: 20px;
-    }
-    
-    .card-title {
-      font-size: 1.5rem;
-    }
-  }
+}

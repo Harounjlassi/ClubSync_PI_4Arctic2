@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user.model';
 import { UserRequest } from '../models/user-request.model';
 import { UserResponse } from '../models/user-response.model';
 import { UserStatsResponse } from '../models/user-stats-response.model';
-import { environment } from '../../environments/environment';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class UserService {
   private apiUrl = 'http://localhost:8080/clubsync/user';
   private authUrl = 'http://localhost:8080/clubsync/auth'; ;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private storageService: StorageService) { }
 
   // CRUD Operations
   getAllUsers(): Observable<UserResponse[]> {
@@ -93,5 +93,12 @@ export class UserService {
 
   logout(): Observable<any> {
     return this.http.post<any>(`${this.authUrl}/logout`, {});
+  }  // Fixed the URL path by adding a separator
+  getUserBoard(): Observable<any> {
+    return this.http.get(`${this.authUrl}/test-comps`, { responseType: 'text' });
+  }
+
+  getAdminBoard(): Observable<any> {
+    return this.http.get(`${this.authUrl}/dashboard`, { responseType: 'text' });
   }
 }

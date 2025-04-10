@@ -1,95 +1,51 @@
-<div class="main-content">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-          <div class="card">
-            <div class="card-header card-header-primary bg-gradient-primary text-center">
-              <h4 class="card-title">ClubSync Login</h4>
-              <p class="card-category">Access your account</p>
-            </div>
-            
-            <div class="card-body">
-              <!-- Alert messages -->
-              <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ errorMessage }}
-                <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
-              </div>
-              
-              <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ successMessage }}
-                <button type="button" class="btn-close" (click)="successMessage = ''" aria-label="Close"></button>
-              </div>
-              
-              <!-- Login Form -->
-              <form *ngIf="!showVerificationForm" [formGroup]="loginForm" (ngSubmit)="onLogin()">
-                <div class="form-group mb-3">
-                  <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Email</mat-label>
-                    <input matInput formControlName="email" placeholder="Enter your email" type="email" required>
-                    <mat-icon matPrefix>email</mat-icon>
-                    <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
-                    <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
-                  </mat-form-field>
-                </div>
-                
-                <div class="form-group mb-4">
-                  <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Password</mat-label>
-                    <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="Enter your password" required>
-                    <mat-icon matPrefix>lock</mat-icon>
-                    <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
-                      <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-                    </button>
-                    <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
-                  </mat-form-field>
-                </div>
-                
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                  <mat-checkbox color="primary">Remember me</mat-checkbox>
-                  <a href="javascript:void(0)" (click)="forgotPassword()" class="text-primary">Forgot password?</a>
-                </div>
-                
-                <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="loginForm.invalid || isLoading">
-                    <span *ngIf="!isLoading">LOGIN</span>
-                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                  </button>
-                </div>
-              </form>
-              
-              <!-- Verification Code Form -->
-              <form *ngIf="showVerificationForm" [formGroup]="verificationForm" (ngSubmit)="onVerify()">
-                <div class="text-center mb-4">
-                  <p>A verification code has been sent to your email. Please enter the code below.</p>
-                </div>
-                
-                <div class="form-group mb-4">
-                  <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Verification Code</mat-label>
-                    <input matInput formControlName="code" placeholder="Enter code" required>
-                    <mat-icon matPrefix>vpn_key</mat-icon>
-                    <mat-error *ngIf="verificationForm.get('code')?.hasError('required')">Code is required</mat-error>
-                  </mat-form-field>
-                </div>
-                
-                <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="verificationForm.invalid || isLoading">
-                    <span *ngIf="!isLoading">VERIFY</span>
-                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                  </button>
-                </div>
-                
-                <div class="text-center mt-3">
-                  <a href="javascript:void(0)" (click)="showVerificationForm = false">Go back to login</a>
-                </div>
-              </form>
-              
-              <div class="mt-4 text-center">
-                <p>Don't have an account? <a [routerLink]="['/register']" class="text-primary">Register here</a></p>
-              </div>
-            </div>
-          </div>
-        </div>
+<!-- authentication.component.html -->
+<div class="login-container">
+  <img src="" alt="Profile" class="profile-img">
+  <h2 class="login-title">Login</h2>
+  
+  <!-- Login Form -->
+  <div *ngIf="!isLoggedIn" id="loginForm">
+    <form name="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input 
+          type="email" 
+          class="form-control" 
+          id="email" 
+          name="email"
+          [(ngModel)]="form.email" 
+          required>
       </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          class="form-control" 
+          id="password" 
+          name="password"
+          [(ngModel)]="form.password" 
+          required>
+        <a href="javascript:void(0)" class="forgot-password">Forgot password?</a>
+      </div>
+      
+      <button type="submit" class="login-btn">
+        Sign In
+      </button>
+      
+      <div *ngIf="isLoginFailed" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+    </form>
+    
+    <div class="register-link">
+      Don't have an account? <a routerLink="/register">Register</a>
     </div>
   </div>
+  
+  <!-- Message after successful login -->
+  <div *ngIf="isLoggedIn" class="alert alert-success">
+    Logged in as {{ roles}}.
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+</div>

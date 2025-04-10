@@ -14,11 +14,13 @@ import { ServicesComponent } from './pages/services/services.component';
 import { ClubsComponent } from './clubs/clubs.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { RegisterComponent } from './register/register.component';
+import { TestCompsComponent } from './test-comps/test-comps.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 const routes: Routes =[
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: '/dashboard',
     pathMatch: 'full',
   }, {
     path: '',
@@ -46,10 +48,10 @@ const routes: Routes =[
     ]
   },
   { path: 'clubs', component: ClubsComponent },
-  { path: 'authentication', component: AuthenticationComponent },
+  { path: 'login', component: AuthenticationComponent },
   { path: 'register', component: RegisterComponent },
-
-
+  { path: 'test-comps', component: TestCompsComponent },
+  { path: 'unauthorized', component: UnauthorizedComponent },
 ];
 
 @NgModule({

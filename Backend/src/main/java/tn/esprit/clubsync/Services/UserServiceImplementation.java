@@ -17,6 +17,7 @@ import tn.esprit.clubsync.dtos.UserRequest;
 import tn.esprit.clubsync.dtos.UserResponse;
 import tn.esprit.clubsync.dtos.UserStatsResponse;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -80,7 +81,7 @@ private RoleRepository roleRepository;
                 user.getSexe(),
                 user.getNumeroDeTelephone(),
                 user.getPhotoProfil(),
-                user.getRole() != null ? user.getRole().getRoleType().name() : null
+                user.getRole() != null ? Collections.singletonList(user.getRole().getRoleType().name()) : null
         );
     }
 

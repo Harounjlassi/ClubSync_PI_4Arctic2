@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import tn.esprit.clubsync.entities.User;
 import tn.esprit.clubsync.dtos.UserResponse;
 
+import java.util.Collections;
+
 @Component
 public class UserMapper {
 
@@ -18,7 +20,7 @@ public class UserMapper {
         response.setSexe(user.getSexe());
         response.setNumeroDeTelephone(user.getNumeroDeTelephone());
         response.setPhotoProfil(user.getPhotoProfil());
-        response.setRole(user.getRole().getRoleType().toString());
+        response.setRole(Collections.singletonList(user.getRole().getRoleType().toString()));
 
         return response;
     }

@@ -39,6 +39,8 @@ import { UserListComponent } from './user-list/user-list.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { RegisterComponent } from './register/register.component';
 import { UpdateUserComponent } from './update-user/update-user.component';
+import { TestCompsComponent } from './test-comps/test-comps.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 @NgModule({
   imports: [
@@ -92,6 +94,8 @@ import { UpdateUserComponent } from './update-user/update-user.component';
     AuthenticationComponent,
     RegisterComponent,
     UpdateUserComponent,
+    TestCompsComponent,
+    UnauthorizedComponent,
     
 
 

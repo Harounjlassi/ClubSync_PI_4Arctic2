@@ -1,0 +1,21 @@
+<div class="container mt-5">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h3>User Dashboard</h3>
+        <div>
+          <span class="mr-3">Welcome, {{ userName }}</span>
+          <button class="btn btn-outline-danger" (click)="logout()">
+            <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div *ngIf="content" class="alert alert-info">
+          {{ content }}
+        </div>
+        <div *ngIf="!content" class="alert alert-warning">
+          Loading content...
+        </div>
+      </div>
+    </div>
+  </div>

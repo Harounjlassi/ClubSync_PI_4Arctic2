@@ -64,6 +64,9 @@ public class SecurityConfig {
                                 "/user/get/all",
                                 "/user/filter",
                                 "/user/users/sorted",
+                                "/auth/test-comps",
+                                "/auth/dashboard", // 👈 ajoute ceci si tu veux le rendre public temporairement
+                                "/auth/logout",
                                 "/user/users/stats"
                         ).permitAll()  //  Routes accessibles sans authentification
                         .anyRequest().authenticated() //  Sécuriser toutes les autres routes

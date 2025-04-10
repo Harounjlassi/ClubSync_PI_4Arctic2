@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -184,6 +185,22 @@ private IUserService userService;
         jwtService.revokeToken(token);
 
         return ResponseEntity.ok("User successfully logged out and token invalidated.");
+    }
+    @GetMapping("/all")
+    public String allAccess() {
+        return "Public Content.";
+    }
+
+    @GetMapping("/test-comps")
+    @PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+    public String userAccess() {
+        return "User Content.";
+    }
+
+    @GetMapping("/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminAccess() {
+        return "Admin Board.";
     }
 
 
