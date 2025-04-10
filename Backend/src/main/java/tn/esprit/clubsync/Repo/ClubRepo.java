@@ -1,4 +1,9 @@
 package tn.esprit.clubsync.Repo;
 
-public interface ClubRepo {
+import org.springframework.data.jpa.repository.JpaRepository;
+import tn.esprit.clubsync.entities.Club;
+
+import java.util.List;
+
+public interface ClubRepo extends JpaRepository<Club, Long> {
 }

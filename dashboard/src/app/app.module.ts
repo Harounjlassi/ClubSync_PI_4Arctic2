@@ -7,20 +7,91 @@ import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { FrontLayoutComponent } from './layouts/front-layout/front-layout.component';
+import { HomeComponent } from './pages/home/home.component';
+import { AboutComponent } from './pages/about/about.component';
+import { ServicesComponent } from './pages/services/services.component';
+import { BlogComponent } from './pages/blog/blog.component';
+import { ScheduleComponent } from './pages/schedule/schedule.component';
+import { FromComponent } from './pages/from/from.component';
+import { ClubListComponent } from './club-list/club-list.component';
+import { AddClubDialogComponent } from './add-club-dialog/add-club-dialog.component';
+// Import Angular Material modules
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
+import { EditClubDialogComponent } from './edit-club-dialog/edit-club-dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ClubsComponent } from './clubs/clubs.component';
+import { ClubMembersComponent } from './club-members/club-members.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ListformComponent } from './Back/FormPost/listform/listform.component';
+import { AddformPostComponent } from './Back/FormPost/addform-post/addform-post.component';
+import { FormsPostFrontComponent } from './Front/FormPost/forms-post-front/forms-post-front.component';  // <-- Ajout
 
 @NgModule({
   imports: [
-    BrowserAnimationsModule,
+
+    BrowserAnimationsModule as any,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+    MatSelectModule,
+    MatAutocompleteModule,  // <-- Ajout
+
+
+     // Angular Material modules
+     MatDialogModule,
+     MatFormFieldModule,
+     MatInputModule,
+     MatButtonModule,
+     MatSnackBarModule,
+     MatIconModule,
+     MatTableModule,       // Ajout du module pour les tables Angular Material
+     MatPaginatorModule,
+     MatCardModule,
+     MatSelectModule,
+     MatProgressSpinnerModule,
+     MatTooltipModule
+
+     
+
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
+    FrontLayoutComponent,
+    HomeComponent,
+    AboutComponent,
+    ServicesComponent,
+    BlogComponent,
+    ScheduleComponent,
+    FromComponent,
+    ClubListComponent,
+    AddClubDialogComponent,
+    ConfirmDialogComponent,
+    EditClubDialogComponent,
+    ClubsComponent,
+    ClubMembersComponent,
+    ListformComponent,
+    AddformPostComponent,
+    FormsPostFrontComponent,
+    
+    
+
 
   ],
   providers: [],

@@ -20,6 +20,12 @@ public class Discussion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_forum;
 
+    private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
+
     public Long getId_forum() {
         return id_forum;
     }
@@ -44,21 +50,6 @@ public class Discussion {
         this.club = club;
     }
 
-    public List<ForumPost> getPosts() {
-        return posts;
-    }
 
-    public void setPosts(List<ForumPost> posts) {
-        this.posts = posts;
-    }
-
-    private String title;
-
-    @ManyToOne
-    @JoinColumn(name = "club_id")
-    private Club club;
-
-    @OneToMany(mappedBy = "discussion", cascade = CascadeType.ALL)
-    private List<ForumPost> posts = new ArrayList<>();
 
 }

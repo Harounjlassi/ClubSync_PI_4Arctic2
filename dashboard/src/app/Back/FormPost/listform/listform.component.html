@@ -1,0 +1,187 @@
+<div class="wrapper">
+    <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+        <app-sidebar></app-sidebar>
+        <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
+    </div>
+    <div class="main-panel">
+        <app-navbar></app-navbar>
+        
+        <!-- Forum Posts Content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-danger">
+                                <h4 class="card-title">Forum Posts</h4>
+                                <p class="card-category">List of all forum posts</p>
+                                <button class="btn btn-primary btn-sm float-right" (click)="openCreateModal()">
+                                    <i class="material-icons">add</i> New Post
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="text-primary">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Content</th>
+                                                <th>Author</th>
+                                                <th>Date</th>
+                                                <th>Comments</th>
+                                                <th>Reactions</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let post of forumPosts">
+                                                <td>{{post.id_post}}</td>
+                                                <td class="content-cell">
+                                                    <div class="truncate-text" [title]="post.content">
+                                                        {{post.content}}
+                                                    </div>
+                                                </td>
+                                                <td>{{post.author?.username}}</td>
+                                                <td>{{post.post_date}}</td>
+                                                <td>{{post.comments?.length || 0}}</td>
+                                                <td>{{post.reacts?.length || 0}}</td>
+                                                <td class="td-actions">
+                                                    <button type="button" rel="tooltip" title="View" 
+                                                        class="btn btn-info btn-link btn-sm" 
+                                                        (click)="viewPost(post.id_post)">
+                                                        <i class="material-icons">visibility</i>
+                                                    </button>
+                                                    <button type="button" rel="tooltip" title="Edit" 
+                                                        class="btn btn-success btn-link btn-sm" 
+                                                        (click)="editPost(post)">
+                                                        <i class="material-icons">edit</i>
+                                                    </button>
+                                                    <button type="button" rel="tooltip" title="Delete" 
+                                                        class="btn btn-danger btn-link btn-sm" 
+                                                        (click)="deletePost(post.id_post)">
+                                                        <i class="material-icons">close</i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="forumPosts?.length === 0">
+                                                <td colspan="7" class="text-center">
+                                                    No forum posts found
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- Pagination -->
+                                <div class="row" *ngIf="forumPosts?.length > 0">
+                                    <div class="col-md-12">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item" [class.disabled]="currentPage === 1">
+                                                    <a class="page-link" (click)="previousPage()">Previous</a>
+                                                </li>
+                                                <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+                                                    <a class="page-link" (click)="goToPage(page)">{{page}}</a>
+                                                </li>
+                                                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                                    <a class="page-link" (click)="nextPage()">Next</a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div *ngIf="isMaps('maps')">
+            <app-footer></app-footer>
+        </div>
+    </div>
+    
+    <!-- Fixed Plugin (keep your existing plugin code) -->
+    <div class="fixed-plugin">
+        <!-- ... your existing fixed plugin code ... -->
+    </div>
+</div>
+
+<!-- Create/Edit Post Modal -->
+<div #postModal class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postModalLabel">{{isEditMode ? 'Edit' : 'Create'}} Post</h5>
+                <button type="button" (click)="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label for="content">Content</label>
+                        <textarea class="form-control" id="content" formControlName="content" rows="5"
+                                  placeholder="Write your post content here..."></textarea>
+                        <div *ngIf="postForm.get('content')?.invalid && postForm.get('content')?.touched" 
+                             class="text-danger">
+                            Content is required
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="closeModal()" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="postForm.invalid">
+                            {{isEditMode ? 'Update' : 'Create'}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Post Modal -->
+<div class="modal fade" id="viewPostModal" tabindex="-1" role="dialog" aria-labelledby="viewPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewPostModalLabel">Post Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="selectedPost">
+                    <div class="post-content mb-4">
+                        <h4>{{selectedPost.content}}</h4>
+                        <div class="post-meta text-muted">
+                            Posted by {{selectedPost.author?.username}} on {{selectedPost.postDate | date:'medium'}}
+                        </div>
+                    </div>
+                    
+                    <div class="post-stats mb-4">
+                        <span class="mr-3"><i class="material-icons">comment</i> {{selectedPost.comments?.length || 0}} comments</span>
+                        <span><i class="material-icons">thumb_up</i> {{selectedPost.reacts?.length || 0}} reactions</span>
+                    </div>
+                    
+                    <div class="comments-section">
+                        <h5>Comments</h5>
+                        <div *ngFor="let comment of selectedPost.comments" class="comment mb-3">
+                            <div class="comment-content">{{comment.content}}</div>
+                            <div class="comment-meta text-muted">
+                                By {{comment.author?.username}} on {{comment.commentDate | date:'short'}}
+                            </div>
+                        </div>
+                        <div *ngIf="!selectedPost.comments || selectedPost.comments.length === 0" class="text-muted">
+                            No comments yet
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,11 +1,12 @@
 package tn.esprit.clubsync.entities;
 
-import jakarta.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,20 +15,28 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "table-comment")
+@Table(name = "table_comment")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_comment;
+    Long id_comment;
 
     @Column(columnDefinition = "TEXT")
-    private String content;
+    String content;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private Users author;
+    Users author;
 
-    private LocalDateTime comment_date;
+    LocalDateTime comment_date;
+
+    @ManyToOne
+    @JoinColumn(name = "forum_post_id")
+    @JsonIgnoreProperties("comments")
+    ForumPost forumPost;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Reply> replies;
 
     public Long getId_comment() {
         return id_comment;
@@ -68,8 +77,4 @@ public class Comment {
     public void setForumPost(ForumPost forumPost) {
         this.forumPost = forumPost;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "forum_post_id")
-    private ForumPost forumPost;
 }

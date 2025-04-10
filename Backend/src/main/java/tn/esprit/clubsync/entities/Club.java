@@ -14,7 +14,7 @@ import java.util.*;
 @AllArgsConstructor
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "table-comment")
+@Table(name = "table-club")
 public class Club {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +29,36 @@ public class Club {
     @JoinColumn(name = "creator_id")
     private Users creator;
 
+    private String logo; // URL ou base64
+    private String slogan;
+    private String categorie;
+
     public Long getId_club() {
         return id_club;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getSlogan() {
+        return slogan;
+    }
+
+    public void setSlogan(String slogan) {
+        this.slogan = slogan;
+    }
+
+    public String getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
     }
 
     public void setId_club(Long id_club) {
@@ -61,13 +89,7 @@ public class Club {
         this.creator = creator;
     }
 
-    public Users getAdmin() {
-        return admin;
-    }
 
-    public void setAdmin(Users admin) {
-        this.admin = admin;
-    }
 
     public List<Users> getMembers() {
         return members;
@@ -93,17 +115,15 @@ public class Club {
         this.discussions = discussions;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "admin_id")
-    private Users admin;
 
     @ManyToMany
     @JoinTable(
-            name = "club_members",
-            joinColumns = @JoinColumn(name = "club_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            name = "club_members",                  // Name of the join table
+            joinColumns = @JoinColumn(name = "club_id"),   // Column in the join table that references the Club entity
+            inverseJoinColumns = @JoinColumn(name = "id")  // Column in the join table that references the Users entity (using id instead of user_id)
     )
     private List<Users> members = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "organize", cascade = CascadeType.ALL)
     private List<Event> events = new ArrayList<>();

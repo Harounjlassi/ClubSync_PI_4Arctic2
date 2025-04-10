@@ -25,6 +25,30 @@ public class ForumPost {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Users author;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String imageBase64;
+
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
+
+    private LocalDateTime post_date;
+
+    @OneToMany(mappedBy = "forumPost", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "forumPost", cascade = CascadeType.ALL)
+    private List<React> reacts = new ArrayList<>();
+
     public Long getId_post() {
         return id_post;
     }
@@ -57,14 +81,6 @@ public class ForumPost {
         this.post_date = post_date;
     }
 
-    public Discussion getDiscussion() {
-        return discussion;
-    }
-
-    public void setDiscussion(Discussion discussion) {
-        this.discussion = discussion;
-    }
-
     public List<Comment> getComments() {
         return comments;
     }
@@ -73,16 +89,4 @@ public class ForumPost {
         this.comments = comments;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Users author;
-
-    private LocalDateTime post_date;
-
-    @ManyToOne
-    @JoinColumn(name = "discussion_id")
-    private Discussion discussion;
-
-    @OneToMany(mappedBy = "forumPost", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
 }

@@ -1,57 +1,48 @@
 package tn.esprit.clubsync.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import java.util.Date;
-import java.util.Set;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "projetTache")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "table-tache")
 public class Tache {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private Long id;
+    private Long id_tache;
 
-    @Column(name="titre")
     private String titre;
-
-    @Column(name="description")
     private String description;
-
-    @Column(name="date_created")
-    @CreationTimestamp
-    private Date dateCreated;
-
-    @Column(name="last_updated")
-    @UpdateTimestamp
-    private Date lastUpdated;
-
-    @Column(name="status")
-    private String status;
-
-    @Column(name="priorite")
+    private LocalDateTime dateDebut;
+    private LocalDateTime dateFin;
+    private String statut;
     private String priorite;
 
     @ManyToOne
-    @JoinColumn(name = "projet_id")
-    private Projet projet;
+    @JoinColumn(name = "assignee_id")
+    private Users assignee;
 
-    @OneToMany(mappedBy = "tache", cascade = CascadeType.ALL)
-    private Set<Report> reports;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Projet project;
 
-
-/**
     public Long getId_tache() {
-        return id;
+        return id_tache;
     }
 
     public void setId_tache(Long id_tache) {
-        this.id = id_tache;
+        this.id_tache = id_tache;
     }
 
     public String getTitre() {
@@ -139,6 +130,4 @@ public class Tache {
 
     @OneToMany(mappedBy = "tache", cascade = CascadeType.ALL)
     private List<Report> reports = new ArrayList<>();
-*/
 }
-
