@@ -193,6 +193,13 @@
                     </svg>
                     <span>Delete</span>
                   </button>
+                  <button class="btn-action btn-messages" (click)="openMessagesModal(tempProjet)">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                      <path d="M12 19c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" fill="#fff"/>
+                    </svg>
+                    <span>Updates</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -352,44 +359,45 @@
             placeholder="Enter project description"
           ></textarea>
         </div>
-        <!-- Image Upload Section -->
-        <div class="form-group">
-          <label for="projectImage">Project Image</label>
-          <div class="image-upload-container">
-            <!-- Preview of selected image -->
-            <div
-              class="image-preview"
-              *ngIf="imagePreview || tempProjet?.imageUrl"
-            >
-              <img
-                [src]="imagePreview || tempProjet?.imageUrl"
-                alt="Project Preview"
-              />
+        <div class="compact-image-upload">
+          <!-- Preview when image exists -->
+          <div
+            class="image-preview-wrapper"
+            *ngIf="imagePreview || tempProjet?.imageUrl"
+          >
+            <img [src]="imagePreview || tempProjet?.imageUrl" alt="Preview" />
+            <div class="preview-actions">
+              <button
+                type="button"
+                class="btn-change"
+                (click)="fileInput.click()"
+              >
+                <i class="fas fa-exchange-alt"></i>
+              </button>
               <button type="button" class="btn-remove" (click)="removeImage()">
-                <i class="fas fa-times"></i>
+                <i class="fas fa-trash"></i>
               </button>
             </div>
-
-            <!-- Upload area (shown when no image is selected) -->
-            <div
-              class="upload-area"
-              *ngIf="!imagePreview && !tempProjet?.imageUrl"
-            >
-              <input
-                type="file"
-                id="projectImage"
-                accept="image/*"
-                (change)="onImagePicked($event)"
-                #fileInput
-              />
-              <label for="projectImage" class="upload-label">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <span>Click to upload an image</span>
-                <small>or drag and drop</small>
-              </label>
-            </div>
           </div>
-        </div>
+
+          <!-- Upload area when no image -->
+          <div
+            class="upload-area"
+            *ngIf="!imagePreview && !tempProjet?.imageUrl"
+          >
+            <input
+              type="file"
+              id="projectImage"
+              accept="image/*"
+              (change)="onImagePicked($event)"
+              #fileInput
+            />
+            <label for="projectImage">
+              <i class="fas fa-camera"></i>
+              <span>Add Image</span>
+            </label>
+          </div>
+        </div>       
         <!-- <div class="form-group">
           <label>Image URL</label>
           <input type="text" formControlName="imageUrl" placeholder="Enter image URL">
@@ -433,6 +441,48 @@
           <button type="submit" class="btn-submit">Save Changes</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+<div class="messages-modal" *ngIf="showMessagesModal">
+  <div class="messages-content">
+    <span class="close" (click)="closeMessagesModal()">&times;</span>
+    <h3>Project Message Notes</h3>
+    <div class="messages-list">
+      <div *ngFor="let message of projectMessages" class="message-item">
+        <div class="message-header">
+          <span class="message-date">{{message.dateCreated | date:'short'}}</span>
+          <div class="message-actions">
+            <button class="btn-edit" (click)="startEditingMessage(message)">
+              <svg viewBox="0 0 24 24" width="14" height="14">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+              </svg>
+            </button>
+            <button class="btn-delete" (click)="deleteMessage(message.id)">
+              <svg viewBox="0 0 24 24" width="14" height="14">
+                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="!message.isEditing; else editMode">
+          <p>{{message.contenu}}</p>
+        </div>
+        
+        <ng-template #editMode>
+          <textarea [(ngModel)]="message.editedText"></textarea>
+          <div class="edit-actions">
+            <button (click)="saveEditedMessage(message)">Save</button>
+            <button (click)="cancelEditing(message)">Cancel</button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    
+    <div class="message-input">
+      <textarea [(ngModel)]="newMessage" placeholder="Add progress update..."></textarea>
+      <button (click)="addMessage()">Send</button>
     </div>
   </div>
 </div>

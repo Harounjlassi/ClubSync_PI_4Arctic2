@@ -34,6 +34,9 @@ public class MessageServiceImpl implements  iMessageService{
         existingMessage.setId(Message.getId());
         existingMessage.setContenu(Message.getContenu());
         existingMessage.setProjetId(Message.getProjetId());
+        existingMessage.setDateCreated(Message.getDateCreated());
+        existingMessage.setLastUpdated(Message.getLastUpdated());
+
 
         // ... update other fields as needed
 

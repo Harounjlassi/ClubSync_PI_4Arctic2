@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -23,11 +25,22 @@ public class Message {
     @Column(name="contenu", columnDefinition = "TEXT")
     private String contenu;
 
+    @Column(name = "date_created")
+    @Temporal (TemporalType.DATE)
+
+    private Date dateCreated;
+
+    @Column(name = "last_updated")
+    @Temporal (TemporalType.DATE)
+
+    private Date lastUpdated;
+
     @ManyToOne
     @JoinColumn(name = "projet_id")
     @JsonIgnore
 
     private Projet projet;
+
 
     @JsonProperty("ProjetId")
     public Long getProjetId() {
@@ -64,6 +77,21 @@ public class Message {
 
     public void setProjet(Projet projet) {
         this.projet = projet;
+    }
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
 

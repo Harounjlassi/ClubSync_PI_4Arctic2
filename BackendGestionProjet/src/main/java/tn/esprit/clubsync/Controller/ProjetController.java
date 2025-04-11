@@ -56,6 +56,11 @@ public class ProjetController {
     @PutMapping("/update/{id}")
     public ResponseEntity<Projet> updateProjet(@PathVariable Long id, @RequestBody Projet projet) {
         try {
+            if (projet.getImageUrl() != null && !projet.getImageUrl().isEmpty()) {
+            if (!isValidBase64Image(projet.getImageUrl())) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
             Projet updatedProjet = projetService.updateProjet(projet, id);
             return new ResponseEntity<>(updatedProjet, HttpStatus.OK);
         } catch (RuntimeException e) {

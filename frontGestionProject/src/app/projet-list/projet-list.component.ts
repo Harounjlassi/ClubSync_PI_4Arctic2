@@ -2,8 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Message } from "app/common/message";
 import { Projet } from "app/common/projet";
 import { User } from "app/common/user";
+import { MessageService } from "app/services/message.service";
 import { ProjetService } from "app/services/projet.service";
 import { UserService } from "app/services/user.service";
 
@@ -13,7 +15,6 @@ import { UserService } from "app/services/user.service";
   styleUrls: ["./projet-list.component.scss"],
 })
 export class ProjetListComponent implements OnInit {
-
   projectsWithColors: any[] = [];
 
   projets: Projet[] = [];
@@ -23,18 +24,28 @@ export class ProjetListComponent implements OnInit {
   addProjectForm: FormGroup;
   editProjectForm: FormGroup;
   selectedProject: Projet;
-  user :User;
+  user: User;
   imagePreview: string;
   selectedFile: File = null;
+  showMessagesModal = false;
+  newMessage = "";
+  selectedProjectForMessages: Projet;
+  // projectMessages: {text: string, date: Date}[] = [
+  //   {text: 'Message 1', date: new Date()},
+  //   {text: 'Message 2', date: new Date()},
+  //   {text: 'Message 3', date: new Date()}
+  // ];
+  projectMessages: Message[] = [];
 
-  constructor(private sanitizer: DomSanitizer,
+  constructor(
+    private sanitizer: DomSanitizer,
     private projetService: ProjetService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private userService: UserService,
+    private messageService: MessageService,
 
     private router: Router
-
   ) {
     this.createAddProjectForm();
     this.createEditProjectForm();
@@ -42,20 +53,32 @@ export class ProjetListComponent implements OnInit {
 
   ngOnInit() {
     this.listProjets();
+    this.listMessages();
+  }
+  listMessages() {
+    this.messageService.getMessages().subscribe(
+      (data) => {
+        console.log("Received projects:", data);
+        this.projectMessages = data || [];
 
-    
+        console.log(" projectMessages:", this.projectMessages);
+      },
+      (error) => {
+        console.error("Error fetching projects:", error);
+      }
+    );
   }
   listProjets() {
     this.projetService.getProjets().subscribe(
       (data) => {
         console.log("Received projects:", data);
         this.projets = data || [];
-        
+
         // Assign colors AFTER data is loaded
-        this.projectsWithColors = this.projets.map(project => ({
+        this.projectsWithColors = this.projets.map((project) => ({
           ...project,
           cardColor: this.getRandomColor(),
-          progressColor: this.generateProgressColor(project) // Modified to be deterministic
+          progressColor: this.generateProgressColor(project), // Modified to be deterministic
         }));
         console.log("Projects with colors:", this.projectsWithColors);
       },
@@ -65,7 +88,74 @@ export class ProjetListComponent implements OnInit {
     );
   }
 
-  // In your component.ts file
+// Generate unique IDs (simple implementation)
+private generateMessageId(): number {
+  return this.projectMessages.length > 0 
+    ? Math.max(...this.projectMessages.map(m => m.id)) + 1 
+    : 1;
+}
+
+deleteMessage(messageId: number) {
+  if (confirm('Are you sure you want to delete this message?')) {
+    this.projectMessages = this.projectMessages.filter(m => m.id !== messageId);
+    
+    // In a real app, call your API:
+    // this.projetService.deleteMessage(messageId).subscribe(...);
+  }
+}
+
+startEditingMessage(message: Message) {
+  message.isEditing = true;
+  message.editedText = message.contenu;
+}
+
+cancelEditing(message: Message) {
+  message.isEditing = false;
+  message.editedText = '';
+}
+
+saveEditedMessage(message: Message) {
+  if (message.editedText?.trim()) {
+    message.contenu = message.editedText;
+    message.lastUpdated = new Date(); // Update timestamp
+    message.isEditing = false;
+    
+    // In a real app, call your API:
+    // this.projetService.updateMessage(message).subscribe(...);
+  }
+}
+
+// Update your existing addMessage method to include ID
+addMessage() {
+  // if (this.newMessage.trim()) {
+  //   const newMsg: Message = {
+  //     id: this.newMessage
+  //     contenu: this.newMessage,
+  //     dateCreated: new Date()
+  //   };
+  //   this.projectMessages.push(newMsg);
+  //   this.newMessage = '';
+    
+    // In a real app:
+    // this.projetService.addMessage(this.selectedProjectForMessages.id, newMsg).subscribe(...);
+  //}
+}
+  openMessagesModal(project: Projet) {
+    this.selectedProjectForMessages = project;
+    // Load existing messages (in a real app, you'd fetch from API)
+    // this.projectMessages = [
+    //   { content: "Project initialized", date: new Date(project.dateCreated) },
+    //   { content: `Progress reached ${project.progress}%`, date: new Date() },
+    // ];
+    this.showMessagesModal = true;
+  }
+
+  closeMessagesModal() {
+    this.showMessagesModal = false;
+    this.newMessage = "";
+  }
+
+ 
   projectColors = [
     {
       name: "Emerald",
@@ -93,10 +183,10 @@ export class ProjetListComponent implements OnInit {
     },
   ];
   projectStatuses = [
-    { 
-      name: 'Not_Started',
+    {
+      name: "Not_Started",
       icon: {
-        path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z',
+        path: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z",
         animation: `
           <animateTransform 
             attributeName="transform" 
@@ -105,14 +195,14 @@ export class ProjetListComponent implements OnInit {
             dur="2s" 
             repeatCount="indefinite"
           />
-        `
+        `,
       },
-      color: '#94a3b8' // Cool gray
+      color: "#94a3b8", // Cool gray
     },
     {
-      name: 'IN_PROGRESS',
+      name: "IN_PROGRESS",
       icon: {
-        path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z M12 6v6l4 2',
+        path: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z M12 6v6l4 2",
         animation: `
           <animateTransform
             attributeName="transform"
@@ -129,14 +219,15 @@ export class ProjetListComponent implements OnInit {
             repeatCount="indefinite"
           />
         `,
-        extraAttributes: 'stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="5,3"'
+        extraAttributes:
+          'stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="5,3"',
       },
-      color: '#60a5fa' // Light blue
+      color: "#60a5fa", // Light blue
     },
     {
-      name: 'Stopped',
+      name: "Stopped",
       icon: {
-        path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z M9 9h6v6H9z',
+        path: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z M9 9h6v6H9z",
         animation: `
           <animate
             attributeName="opacity"
@@ -151,13 +242,13 @@ export class ProjetListComponent implements OnInit {
             repeatCount="indefinite"
           />
         `,
-        color: '#ef4444' // Red
-      }
+        color: "#ef4444", // Red
+      },
     },
     {
-      name: 'Finished',
+      name: "Finished",
       icon: {
-        path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
+        path: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z",
         animation: `
           <animateTransform
             attributeName="transform"
@@ -173,24 +264,31 @@ export class ProjetListComponent implements OnInit {
             repeatCount="indefinite"
           />
         `,
-        color: '#10b981' // Green
-      }
-    }
+        color: "#10b981", // Green
+      },
+    },
   ];
-  
+
   getStatusIcon(status: string) {
-    return this.projectStatuses.find(s => s.name === status)?.icon || this.projectStatuses[0].icon;
+    return (
+      this.projectStatuses.find((s) => s.name === status)?.icon ||
+      this.projectStatuses[0].icon
+    );
   }
-  
+
   getStatusColor(status: string) {
-    return this.projectStatuses.find(s => s.name === status)?.color || '#6b7280';
+    return (
+      this.projectStatuses.find((s) => s.name === status)?.color || "#6b7280"
+    );
   }
-  
+
   getSanitizedSvg(status: string) {
     const icon = this.getStatusIcon(status);
     const svg = `
-      <svg viewBox="0 0 24 24" fill="${icon.color || this.getStatusColor(status)}" 
-           ${icon.extraAttributes || ''}>
+      <svg viewBox="0 0 24 24" fill="${
+        icon.color || this.getStatusColor(status)
+      }" 
+           ${icon.extraAttributes || ""}>
         <path d="${icon.path}"/>
         ${icon.animation}
       </svg>
@@ -203,89 +301,77 @@ export class ProjetListComponent implements OnInit {
     ].gradient;
   }
   generateProgressColor(project: any) {
-    if (!project.cardColor) return '';
+    if (!project.cardColor) return "";
     return project.cardColor.replace("135deg", "90deg");
   }
 
   showProjectReports(project: any) {
     // Your report display logic here
-    console.log('Showing reports for:', project.nom);
-   
-  }
-  
-  openDeleteProjectModal( project: Projet) {
-    this.projetService.deletePropjet(project.id).subscribe(
-      (response) => {
-        
-        this.listProjets(); // Refresh the list
-      },);
-
-
+    console.log("Showing reports for:", project.nom);
   }
 
+  openDeleteProjectModal(project: Projet) {
+    this.projetService.deletePropjet(project.id).subscribe((response) => {
+      this.listProjets(); // Refresh the list
+    });
+  }
 
-
-
-
-
- 
   createAddProjectForm() {
     this.addProjectForm = this.fb.group({
       id: [null],
-      nom: ['', Validators.required],
-      description: [''],
-      imageUrl: [''],
-      status: ['Not_Started'],
+      nom: ["", Validators.required],
+      description: [""],
+      imageUrl: [""],
+      status: ["Not_Started"],
       progress: [0],
-      createur: [''],
+      createur: [""],
       dateCreated: [new Date()],
       lastUpdated: [new Date()],
-      image: [null]
-
+      image: [null],
     });
   }
 
   createEditProjectForm() {
     this.editProjectForm = this.fb.group({
       id: [null],
-      nom: ['', Validators.required],
-      description: [''],
-      imageUrl: [''],
-      status: ['Not_Started'],
+      nom: ["", Validators.required],
+      description: [""],
+      imageUrl: [""],
+      status: ["Not_Started"],
       progress: [0],
-      createur: [''],
+      createur: [""],
       dateCreated: [new Date()],
       lastUpdated: [new Date()],
-      image: [null]
-
+      image: [null],
     });
   }
   onImagePicked(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
-  
+
     const file = input.files[0];
     this.selectedFile = file;
-  
+
     // Validate file type and size
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const validTypes = ["image/jpeg", "image/png", "image/gif"];
     if (!validTypes.includes(file.type)) {
-      alert('Only JPEG, PNG, and GIF images are allowed');
+      alert("Only JPEG, PNG, and GIF images are allowed");
       return;
     }
-  
-    if (file.size > 2 * 1024 * 1024) { // 2MB limit
-      alert('Image size should be less than 2MB');
+
+    if (file.size > 2 * 1024 * 1024) {
+      // 2MB limit
+      alert("Image size should be less than 2MB");
       return;
     }
-  
+
     // Convert to Base64 string
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result as string;
       // Store the Base64 string in the form
-      this.addProjectForm.patchValue({ 
-        imageUrl: reader.result as string 
+      this.addProjectForm.patchValue({
+        imageUrl: reader.result as string,
       });
     };
     reader.readAsDataURL(file);
@@ -293,7 +379,7 @@ export class ProjetListComponent implements OnInit {
   removeImage() {
     this.imagePreview = null;
     this.selectedFile = null;
-    this.addProjectForm.patchValue({ imageUrl: '' });
+    this.addProjectForm.patchValue({ imageUrl: "" });
   }
 
   openAddProjectModal() {
@@ -304,34 +390,63 @@ export class ProjetListComponent implements OnInit {
     this.showAddProjectModal = false;
     this.addProjectForm.reset();
   }
+  onEditImagePicked(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+
+    // Validate file type and size
+    const validTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!validTypes.includes(file.type)) {
+      alert("Only JPEG, PNG, and GIF images are allowed");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      // 2MB limit
+      alert("Image size should be less than 2MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    this.imagePreview = reader.result as string;
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+      this.editProjectForm.patchValue({
+        imageUrl: reader.result as string,
+      });
+    };
+    reader.readAsDataURL(file);
+  }
 
   openEditProjectModal(project: Projet) {
     this.selectedProject = project;
-  this.userService.getUserById(project.createurId  ).subscribe(
-    (data) => {
-      console.log("Received user:", data);
-      this.user = data;
-      console.log("Received user:", this.user[0].username);
-      
-      this.editProjectForm.patchValue({
-        id: project.id || null,
-        nom: project.nom || '',
-        description: project.description || '',
-        imageUrl: project.imageUrl || '',
-        status: project.status || 'Not_Started',
-        progress: project.progress || 0,
-        createur: this.user[0].username|| '',
-        dateCreated: project.dateCreated || new Date(),
-        lastUpdated:  new Date()
-      });
-    },
-    (error) => {
-      console.error('Error getting user:', error);
-    }
-  );
-    console.log(  project );
 
-    
+    this.userService.getUserById(project.createurId).subscribe(
+      (data) => {
+        console.log("Received user:", data);
+        this.user = data;
+        console.log("Received user:", this.user[0].username);
+
+        this.editProjectForm.patchValue({
+          id: project.id || null,
+          nom: project.nom || "",
+          description: project.description || "",
+          imageUrl: project.imageUrl || "",
+          status: project.status || "Not_Started",
+          progress: project.progress || 0,
+          createur: this.user[0].username || "",
+          dateCreated: project.dateCreated || new Date(),
+          lastUpdated: new Date(),
+        });
+      },
+      (error) => {
+        console.error("Error getting user:", error);
+      }
+    );
+    console.log(project);
+
     this.showEditProjectModal = true;
   }
 
@@ -342,13 +457,13 @@ export class ProjetListComponent implements OnInit {
 
   onAddProjectSubmit() {
     console.log(this.addProjectForm.value);
-    
+
     if (this.addProjectForm.valid) {
       const newProject: Projet = {
         ...this.addProjectForm.value,
         id: null,
         imageUrl: this.imagePreview, // Or null if no image
-        dateCreated: new Date().toISOString() // Will be assigned by the backend
+        dateCreated: new Date().toISOString(), // Will be assigned by the backend
       };
       console.log("imma");
       console.log(newProject);
@@ -358,98 +473,33 @@ export class ProjetListComponent implements OnInit {
           this.closeAddProjectModal();
         },
         (error) => {
-          console.error('Error adding project:', error);
+          console.error("Error adding project:", error);
         }
       );
     }
   }
 
-
   onEditProjectSubmit() {
-
-    console.log("update project");
     console.log(this.editProjectForm.value);
-    console.log(this.selectedProject);
-    if (this.editProjectForm.valid && this.selectedProject) {
-        const newProject: Projet = {
-          ...this.editProjectForm.value,
-        };
-        
-        this.projetService.updateProjet(newProject).subscribe(
-          (response) => {
-            this.listProjets(); // Refresh the list
-            this.closeAddProjectModal();
-          },
-          (error) => {
-            console.error('Error update project:', error);
-          }
-        );
-      }
+
+    if (this.editProjectForm.valid) {
+      const newProject: Projet = {
+        ...this.editProjectForm.value,
+
+        imageUrl: this.imagePreview, // Or null if no image
+        lastUpdated: new Date().toISOString(), // Will be assigned by the backend
+      };
+      console.log("imma");
+      console.log(newProject);
+      this.projetService.updateProjet(newProject).subscribe(
+        (response) => {
+          this.listProjets(); // Refresh the list
+          this.closeAddProjectModal();
+        },
+        (error) => {
+          console.error("Error update project:", error);
+        }
+      );
+    }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
