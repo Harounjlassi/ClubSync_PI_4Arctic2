@@ -66,7 +66,7 @@
 ### **Prerequisites**  
 - Node.js (for Angular)  
 - Java 17+  
-- PostgreSQL  
+- mysql  
 
 ### **Backend Setup**  
 ```sh
