@@ -68,11 +68,11 @@
                       </ul>
                     </nav>
                   </div>
-                  <div class="header-right-btn f-right d-none d-lg-block ml-30">
+                  <!-- <div class="header-right-btn f-right d-none d-lg-block ml-30">
                     <a href="from.html" class="btn header-btn"
                       >became a member</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <!-- Mobile Menu -->
@@ -103,56 +103,96 @@
         </div>
       </div>
 
-      <section class="about-area section-padding20">
+      <section class="about-area section-padding30">
         <div class="container">
           <div class="row">
+            <!-- Not Started Card -->
             <div class="col-md-3 col-sm-6">
               <div class="stat-card">
-                <div class="stat-icon bg-primary">
-                  <i class="fas fa-project-diagram"></i>
+                <div class="stat-icon bg-info">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path d="M384 32c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96C0 60.7 28.7 32 64 32H384zM160 144c-13.3 0-24 10.7-24 24s10.7 24 24 24H288c13.3 0 24-10.7 24-24s-10.7-24-24-24H160zM128 248c0 13.3 10.7 24 24 24H288c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24zM160 344c-13.3 0-24 10.7-24 24s10.7 24 24 24H288c13.3 0 24-10.7 24-24s-10.7-24-24-24H160z"/>
+                  </svg>
                 </div>
                 <div class="stat-content">
-                  <h3>24</h3>
-                  <p>Active Projects</p>
+                  <h3 class="stat-title">Not Started Projects</h3>
+                  <p class="stat-value">{{this.notStartedP}}</p>
+                  <div class="stat-trend neutral">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                      <path d="M201.4 137.4c12.5-12.5 32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 205.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160z"/>
+                    </svg>
+                    <span>2 new this week</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-              <div class="stat-card">
-                <div class="stat-icon bg-success">
-                  <i class="fas fa-tasks"></i>
-                </div>
-                <div class="stat-content">
-                  <h3>187</h3>
-                  <p>Completed Tasks</p>
-                </div>
-              </div>
-            </div>
+      
+            <!-- Pending Card -->
             <div class="col-md-3 col-sm-6">
               <div class="stat-card">
                 <div class="stat-icon bg-warning">
-                  <i class="fas fa-users"></i>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+                  </svg>
                 </div>
                 <div class="stat-content">
-                  <h3>15</h3>
-                  <p>Team Members</p>
+                  <h3 class="stat-title">PLanning Projects</h3>
+                  <p class="stat-value">{{this.plannignP}}</p>
+                  <div class="stat-trend negative">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                      <path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/>
+                    </svg>
+                    <span>3 delayed</span>
+                  </div>
                 </div>
               </div>
             </div>
+      
+            <!-- Active Projects Card -->
             <div class="col-md-3 col-sm-6">
               <div class="stat-card">
-                <div class="stat-icon bg-danger">
-                  <i class="fas fa-exclamation-triangle"></i>
+                <div class="stat-icon bg-warning">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/>
+                  </svg>
                 </div>
                 <div class="stat-content">
-                  <h3>5</h3>
-                  <p>Overdue Projects</p>
+                  <h3 class="stat-title">In Progress Projects</h3>
+                  <p class="stat-value">{{this.inProgressP}}</p>
+                  <div class="stat-trend positive">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                      <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/>
+                    </svg>
+                    <span>12% from last month</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Finished Card -->
+            <div class="col-md-3 col-sm-6">
+              <div class="stat-card">
+                <div class="stat-icon bg-success">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
+                  </svg>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-title">Completed Projects</h3>
+                  <p class="stat-value">{{completedP}}</p>
+                  <div class="stat-trend positive">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                      <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/>
+                    </svg>
+                    <span>5 completed this week</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+      
       <section class="section-padding20">
         <div class="container">
           <div class="row">
@@ -288,7 +328,10 @@
                 <!-- Project Footer -->
 
                 <div class="project-footer">
-                  <button class="btn-details" (click)="openModal()">
+                  <button
+                    class="btn-details"
+                    (click)="openModal(tempProjet.id)"
+                  >
                     <i class="far fa-folder-open"></i>Show Messages
                   </button>
                   <button
@@ -300,6 +343,7 @@
                 </div>
               </div>
             </div>
+            <!-- Message Modal -->
 
             <div
               class="modal-overlay"
@@ -308,49 +352,66 @@
             >
               <div class="modal-container" (click)="$event.stopPropagation()">
                 <div class="modal-header">
-                  <h3>Website Redesign Project Details</h3>
+                  <h3><i class="fas fa-comments"></i> Project Messages</h3>
                   <button class="modal-close" (click)="closeModal()">
-                    &times;
+                    <i class="fas fa-times"></i>
                   </button>
                 </div>
 
                 <div class="modal-content">
-                  <div class="modal-section">
-                    <h4>Description</h4>
-                    <p>
-                      Complete redesign of company website with modern UI/UX
-                      improvements. This project involves creating a responsive
-                      layout, migrating content, and implementing new features.
-                    </p>
+                  <!-- Message List -->
+                  <div class="messages-container">
+                    <div *ngFor="let message of messages" class="message-card">
+                      <div class="message-header">
+                        <div class="message-meta">
+                          <span class="message-id"
+                            >Message #{{ message.id }}</span
+                          >
+                          <span class="message-date">
+                            <i class="far fa-clock"></i>
+                            {{ message.dateCreated | date : "mediumDate" }}
+                            <span
+                              *ngIf="
+                                message.dateCreated !== message.lastUpdated
+                              "
+                            >
+                              (updated
+                              {{ message.lastUpdated | date : "mediumDate" }})
+                            </span>
+                          </span>
+                        </div>
+                        <div class="message-actions">
+                          <button
+                            class="btn-icon"
+                            (click)="copyMessage(message.id)"
+                          >
+                            <i class="fas fa-copy"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="message-content">
+                        <p>{{ message.contenu }}</p>
+                      </div>
+
+                      <div class="message-footer">
+                        <span class="project-badge">
+                          <i class="fas fa-project-diagram"></i> Project #{{
+                            message.ProjetId
+                          }}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="modal-section">
-                    <h4>Project Team</h4>
-                    <ul class="team-list">
-                      <li><strong>Project Lead:</strong> Sarah J.</li>
-                      <li><strong>UI Designer:</strong> Michael T.</li>
-                      <li><strong>Frontend Dev:</strong> Alex K.</li>
-                      <li><strong>Backend Dev:</strong> Jamie L.</li>
-                    </ul>
-                  </div>
-
-                  <div class="modal-section">
-                    <h4>Timeline</h4>
-                    <ul class="timeline">
-                      <li><strong>Start Date:</strong> March 1, 2023</li>
-                      <li><strong>Due Date:</strong> May 15, 2023</li>
-                      <li><strong>Current Phase:</strong> Development</li>
-                    </ul>
-                  </div>
-
-                  <div class="modal-section">
-                    <h4>Key Requirements</h4>
-                    <ul class="requirements">
-                      <li>Mobile-first responsive design</li>
-                      <li>WCAG 2.1 AA accessibility compliance</li>
-                      <li>CMS integration</li>
-                      <li>SEO optimization</li>
-                    </ul>
+                  <!-- No Messages Placeholder -->
+                  <div
+                    *ngIf="!messages || messages.length === 0"
+                    class="no-messages"
+                  >
+                    <i class="far fa-comment-dots"></i>
+                    <h4>No Messages Yet</h4>
+                    <p>There are no messages for this project</p>
                   </div>
                 </div>
 
@@ -358,12 +419,14 @@
                   <button class="btn-secondary" (click)="closeModal()">
                     <i class="far fa-times-circle"></i> Close
                   </button>
-                  <button class="btn-primary">
-                    <i class="far fa-paper-plane"></i> Contact Team
-                  </button>
+                  <!-- <button class="btn-primary" >
+                    <i class="far fa-plus-square"></i> New Message
+                  </button> -->
                 </div>
               </div>
             </div>
+
+            <!-- Reports Modal -->
             <div
               class="modal-overlay"
               [class.active]="showModalReport"
@@ -371,82 +434,113 @@
             >
               <div class="modal-container" (click)="$event.stopPropagation()">
                 <div class="modal-header">
-                  <h3>Project Reports Details</h3>
-                  <button class="modal-close" (click)="closeModal()">
-                    &times;
+                  <h3><i class="fas fa-file-alt"></i> Project Reports</h3>
+                  <button
+                    class="modal-close"
+                    (click)="closeModal()"
+                    aria-label="Close modal"
+                  >
+                    <i class="fas fa-times"></i>
                   </button>
                 </div>
 
                 <div class="modal-content">
-                  <div class="modal-section">
-                    <h4>Description</h4>
-                    <p>
-                      Complete redesign of company website with modern UI/UX
-                      improvements. This project involves creating a responsive
-                      layout, migrating content, and implementing new features.
-                    </p>
-                  </div>
+                  <!-- Reports Section -->
+                  <div class="modal-section reports-section">
+                    <h4>
+                      <i class="fas fa-clipboard-check"></i> Project Reports
+                    </h4>
 
-                  <div class="modal-section">
-                    <h4>Project Team</h4>
-                  
-                    
-                    <!-- Debug Output (temporary) -->
-                    <div *ngIf="reports" style="background: #f5f5f5; padding: 10px; margin-bottom: 15px;">
-                      <h5>Debug Info:</h5>
-                      <pre>Reports data: {{ reports| json }}</pre>
-                      <pre>ReportsBy data: {{ reportsBy | json }}</pre>
+                    <!-- Debug Output -->
+                    <!-- <div *ngIf="reports" class="debug-info">
+                      <h5>Debug Data:</h5>
+                      <pre>{{ reports | json }}</pre>
+                      <pre *ngIf="reportsBy">{{ reportsBy | json }}</pre>
+                    </div> -->
+
+                    <!-- Reports List -->
+                    <div
+                      *ngIf="reportsBy && reportsBy.length > 0"
+                      class="reports-list"
+                    >
+                      <div *ngFor="let report of reportsBy" class="report-card">
+                        <div class="report-header">
+                          <div class="report-title">{{ report.title }}</div>
+                          <div
+                            class="report-status"
+                            [ngClass]="'status-' + report.status.toLowerCase()"
+                          >
+                            {{ report.status | titlecase }}
+                          </div>
+                        </div>
+                        <div class="report-meta">
+                          <span class="meta-item"
+                            ><i class="fas fa-tasks"></i>
+                            {{ report.TacheTitre }}</span
+                          >
+                          <span class="meta-item"
+                            ><i class="fas fa-user"></i>
+                            {{ report.ReporterFirstName }}</span
+                          >
+                          <span class="meta-item"
+                            ><i class="fas fa-clock"></i>
+                            {{ report.lastUpdated | date : "mediumDate" }}</span
+                          >
+                        </div>
+                        <div class="report-description">
+                          <p>{{ report.description }}</p>
+                        </div>
+                      </div>
                     </div>
-              <!-- Display all reports -->
-<div *ngIf="reportsBy && reportsBy.length > 0">
-    <h3>Project Reports</h3>
-    <ul>
-      <li *ngFor="let report of reportsBy" class="report-item">
-        <strong>{{ report.title }}</strong> - {{ report.TacheTitre }}
-        <div>Status: {{ report.status | titlecase }}</div>
-        <div>Reported by: {{ report.ReporterFirstName }}</div>
-        <div>Last updated: {{ report.lastUpdated | date:'medium' }}</div>
-        <p>{{ report.description }}</p>
-      </li>
-    </ul>
-  </div>
-  
-  <!-- Show message if no reports -->
-  <div *ngIf="!reportsBy || reportsBy.length === 0" class="no-reports">
-    No reports available for this project.
-  </div>
+
+                    <!-- No Reports Message -->
+                    <div
+                      *ngIf="!reportsBy || reportsBy.length === 0"
+                      class="no-reports"
+                    >
+                      <i class="far fa-file-alt"></i>
+                      <p>No reports available for this project</p>
+                    </div>
+                  </div>
+
+                  <!-- Team Section -->
+                  <!-- <div class="modal-section team-section">
+                    <h4><i class="fas fa-users"></i> Project Team</h4>
                     <ul class="team-list">
-                      <!-- Dynamic Reports -->
-                      <li *ngFor="let report of reports">
-                        <strong>Report:</strong> {{ report.title }} (Status: {{ report.status }})
+                      <li *ngFor="let report of reports" class="team-report">
+                        <span class="report-label">Report:</span> 
+                        <span class="report-title">{{ report.title }}</span>
+                        <span class="report-status" [ngClass]="'status-' + report.status.toLowerCase()">
+                          {{ report.status }}
+                        </span>
                       </li>
-                      
-                      <!-- Static Team Members -->
-                      <li><strong>Project Lead:</strong> Sarah J.</li>
-                      <li><strong>UI Designer:</strong> Michael T.</li>
-                      <li><strong>Frontend Dev:</strong> Alex K.</li>
-                      <li><strong>Backend Dev:</strong> Jamie L.</li>
+                      <li class="team-member"><i class="fas fa-crown"></i> <strong>Project Lead:</strong> Sarah J.</li>
+                      <li class="team-member"><i class="fas fa-paint-brush"></i> <strong>UI Designer:</strong> Michael T.</li>
+                      <li class="team-member"><i class="fas fa-code"></i> <strong>Frontend Dev:</strong> Alex K.</li>
+                      <li class="team-member"><i class="fas fa-server"></i> <strong>Backend Dev:</strong> Jamie L.</li>
                     </ul>
                   </div>
-
-                  <div class="modal-section">
-                    <h4>Timeline</h4>
-                    <ul class="timeline">
-                      <li><strong>Start Date:</strong> March 1, 2023</li>
-                      <li><strong>Due Date:</strong> May 15, 2023</li>
-                      <li><strong>Current Phase:</strong> Development</li>
+             -->
+                  <!-- Timeline Section -->
+                  <!-- <div class="modal-section timeline-section">
+                    <h4><i class="fas fa-calendar-alt"></i> Timeline</h4>
+                    <ul class="timeline-list">
+                      <li><i class="far fa-play-circle"></i> <strong>Start Date:</strong> March 1, 2023</li>
+                      <li><i class="far fa-calendar-check"></i> <strong>Due Date:</strong> May 15, 2023</li>
+                      <li><i class="fas fa-project-diagram"></i> <strong>Current Phase:</strong> Development</li>
                     </ul>
                   </div>
-
-                  <div class="modal-section">
-                    <h4>Key Requirements</h4>
-                    <ul class="requirements">
-                      <li>Mobile-first responsive design</li>
-                      <li>WCAG 2.1 AA accessibility compliance</li>
-                      <li>CMS integration</li>
-                      <li>SEO optimization</li>
+             -->
+                  <!-- Requirements Section -->
+                  <!-- <div class="modal-section requirements-section">
+                    <h4><i class="fas fa-clipboard-list"></i> Key Requirements</h4>
+                    <ul class="requirements-list">
+                      <li><i class="fas fa-mobile-alt"></i> Mobile-first responsive design</li>
+                      <li><i class="fas fa-universal-access"></i> WCAG 2.1 AA accessibility compliance</li>
+                      <li><i class="fas fa-cogs"></i> CMS integration</li>
+                      <li><i class="fas fa-search"></i> SEO optimization</li>
                     </ul>
-                  </div>
+                  </div> -->
                 </div>
 
                 <div class="modal-footer">

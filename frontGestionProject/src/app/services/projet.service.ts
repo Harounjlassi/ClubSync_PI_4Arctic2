@@ -19,6 +19,26 @@ export class ProjetService {
   constructor(private httpClient:HttpClient,private userService: UserService ) { }
   //private baseUrl = 'http://localhost:8080/api/products?size=100';
   private baseUrl = 'http://localhost:8080/api/projets';
+  private faceDetTaskUrl = 'http://localhost:5100/';
+  //private faceDetTaskUrl = 'http://localhost:5100/';
+  genAiTaskUrl = 'http://localhost:5200/generate-tasks';
+  genAiTasks(projet:Projet){
+    return this.httpClient.post(this.genAiTaskUrl , {
+      assignee_id: projet.createurId,
+      description: projet.description,
+      projet_id: projet.id,
+
+
+    });
+
+
+  }
+  startFaceDetTask(){
+    return this.httpClient.post(this.faceDetTaskUrl + 'start-detection', {});
+  }
+  stopFaceDetTask(){
+    return this.httpClient.post(this.faceDetTaskUrl + 'stop-detection',{});
+  }
   getProjets(): Observable<Projet[]> {
     
     const getUrl = `${this.baseUrl}/all`;

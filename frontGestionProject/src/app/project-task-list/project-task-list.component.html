@@ -9,12 +9,12 @@
           <div class="column-header">
             <div class="header-content">
               <div class="column-icon">📋</div>
-              <h3 class="column-title">To Do</h3>
+              <h3 class="column-titre">To Do</h3>
               <span class="task-count">{{getTasksByStatus('todo').length}} tasks</span>
             </div>
             <button class="btn-add-task" (click)="openTaskModal('todo')">
               <span class="btn-icon">+</span>
-              Add Task
+              
             </button>
           </div>
           <div class="tasks-container">
@@ -22,21 +22,26 @@
               <div class="empty-icon">📭</div>
               <p>No tasks here yet</p>
             </div>
-            <div class="kanban-task" *ngFor="let task of getTasksByStatus('todo')" 
-                 draggable="true" (dragstart)="onDragStart($event, task)"
-                 [class.task-dragging]="draggedTaskId === task.id">
-              <div class="task-priority" [class.high]="task.priority === 'high'"
-                   [class.medium]="task.priority === 'medium'" [class.low]="task.priority === 'low'"></div>
+            <div class="kanban-task" *ngFor="let task of getTasksByStatus('todo')" >
+                
+              <div class="task-priority" [class.high]="task.priorite === 'HIGH'"
+                   [class.medium]="task.priorite === 'MEDIUM'" [class.low]="task.priorite === 'low'"></div>
               <div class="task-content">
                 <div class="task-header">
-                  <h4 class="task-title">{{task.titre}}</h4>
-                  <div class="task-priority-icon">{{getPriorityIcon(task.priority)}}</div>
+                  <h4 class="task-titre">{{task.titre}}</h4>
+                  <div class="task-priority-icon">{{getPriorityIcon(task.priorite)}}</div>
                 </div>
                 <p class="task-description">{{task.description}}</p>
                 <div class="task-meta">
                   <span class="task-date">
                     <span class="meta-icon">📅</span>
                     {{task.dueDate | date:'mediumDate'}}
+                  </span>
+                </div>
+                <div class="task-meta">
+                  <span class="task-date">
+                    <span class="meta-icon">🏷️</span>
+                    {{task.label }}
                   </span>
                 </div>
               </div>
@@ -63,7 +68,7 @@
           <div class="column-header">
             <div class="header-content">
               <div class="column-icon">🔄</div>
-              <h3 class="column-title">In Progress</h3>
+              <h3 class="column-titre">In Progress</h3>
               <span class="task-count">{{getTasksByStatus('inProgress').length}} tasks</span>
             </div>
           </div>
@@ -75,20 +80,20 @@
             <div class="kanban-task" *ngFor="let task of getTasksByStatus('inProgress')" 
                  draggable="true" (dragstart)="onDragStart($event, task)"
                  [class.task-dragging]="draggedTaskId === task.id">
-              <div class="task-priority" [class.high]="task.priority === 'high'"
-                   [class.medium]="task.priority === 'medium'" [class.low]="task.priority === 'low'"></div>
+              <div class="task-priority" [class.high]="task.priorite === 'high'"
+                   [class.medium]="task.priority === 'medium'" [class.low]="task.priorite === 'low'"></div>
               <div class="task-content">
                 <div class="task-header">
-                  <h4 class="task-title">{{task.titre}}</h4>
-                  <div class="task-priority-icon">{{getPriorityIcon(task.priority)}}</div>
+                  <h4 class="task-titre">{{task.titre}}</h4>
+                  <div class="task-priority-icon">{{getPriorityIcon(task.priorite)}}</div>
                 </div>
                 <div class="progress-section">
                   <div class="progress-info">
                     <span>Progress</span>
-                    <span class="progress-percent">{{task.progress}}%</span>
+                    <span class="progress-percent ">{{task.progress}}% </span>
                   </div>
                   <div class="progress-bar">
-                    <div class="progress-fill" [style.width.%]="task.progress"></div>
+                    <div class="progress-fill" [style.width.%]=13></div>
                   </div>
                 </div>
               </div>
@@ -115,11 +120,11 @@
           <div class="column-header">
             <div class="header-content">
               <div class="column-icon">✅</div>
-              <h3 class="column-title">Done</h3>
+              <h3 class="column-titre">Done</h3>
               <span class="task-count">{{getTasksByStatus('done').length}} tasks</span>
             </div>
             <button class="btn-clear-done" *ngIf="getTasksByStatus('done').length > 0" 
-                    (click)="clearCompletedTasks()" title="Clear completed">
+                    (click)="clearCompletedTasks()" titre="Clear completed">
               <span class="btn-icon">🗑️</span>
             </button>
           </div>
@@ -135,7 +140,7 @@
                    [class.medium]="task.priority === 'medium'" [class.low]="task.priority === 'low'"></div>
               <div class="task-content">
                 <div class="task-header">
-                  <h4 class="task-title">{{task.titre}}</h4>
+                  <h4 class="task-titre">{{task.titre}}</h4>
                   <div class="task-priority-icon">{{getPriorityIcon(task.priority)}}</div>
                 </div>
                 <div class="completion-badge">
@@ -171,8 +176,8 @@
           <div class="modal-body">
             <form [formGroup]="taskForm" (ngSubmit)="handleTaskSubmit()">
               <div class="form-group">
-                <label for="taskTitle">Title</label>
-                <input type="text" id="taskTitle" [(ngModel)]="currentTask.titre" name="titre" required>
+                <label for="taskTitre">titre</label>
+                <input type="text" id="taskTitre" [(ngModel)]="currentTask.titre" name="titre" required>
               </div>
               
               <div class="form-group">

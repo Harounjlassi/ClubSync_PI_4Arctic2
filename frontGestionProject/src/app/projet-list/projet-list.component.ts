@@ -596,4 +596,58 @@ addMessage() {
       );
     }
   }
+
+/* Component Logic */
+currentPriority = 1; // 1-4 scale (low-critical)
+
+getPriorityText(level) {
+  const priorities = {
+    1: 'Low Priority',
+    2: 'Medium Priority',
+    3: 'High Priority',
+    4: 'Critical!'
+  };
+  return priorities[level] || 'Analyzing...';
+}
+
+testcam:number = 1;
+detectFaceAndGenerateTasks() {
+  if (this.testcam == 1) {
+
+  this.projetService.startFaceDetTask()
+   .subscribe(
+       (response) => {
+          console.log('Face detection task started:', response);
+          this.testcam = 2; 
+         
+        }
+      );
+    }else {
+      this.projetService.stopFaceDetTask()
+      .subscribe(
+        (response) => {
+          console.log('Face detection task stopped:', response);
+          this.testcam = 1; 
+        }
+      );
+    }
+
+  
+  this.currentPriority = Math.min(4, this.currentPriority + 1); // Demo cycling
+}
+
+generateAITasks( projet:Projet): void {
+
+  this.projetService.genAiTasks(projet)
+   .subscribe(
+       (response) => {
+          console.log('AI tasks gen:', response);
+         
+        }
+      );
+  
+
+
+}
+
 }

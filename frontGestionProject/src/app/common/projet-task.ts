@@ -3,11 +3,11 @@ export class ProjetTask {
   titre: string;
   description: string;
   status: 'todo' | 'inProgress' | 'done';
-  priority: 'high' | 'medium' | 'low';
+  priorite: 'high' | 'medium' | 'low';
   dueDate: string;
   progress?: number;
   assignee?: string;
-  label?: string;
+  label: string;
   completedDate?: string;
   ProjetId: number;
 
@@ -17,7 +17,7 @@ export class ProjetTask {
     titre: string,
     description: string,
     status: 'todo' | 'inProgress' | 'done',
-    priority: 'high' | 'medium' | 'low',
+    priorite: 'high' | 'medium' | 'low',
     dueDate: string,
     progress?: number,
     assignee?: string,
@@ -28,7 +28,7 @@ export class ProjetTask {
     this.titre = titre;
     this.description = description;
     this.status = status;
-    this.priority = priority;
+    this.priorite = priorite;
     this.dueDate = dueDate;
     this.progress = progress;
     this.assignee = assignee;

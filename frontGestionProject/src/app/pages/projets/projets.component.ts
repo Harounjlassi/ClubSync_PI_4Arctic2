@@ -9,6 +9,7 @@ import { UserService } from 'app/services/user.service';
 import { finalize } from 'rxjs';
 import { Report } from 'app/common/report';
 import { ReportService } from 'app/services/report.service';
+import { MessageService } from 'app/services/message.service';
 
 @Component({
   selector: 'app-projets',
@@ -27,12 +28,19 @@ tasks: {[projectId: number]: ProjetTask[]} = {};
 users: {[userId: number]: User} = {};
 reports: {[projectId: number]: Report[]} = {};
 reportsBy:Report[];
-messages: {[projectId: number]: Message[]} = {};
+messages:  Message[] ;
+
+notStartedP:number;
+plannignP:number;
+inProgressP:number;
+completedP:number;
+
  
   constructor(    private projetService: ProjetService,
     private userService: UserService,
     private taskService: TaskService,
     private reportService: ReportService,
+    private messageService: MessageService,
 
     private cdRef: ChangeDetectorRef
   ){
@@ -42,7 +50,9 @@ messages: {[projectId: number]: Message[]} = {};
   
   ngOnInit() {
     this.listProjets();
-    console.log("sssssss"+this.users);
+
+    this.completedP=this.projets.filter(p => p.status === 'Finished').length;
+    console.log("sssssss"+this.projets);
    
   }
   
@@ -52,6 +62,10 @@ messages: {[projectId: number]: Message[]} = {};
     this.projetService.getProjets().subscribe({
       next: (projects) => {
         this.projets = projects || [];
+        this.completedP=this.projets.filter(p => p.status === 'Finished').length;
+        this.notStartedP=this.projets.filter(p => p.status === 'Not_Started').length;
+        this.plannignP=this.projets.filter(p => p.status === 'PLANNING').length;
+        this.inProgressP=this.projets.filter(p => p.status === 'IN_PROGRESS').length;
         
         // Load users and tasks
         this.loadAllUsers();
@@ -247,16 +261,38 @@ getUserName(id: number): string {
     if (task.status == 'todo')  return 'TO_DO';
     return 'PENDING';
   }
-  openModal() {
+  openModal(projectId:number) {
     this.showModal = true;
 
-    document.body.style.overflow = 'hidden'; // Prevent scrolling
-  }
+    document.body.style.overflow = 'hidden';
+  
+    console.log("Opening modal for project:", projectId);
+    console.log("Current messgeas  cache:", this.messages);
+  
+    // Check if we already have reports for this project
+   
+   
+      console.log("Fetching messages from API...");
+      this.messageService.getMessageByIdProjet(projectId).subscribe({
+        next: (response) => {
+          // Normalize response to always be an array
+          this.messages= response ;
+          console.log("Fetched messages:", this.messages);
+          
+  
+        },
+        error: (err) => {
+          console.error("Error loading messages:", err);
+          this.messages = [];
+        }
+      });
+    }
  
 
   closeModal() {
     this.showModal = false;
     this.showModalReport = false;
+    this.messages = [];
     document.body.style.overflow = ''; // Re-enable scrolling
   }
 

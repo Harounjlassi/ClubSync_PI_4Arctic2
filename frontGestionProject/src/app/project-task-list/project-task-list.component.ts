@@ -23,7 +23,7 @@ export class ProjectTaskListComponent implements OnInit {
     titre: '',
     description: '',
     status: 'todo',
-    priority: 'medium',
+    priorite: 'medium',
     dueDate: new Date().toISOString().split('T')[0],
     progress: 0,
     assignee: '',
@@ -43,7 +43,7 @@ export class ProjectTaskListComponent implements OnInit {
       titre: ['', Validators.required],
       description: [''],
       status: ['Pending', Validators.required],
-      priority: ['medium', Validators.required],
+      priorite: ['medium', Validators.required],
       dueDate: [new Date().toISOString().split('T')[0], Validators.required],
       progress: [0],
       assignee: [''],
@@ -65,6 +65,7 @@ export class ProjectTaskListComponent implements OnInit {
       (data) => {
         console.log("Received tasks:", data);
         this.tasks = data || [];
+        console.log("Tasks after assignment:", this.tasks);
       },
       (error) => {
         console.error("Error fetching tasks:", error);
@@ -73,6 +74,7 @@ export class ProjectTaskListComponent implements OnInit {
   }
 
   getTasksByStatus(status: string): ProjetTask[] {
+    console.log('GetTasksByStatus:', this.tasks.filter(task => task.status === status));
     return this.tasks.filter(task => task.status === status);
   }
 
@@ -84,7 +86,7 @@ export class ProjectTaskListComponent implements OnInit {
       titre: '',
       description: '',
       status,
-      priority: 'medium',
+      priorite: 'medium',
       dueDate: new Date().toISOString().split('T')[0],
       progress: 0,
       assignee: '',
@@ -178,9 +180,9 @@ export class ProjectTaskListComponent implements OnInit {
 
   getPriorityIcon(priority: string): string {
     switch(priority) {
-      case 'high': return '🔥';
-      case 'medium': return '⚠️';
-      case 'low': return '🌱';
+      case 'HIGH': return '🔥';
+      case 'MEDIUM': return '⚠️';
+      case 'LOW': return '🌱';
       default: return '🔹';
     }
   }

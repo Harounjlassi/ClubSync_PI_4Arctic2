@@ -36,12 +36,12 @@ export class TaskService {
         const addUrl = `${this.baseUrl}/add`;
 
         const payload = {
-          title: task.titre,
+          titre: task.titre,
           description: task.description,
           status: task.status || 'todo',
-          priority: task.priority || 'medium',
+          priorite: task.priorite || 'medium',
           dueDate: task.dueDate,
-          progress: task.progress || 0,
+          progress: task.progress || 50,
           label: task.label,
           dateCreated: new Date().toISOString(),
           lastUpdated: new Date().toISOString(),

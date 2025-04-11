@@ -7,8 +7,60 @@
             <svg viewBox="0 0 24 24">
               <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
             </svg>
-
             Add New Project
+          </button>
+        </div>
+        <div class="face-priority-container">
+          <button class="btn-face-priority" (click)="detectFaceAndGenerateTasks()">
+            <!-- Holographic Face Detection Sphere -->
+            <div class="face-detection-sphere">
+              <div class="holographic-grid"></div>
+              <div class="face-outline">
+                <div class="face-contour"></div>
+              </div>
+              <div class="face-dots">
+                <div class="dot dot-1"></div>
+                <div class="dot dot-2"></div>
+                <div class="dot dot-3"></div>
+                <div class="dot dot-4"></div>
+                <div class="dot dot-5"></div>
+              </div>
+              <div class="face-scanline"></div>
+              <div class="sphere-glow"></div>
+            </div>
+            
+            <!-- Dynamic Priority Indicator -->
+            <div class="priority-indicator">
+              <div class="priority-level" [class]="'priority-' + currentPriority">
+                <div class="priority-glow"></div>
+                <div class="priority-pulse"></div>
+                <span class="priority-text">{{getPriorityText(currentPriority)}}</span>
+                <svg class="priority-icon" viewBox="0 0 24 24">
+                  <path d="M12 2L4 12l8 10 8-10z" fill="none" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Button Content with Animated Text -->
+            <div class="btn-content">
+              <span class="main-text">
+                <span class="text-gradient">Get Your Priority Tasks by Your Face Recognition</span>
+                <span class="text-underline"></span>
+              </span>
+              <span class="sub-text">
+                <span class="typing-animation">Analyzing facial expression</span>
+                <span class="typing-dots">...</span>
+              </span>
+            </div>
+            
+            <!-- Advanced Tech Effects -->
+            <div class="tech-glow"></div>
+            <div class="hover-particles">
+              <div class="particle particle-1"></div>
+              <div class="particle particle-2"></div>
+              <div class="particle particle-3"></div>
+            </div>
+            <div class="ripple-effect"></div>
           </button>
         </div>
         <div class="projects-horizontal-container">
@@ -68,6 +120,37 @@
                     <span>Last Updated : {{ tempProjet.lastUpdated }}</span>
                   </div>
                 </div>
+
+                <div class="ai-task-generator-container">
+                  <button 
+                    class="btn-ai-cosmic" 
+                    (click)="generateAITasks(tempProjet)"
+                    [style.--card-color]="tempProjet.cardColor"
+                  >
+                    <div class="cosmic-orb">
+                      <div class="quantum-core"></div>
+                      <div class="neon-rings">
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                      </div>
+                      <div class="particle-field">
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                      </div>
+                    </div>
+                    <div class="btn-cosmic-content">
+                      <span class="cosmic-text">Generate AI Tasks</span>
+                      <span class="cosmic-subtext">Powered by Neural Networks</span>
+                    </div>
+                    <div class="cosmic-shine"></div>
+                    <div class="hover-glow"></div>
+                  </button>
+                </div>
+          
                 <div class="project-image-wrapper">
                   <div class="project-image-container">
                     <img
