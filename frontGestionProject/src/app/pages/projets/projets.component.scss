@@ -172,13 +172,51 @@ body {
   z-index: 2;
 }
 
-.project-badge.in-progress {
-  background: var(--warning);
-  color: #333;
+/* Not Started - Gray */
+.project-badge.NOT_STARTED {
+  background: #6c757d; /* Bootstrap's gray */
+  color: var(--white);
 }
 
-.project-badge.completed {
-  background: var(--success);
+/* Planning - Blue */
+.project-badge.PLANNING {
+  background: #17a2b8; /* Bootstrap's info blue */
+  color: var(--white);
+}
+
+/* In Progress - Yellow */
+.project-badge.IN_PROGRESS {
+  background: var(--warning); /* Yellow */
+  color: #333; /* Dark text for better contrast */
+}
+
+/* Completed - Green */
+.project-badge.Finished {
+  background: var(--success); /* Green */
+  color: var(--white);
+}
+
+/* On Hold - Red */
+.project-badge.ON_HOLD {
+  background: var(--danger); /* Red */
+  color: var(--white);
+}
+
+/* Approved - Purple */
+.project-badge.APPROVED {
+  background: #6f42c1; /* Bootstrap's purple */
+  color: var(--white);
+}
+
+/* Rejected - Dark Red */
+.project-badge.REJECTED {
+  background: #dc3545; /* Darker red */
+  color: var(--white);
+}
+
+/* Blocked - Dark Gray */
+.project-badge.BLOCKED {
+  background: #343a40; /* Bootstrap's dark */
   color: var(--white);
 }
 
@@ -326,6 +364,15 @@ body {
 .btn-details:hover {
   background: rgba(1, 83, 96, 0.05);
 }
+.btn-reports {
+  background: var(--white);
+  color: var(--primary);
+  border: 1px solid rgba(184, 14, 57, 0.3);
+}
+
+.btn-reports:hover {
+  background: rgba(96, 1, 45, 0.05);
+}
 
 .project-tasks {
   padding: 15px 25px;
@@ -436,7 +483,44 @@ body {
     transform: translateX(100%);
   }
 }
+/* To-DO Task Style */
+.project-tasks .task-list .task.to-do i {
+  color: var(--primary);
+}
 
+.project-tasks .task-list .task.to-do small {
+  color: var(--primary);
+}
+
+/* Pulse Animation for TO_DO tasks */
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* No Tasks State */
+.no-tasks {
+  text-align: center;
+  padding: 20px;
+  color: rgba(var(--text-color), 0.5);
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.no-tasks i {
+  font-size: 24px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.no-tasks p {
+  margin: 0;
+  font-size: 14px;
+}
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
