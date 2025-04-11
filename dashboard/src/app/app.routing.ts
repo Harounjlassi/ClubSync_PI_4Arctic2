@@ -16,6 +16,8 @@ import { AuthenticationComponent } from './authentication/authentication.compone
 import { RegisterComponent } from './register/register.component';
 import { TestCompsComponent } from './test-comps/test-comps.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
+import { HasRoleGuard } from './guards/has-role.guard';
 
 const routes: Routes =[
   {
@@ -50,8 +52,16 @@ const routes: Routes =[
   { path: 'clubs', component: ClubsComponent },
   { path: 'login', component: AuthenticationComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'test-comps', component: TestCompsComponent },
-  { path: 'unauthorized', component: UnauthorizedComponent },
+  { path: 'test-comps',
+   component: TestCompsComponent,
+   canActivate: [IsAuthenticatedGuard, HasRoleGuard],
+   data: {
+     role: 'Admin',
+   },
+   },
+  { path: 'unauthorized', component: UnauthorizedComponent,
+    canActivate: [IsAuthenticatedGuard],
+   },
 ];
 
 @NgModule({

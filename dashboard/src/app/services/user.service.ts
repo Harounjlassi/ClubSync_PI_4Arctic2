@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { User } from '../models/user.model';
 import { UserRequest } from '../models/user-request.model';
 import { UserResponse } from '../models/user-response.model';
@@ -13,10 +13,26 @@ import { StorageService } from './storage.service';
 })
 export class UserService {
   private apiUrl = 'http://localhost:8080/clubsync/user';
-  private authUrl = 'http://localhost:8080/clubsync/auth'; ;
+  private authUrl = 'http://localhost:8080/clubsync/auth'; 
+  private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
+  private readonly TOKEN_NAME = 'user_auth';
+  isLoggedIn$ = this._isLoggedIn$.asObservable();
+  user: User | null;
 
-  constructor(private http: HttpClient, private storageService: StorageService) { }
+  get token(): any {
+    return localStorage.getItem(this.TOKEN_NAME);
+  }
 
+  constructor(private http: HttpClient, private storageService: StorageService) {
+    this._isLoggedIn$.next(!!this.token);
+    this.user = this.getUser(this.token);
+   }
+   private getUser(token: string): User | null {
+    if (!token) {
+      return null
+    }
+    return JSON.parse(atob(token.split('.')[1])) as User;
+  }
   // CRUD Operations
   getAllUsers(): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(`${this.apiUrl}/get/all`);
@@ -80,7 +96,11 @@ export class UserService {
   }
 
   login(loginRequest: { email: string, password: string }): Observable<any> {
-    return this.http.post<any>(`${this.authUrl}/login`, loginRequest);
+    return this.http.post<any>(`${this.authUrl}/login`, loginRequest).pipe( tap((response: any) => {
+      this._isLoggedIn$.next(true);
+      localStorage.setItem(this.TOKEN_NAME, response.token);
+      this.user = this.getUser(response.token);
+    }));
   }
 
   verifyCode(verifyRequest: { email: string, code: string }): Observable<any> {
@@ -95,10 +115,14 @@ export class UserService {
     return this.http.post<any>(`${this.authUrl}/logout`, {});
   }  // Fixed the URL path by adding a separator
   getUserBoard(): Observable<any> {
-    return this.http.get(`${this.authUrl}/test-comps`, { responseType: 'text' });
+  
+    const token = this.storageService.getToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.authUrl}/User`, { headers, responseType: 'text' });
+
   }
 
   getAdminBoard(): Observable<any> {
-    return this.http.get(`${this.authUrl}/dashboard`, { responseType: 'text' });
+    return this.http.get(`${this.authUrl}/dashboard`, { withCredentials: true,responseType: 'text' });
   }
 }

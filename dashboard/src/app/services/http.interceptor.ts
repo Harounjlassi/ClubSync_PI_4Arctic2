@@ -6,48 +6,26 @@ import { catchError } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 import { EventBusService } from './event-bus.service';
 import { EventData } from './event.class';
+import { UserService } from './user.service';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
-  private isRefreshing = false;
+  constructor(private authService: UserService) {}
 
-  constructor(private storageService: StorageService, private eventBusService: EventBusService) { }
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    req = req.clone({
-      withCredentials: true,
+  intercept(
+    request: HttpRequest<unknown>,
+    next: HttpHandler
+  ): Observable<HttpEvent<unknown>> {
+    request = request.clone({
+      headers: request.headers.set('authorization', this.authService.token),
     });
-
-    return next.handle(req).pipe(
-      catchError((error) => {
-        // logout when token is expired
-/*
-        if (
-          error instanceof HttpErrorResponse &&
-          !req.url.includes('auth/signin') &&
-          error.status === 401
-        ) {
-          return this.handle401Error(req, next);
-        }
-*/
-        return throwError(() => error);
-      })
-    );
-  }
-
-  private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
-    if (!this.isRefreshing) {
-      this.isRefreshing = true;
-
-      if (this.storageService.isLoggedIn()) {
-        this.eventBusService.emit(new EventData('logout', null));
-      }
-    }
 
     return next.handle(request);
   }
 }
 
-export const httpInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
-];
+export const AuthInterceptorProvider = {
+  provide: HTTP_INTERCEPTORS,
+  useClass: HttpRequestInterceptor,
+  multi: true,
+};

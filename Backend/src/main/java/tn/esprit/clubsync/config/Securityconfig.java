@@ -21,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import java.util.List;
 
@@ -64,8 +63,8 @@ public class SecurityConfig {
                                 "/user/get/all",
                                 "/user/filter",
                                 "/user/users/sorted",
-                                "/auth/test-comps",
-                                "/auth/dashboard", // 👈 ajoute ceci si tu veux le rendre public temporairement
+                                "/auth/User",
+                                "/auth/Admin", // 👈 ajoute ceci si tu veux le rendre public temporairement
                                 "/auth/logout",
                                 "/user/users/stats"
                         ).permitAll()  //  Routes accessibles sans authentification
@@ -75,7 +74,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // 🔥 Ajout du filtre JWT ici
                 .build();
     }
-
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -100,17 +98,21 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    // 🔥 CORS configuration update to allow only specific origin (e.g., localhost:4200)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // 🔥 Autoriser toutes les origines (peut être restreint)
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Change "*" to specific origin
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true); // Allow sending credentials (cookies, tokens)
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+    // Swagger config for Bearer authentication (JWT)
     @Configuration
     @SecurityScheme(
             name = "BearerAuth",
@@ -120,6 +122,4 @@ public class SecurityConfig {
     )
     public class SwaggerConfig {
     }
-
 }
-

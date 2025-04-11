@@ -191,16 +191,16 @@ private IUserService userService;
         return "Public Content.";
     }
 
-    @GetMapping("/test-comps")
+    @GetMapping("/User")
     @PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
-    public String userAccess() {
-        return "User Content.";
+    public ResponseEntity<String> getUserContent() {
+        return ResponseEntity.ok("User content");
     }
 
-    @GetMapping("/dashboard")
+    @GetMapping("/Admin")
     @PreAuthorize("hasRole('ADMIN')")
-    public String adminAccess() {
-        return "Admin Board.";
+    public ResponseEntity<String> getAdminContent() {
+        return ResponseEntity.ok("Admin content");
     }
 
 

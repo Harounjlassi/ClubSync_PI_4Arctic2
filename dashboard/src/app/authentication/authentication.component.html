@@ -1,51 +1,81 @@
-<!-- authentication.component.html -->
-<div class="login-container">
-  <img src="" alt="Profile" class="profile-img">
-  <h2 class="login-title">Login</h2>
-  
-  <!-- Login Form -->
-  <div *ngIf="!isLoggedIn" id="loginForm">
-    <form name="form" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="email">Email address</label>
-        <input 
-          type="email" 
-          class="form-control" 
-          id="email" 
-          name="email"
-          [(ngModel)]="form.email" 
-          required>
-      </div>
-      
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input 
-          type="password" 
-          class="form-control" 
-          id="password" 
-          name="password"
-          [(ngModel)]="form.password" 
-          required>
-        <a href="javascript:void(0)" class="forgot-password">Forgot password?</a>
-      </div>
-      
-      <button type="submit" class="login-btn">
-        Sign In
-      </button>
-      
-      <div *ngIf="isLoginFailed" class="alert alert-danger">
-        {{ errorMessage }}
-      </div>
-    </form>
-    
-    <div class="register-link">
-      Don't have an account? <a routerLink="/register">Register</a>
-    </div>
-  </div>
-  
-  <!-- Message after successful login -->
-  <div *ngIf="isLoggedIn" class="alert alert-success">
-    Logged in as {{ roles}}.
-    <button class="logout-btn" (click)="logout()">Logout</button>
+<div class="auth-page">
+  <div class="auth-card-container">
+    <mat-card class="auth-card">
+      <mat-card-header>
+        <div class="auth-logo">
+          <!-- You can add your logo here -->
+          <mat-icon class="logo-icon">lock</mat-icon>
+        </div>
+        <mat-card-title>Welcome Back</mat-card-title>
+        <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submitForm()" autocomplete="off">
+          
+          <!-- Alert for errors -->
+          <div *ngIf="isLoginFailed" class="error-alert">
+            <mat-icon>error</mat-icon>
+            <span>{{errorMessage}}</span>
+          </div>
+
+          <!-- Email field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input 
+              matInput 
+              type="email" 
+              formControlName="email" 
+              placeholder="your.email@example.com"
+              required>
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="email?.hasError('required')">Email is required</mat-error>
+            <mat-error *ngIf="email?.hasError('email')">Please enter a valid email address</mat-error>
+          </mat-form-field>
+
+          <!-- Password field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input 
+              matInput 
+              [type]="hidePassword ? 'password' : 'text'" 
+              formControlName="password"
+              required>
+            <mat-icon matPrefix>lock</mat-icon>
+            <button 
+              type="button"
+              mat-icon-button 
+              matSuffix 
+              (click)="hidePassword = !hidePassword" 
+              [attr.aria-label]="'Hide password'" 
+              [attr.aria-pressed]="hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="password?.hasError('required')">Password is required</mat-error>
+            <mat-error *ngIf="password?.hasError('minlength')">Password must be at least 6 characters</mat-error>
+          </mat-form-field>
+          
+          <div class="forgot-password">
+            <a routerLink="/forgot-password">Forgot password?</a>
+          </div>
+
+          <!-- Submit button -->
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="full-width submit-button" 
+            type="submit"
+            [disabled]="form.invalid || isLoading">
+            <span *ngIf="!isLoading">Sign In</span>
+            <mat-spinner *ngIf="isLoading" diameter="24" class="spinner-button"></mat-spinner>
+          </button>
+        </form>
+      </mat-card-content>
+
+      <mat-card-actions class="register-section">
+        <span>Don't have an account?</span>
+        <button mat-button color="accent" (click)="navigateToRegister()">Create Account</button>
+      </mat-card-actions>
+    </mat-card>
   </div>
 </div>

@@ -1,0 +1,54 @@
+.test-comps-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fdfdfd;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+  
+      h2 {
+        font-size: 24px;
+        color: #333;
+      }
+  
+      .logout-btn {
+        padding: 8px 16px;
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+  
+        &:hover {
+          background-color: #c0392b;
+        }
+      }
+    }
+  
+    .loading {
+      font-style: italic;
+      color: #888;
+    }
+  
+    .content-box {
+      padding: 16px;
+      background-color: #ecf0f1;
+      border-radius: 6px;
+      color: #2c3e50;
+    }
+  
+    .error-message {
+      margin-top: 20px;
+      color: #c0392b;
+      font-weight: bold;
+    }
+  }
+  
