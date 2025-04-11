@@ -24,20 +24,33 @@
 - 💬 Notifications for task updates  
 - 🧵 Comment threads on tasks  
 
+## 🤖 **AI Integration**  
+<p align="left">
+  <img src="https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow"/>
+  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch"/>
+  <img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI"/>
+  <img src="https://img.shields.io/badge/Llama 2-FFD700?style=for-the-badge&logo=meta&logoColor=black" alt="Llama 2"/>
+</p>
+
+**AI Features**:  
+- 🔍 **Smart Task Suggestions** (NLP-powered auto-categorization)  
+- 📊 **Predictive Analytics** (Forecast project delays via historical data)  
+- 🤖 **Face Recognition** (GPT-3.5 integration for team queries)  
+- 🎯 **Priority AI** (Auto-tag task urgency with ML)  
+
 ---
 
 ## ⚙️ Tech Stack  
 **Frontend**:  
 <p align="left">
   <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular"/>
-  <img src="https://img.shields.io/badge/PrimeNG-FFA500?style=for-the-badge" alt="PrimeNG"/>
   <img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="Chart.js"/>
 </p>
 
 **Backend**:  
 <p align="left">
   <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot"/>
-  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL"/>
   <img src="https://img.shields.io/badge/WebSocket-000000?style=for-the-badge" alt="WebSocket"/>
 </p>
 
