@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
-import { BrowserModule  } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
@@ -19,12 +19,43 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
 import { HasRoleGuard } from './guards/has-role.guard';
 
-const routes: Routes =[
+const routes: Routes = [
+  // Default route redirects to login
   {
     path: '',
-    redirectTo: '/dashboard',
+    redirectTo: 'login',
     pathMatch: 'full',
-  }, {
+  },
+  // Authentication routes (outside of layouts)
+  {
+    path: 'login',
+    component: AuthenticationComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent,
+    canActivate: [IsAuthenticatedGuard],
+  },
+  // Front layout and its child routes
+  {
+    path: 'front',
+    component: FrontLayoutComponent,
+    children: [
+      { path: '', component: HomeComponent },
+      { path: 'about', component: AboutComponent },
+      { path: 'services', component: ServicesComponent },
+      { path: 'from', component: FromComponent },
+      { path: 'blog', component: BlogComponent },
+      { path: 'schedule', component: ScheduleComponent },
+      { path: 'clubs', component: ClubsComponent },
+    ]
+  },
+  // Admin layout must be AFTER the specific routes to prevent conflicts
+  {
     path: '',
     component: AdminLayoutComponent,
     children: [{
@@ -32,46 +63,35 @@ const routes: Routes =[
       loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
     }]
   },
+  // Standalone routes
   {
-    path: 'front',
-    component: FrontLayoutComponent, // layout pour le front-office
-    children: [
-      { path: '', component: HomeComponent },        // page d'accueil
-      { path: 'about', component: AboutComponent },    // page à propos
-      { path: 'services', component: ServicesComponent },
-      { path: 'from', component: FromComponent},
-      { path: 'blog', component: BlogComponent }, 
-      { path: 'schedule', component: ScheduleComponent },  
-      { path: 'clubs', component: ClubsComponent },
-
-      
-
-     
-    ]
+    path: 'clubs',
+    component: ClubsComponent
   },
-  { path: 'clubs', component: ClubsComponent },
-  { path: 'login', component: AuthenticationComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'test-comps',
-   component: TestCompsComponent,
-   canActivate: [IsAuthenticatedGuard, HasRoleGuard],
-   data: {
-     role: 'Admin',
-   },
-   },
-  { path: 'unauthorized', component: UnauthorizedComponent,
-    canActivate: [IsAuthenticatedGuard],
-   },
+  {
+    path: 'test-comps',
+    component: TestCompsComponent,
+    canActivate: [IsAuthenticatedGuard, HasRoleGuard],
+    data: {
+      role: 'Admin',
+    },
+  },
+  // Wildcard route for handling 404s (should be last)
+  {
+    path: '**',
+    redirectTo: 'login'
+  }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forRoot(routes, {
-       useHash: true
+      useHash: true
     })
   ],
   exports: [
+    RouterModule
   ],
 })
 export class AppRoutingModule { }

@@ -100,7 +100,7 @@ export class AuthenticationComponent implements OnInit {
   redirectBasedOnRole(role: string) {
     if (role === 'Admin') {
       console.log('Admin role detected');
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['dashboard']);
     } else if (role === 'User') {
       console.log('User role detected');
       this.router.navigate(['/front']);
