@@ -310,9 +310,21 @@
             type="text"
             formControlName="createur"
             placeholder="Enter creator name"
+            class="form-input"
           />
         </div>
-
+        
+        <div class="camera-controls">
+          <button type="button" class="btn btn-start" (click)="startCamera()">
+            <i class="fas fa-play"></i> Begin
+          </button>
+          <button type="button" class="btn btn-detect" (click)="detectFaces()">
+            <i class="fas fa-search"></i> Detect
+          </button>
+          <button type="button" class="btn btn-stop" (click)="stopCamera()">
+            <i class="fas fa-stop"></i> End
+          </button>
+        </div>
         <div class="form-actions">
           <button
             type="button"
@@ -447,11 +459,12 @@
 <div class="messages-modal" *ngIf="showMessagesModal">
   <div class="messages-content">
     <span class="close" (click)="closeMessagesModal()">&times;</span>
-    <h3>Project Message Notes</h3>
+    <h3>Project Message Notes Of The {{selectedProjectForMessages.nom}} Project</h3>
     <div class="messages-list">
       <div *ngFor="let message of projectMessages" class="message-item">
         <div class="message-header">
-          <span class="message-date">{{message.dateCreated | date:'short'}}</span>
+          <span class="message-date">Created date :{{message.dateCreated | date:'short'}}</span>
+          <span class="message-date">Last Updated : {{message.lastUpdated | date:'short'}}</span>
           <div class="message-actions">
             <button class="btn-edit" (click)="startEditingMessage(message)">
               <svg viewBox="0 0 24 24" width="14" height="14">

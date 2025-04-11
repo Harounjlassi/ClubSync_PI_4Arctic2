@@ -66,4 +66,9 @@ public class MessageServiceImpl implements  iMessageService{
         return messageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Message not found with id: " + id));
     }
+
+    public List<Message> searchMessageByIdProjet(Long idProjet) {
+        return messageRepository.searchMessageByIdProjet(idProjet);
+
+    }
 }

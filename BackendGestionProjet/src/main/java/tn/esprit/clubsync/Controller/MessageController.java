@@ -50,6 +50,12 @@ public class MessageController {
         messageService.deleteMessageById(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/getMessageByIdProjet/{IdProjet}")
+    public ResponseEntity<List<Message>> searchMessageByIdProjet(@PathVariable Long IdProjet) {
+        List<Message> existingTaches = messageService.searchMessageByIdProjet(IdProjet);
+        return ResponseEntity.ok(existingTaches);
+    }
+
 
 
 }

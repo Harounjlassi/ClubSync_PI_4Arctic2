@@ -5,9 +5,12 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Message } from "app/common/message";
 import { Projet } from "app/common/projet";
 import { User } from "app/common/user";
+import { FaceRecognitionService } from "app/services/face-recognition.service";
 import { MessageService } from "app/services/message.service";
 import { ProjetService } from "app/services/projet.service";
 import { UserService } from "app/services/user.service";
+// import { AppProjetMessageComponent } from '../projet-message/projet-message.component'; // Import the component
+
 
 @Component({
   selector: "app-projet-list",
@@ -26,6 +29,8 @@ export class ProjetListComponent implements OnInit {
   selectedProject: Projet;
   user: User;
   imagePreview: string;
+  detectedFaces: any[] = [];
+  cameraStatus = 'stopped';
   selectedFile: File = null;
   showMessagesModal = false;
   newMessage = "";
@@ -44,7 +49,7 @@ export class ProjetListComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private messageService: MessageService,
-
+    private faceService: FaceRecognitionService,
     private router: Router
   ) {
     this.createAddProjectForm();
@@ -53,10 +58,9 @@ export class ProjetListComponent implements OnInit {
 
   ngOnInit() {
     this.listProjets();
-    this.listMessages();
   }
-  listMessages() {
-    this.messageService.getMessages().subscribe(
+  listMessages(id: number) {
+    this.messageService.getMessageByIdProjet(id).subscribe(
       (data) => {
         console.log("Received projects:", data);
         this.projectMessages = data || [];
@@ -94,13 +98,26 @@ private generateMessageId(): number {
     ? Math.max(...this.projectMessages.map(m => m.id)) + 1 
     : 1;
 }
-
+navigateToMessages(projectId: number) {
+  // Navigate to the route
+  this.router.navigate(['/message', projectId]);
+  
+  // Also open the modal if you want both
+  //this.openMessagesModal(this.tempProjet);
+}
 deleteMessage(messageId: number) {
   if (confirm('Are you sure you want to delete this message?')) {
     this.projectMessages = this.projectMessages.filter(m => m.id !== messageId);
     
-    // In a real app, call your API:
-    // this.projetService.deleteMessage(messageId).subscribe(...);
+     this.messageService.deleteMessage(messageId).subscribe(
+        (data) => {
+          console.log("Deleted message:", data);
+        },
+        (error) => {
+          console.error("Error deleting message:", error);
+        }
+      );
+     
   }
 }
 
@@ -117,29 +134,45 @@ cancelEditing(message: Message) {
 saveEditedMessage(message: Message) {
   if (message.editedText?.trim()) {
     message.contenu = message.editedText;
-    message.lastUpdated = new Date(); // Update timestamp
+    message.lastUpdated = new Date(); 
     message.isEditing = false;
     
-    // In a real app, call your API:
-    // this.projetService.updateMessage(message).subscribe(...);
+    this.messageService.updateMessage(message).subscribe(
+      (data) => {
+        console.log("Updated message:", data);
+      },
+      (error) => {
+        console.error("Error updating message:", error);
+      }
+    )
   }
 }
 
-// Update your existing addMessage method to include ID
 addMessage() {
-  // if (this.newMessage.trim()) {
-  //   const newMsg: Message = {
-  //     id: this.newMessage
-  //     contenu: this.newMessage,
-  //     dateCreated: new Date()
-  //   };
-  //   this.projectMessages.push(newMsg);
-  //   this.newMessage = '';
+  if (this.newMessage.trim()) {
+    const newMsg = {
+      contenu: this.newMessage,
+      dateCreated: new Date()
+      ,
+      lastUpdated: new Date(),
+      ProjetId: this.selectedProjectForMessages.id,
+      isEditing: false,
+      editedText: '' // Reset editedText for new message
+    };
+
     
     // In a real app:
-    // this.projetService.addMessage(this.selectedProjectForMessages.id, newMsg).subscribe(...);
+    this.messageService.createMessage( newMsg).subscribe(
+      (message) => {
+        console.log("Message created:", message);
+        this.projectMessages.push(message);
+      },
+      (error) => {
+        console.error("Error creating message:", error);
+      }
+    );
   //}
-}
+}}
   openMessagesModal(project: Projet) {
     this.selectedProjectForMessages = project;
     // Load existing messages (in a real app, you'd fetch from API)
@@ -147,6 +180,8 @@ addMessage() {
     //   { content: "Project initialized", date: new Date(project.dateCreated) },
     //   { content: `Progress reached ${project.progress}%`, date: new Date() },
     // ];
+    this.listMessages(project.id);
+
     this.showMessagesModal = true;
   }
 
@@ -384,6 +419,65 @@ addMessage() {
 
   openAddProjectModal() {
     this.showAddProjectModal = true;
+  }
+  startCamera(): void {
+    this.faceService.startCamera().subscribe({
+      next: (response) => {
+        this.cameraStatus = 'running';
+        console.log('Camera started', response);
+        // this.addProjectForm.patchValue({
+        //   createur: response.faces[0].name
+        // });
+        //this.detectFaces();
+      },
+      error: (err) => console.error('Error starting camera', err)
+    });
+  }
+  detectFaces(): void {
+    if (this.cameraStatus !== 'running') {
+      return; // Don't detect if camera isn't running
+    }
+  
+    this.faceService.detectFaces().subscribe({
+      next: (response) => {
+        if (response?.faces?.length > 0) {
+          this.detectedFaces = response.faces;
+          console.log('Detected faces:', response);
+          
+          // Update creator field with first detected face
+          this.addProjectForm.patchValue({
+            createur: response.faces[0].name
+          });
+  
+          // Auto-refresh every 2 seconds if camera is still running
+          if (this.cameraStatus === 'running') {
+            setTimeout(() => this.detectFaces(), 2000);
+          }
+        } else {
+          console.log('No faces detected');
+          // Still refresh if camera is running but no faces detected
+          if (this.cameraStatus === 'running') {
+            setTimeout(() => this.detectFaces(), 2000);
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Face detection error:', err);
+        // Retry after 2 seconds even if error occurs
+        if (this.cameraStatus === 'running') {
+          setTimeout(() => this.detectFaces(), 2000);
+        }
+      }
+    });
+  }
+  stopCamera(): void {
+    this.faceService.stopCamera().subscribe({
+      next: (response) => {
+        this.cameraStatus = 'stopped';
+        console.log('Camera stopped', response);
+      },
+      error: (err) => console.error('Error stopping camera', err)
+    });
   }
 
   closeAddProjectModal() {

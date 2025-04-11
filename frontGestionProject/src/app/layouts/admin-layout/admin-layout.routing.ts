@@ -11,6 +11,7 @@ import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { ProjetListComponent } from 'app/projet-list/projet-list.component';
 import { ProjectReportListComponent } from 'app/project-report-list/project-report-list.component';
 import { ProjectTaskListComponent } from 'app/project-task-list/project-task-list.component';
+import { ProjetMessageComponent } from 'app/components/projet-message/projet-message.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -66,4 +67,5 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'projet',        component: ProjetListComponent },
     { path: 'projet-reports/:id',        component: ProjectReportListComponent },
     { path: 'projet-tasks/:id',        component: ProjectTaskListComponent },
+    { path: 'projet-messages/:id',        component: ProjetMessageComponent },
 ];

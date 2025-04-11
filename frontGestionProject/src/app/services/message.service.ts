@@ -25,18 +25,19 @@ export class MessageService {
       })
     );
   }
-    getTasksByIdProjet(projectId: number): Observable<Message[]> {
-      return this.httpClient.get<Message[]>(`${this.baseUrl}/findByTacheByIdProjet/${projectId}`);
+    getMessageByIdProjet(projectId: number): Observable<Message[]> {
+      return this.httpClient.get<Message[]>(`${this.baseUrl}/getMessageByIdProjet/${projectId}`);
     }
   
     getTaskById(taskId: string): Observable<Message> {
       return this.httpClient.get<Message>(`${this.baseUrl}/${taskId}`);
     }
   
-    createTask(message: Message): Observable<Message> {
-      console.log('Fsssssssssues:', task);
+    createMessage(message: any): Observable<Message> {
+      console.log('Fsssssssssues:', message);
     
           const addUrl = `${this.baseUrl}/add`;
+
   
       
   
@@ -45,12 +46,12 @@ export class MessageService {
      
     }
   
-    updateTask(task: Message): Observable<Message> {
-      return this.httpClient.put<Message>(`${this.baseUrl}/update/${task.id}`, task);
+    updateMessage(message: Message): Observable<Message> {
+      return this.httpClient.put<Message>(`${this.baseUrl}/update/${message.id}`, message);
     }
   
-    deleteTask(taskId: string): Observable<void> {
-      return this.httpClient.delete<void>(`${this.baseUrl}/delete/${taskId}`);
+    deleteMessage(messageId: number): Observable<void> {
+      return this.httpClient.delete<void>(`${this.baseUrl}/delete/${messageId}`);
     }
     
 

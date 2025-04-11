@@ -46,7 +46,7 @@ public class Message {
     public Long getProjetId() {
         return projet != null ? projet.getId() : null;
     }
-    @JsonProperty("projet")
+    @JsonProperty("ProjetId")
     public void setProjetId(Long projetId) {
         this.projet = new Projet();
         this.projet.setId(projetId);
