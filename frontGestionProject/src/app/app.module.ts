@@ -18,6 +18,7 @@ import { TestComponent } from './test/test.component';
 import { ProjetListComponent } from './projet-list/projet-list.component';
 import { ProjectTaskListComponent } from './project-task-list/project-task-list.component';
 import { ProjectReportListComponent } from './project-report-list/project-report-list.component';
+import { ProjetsComponent } from './pages/projets/projets.component';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { ProjectReportListComponent } from './project-report-list/project-report
     ProjetListComponent,
     ProjectTaskListComponent,
     ProjectReportListComponent,
+    ProjetsComponent,
 
   ],
   providers: [],

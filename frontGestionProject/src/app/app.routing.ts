@@ -11,6 +11,7 @@ import { FromComponent } from './pages/from/from.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ServicesComponent } from './pages/services/services.component';
+import { ProjetsComponent } from './pages/projets/projets.component';
 
 const routes: Routes =[
   {
@@ -30,11 +31,13 @@ const routes: Routes =[
     component: FrontLayoutComponent, // layout pour le front-office
     children: [
       { path: '', component: HomeComponent },        // page d'accueil
+
       { path: 'about', component: AboutComponent },    // page à propos
       { path: 'services', component: ServicesComponent },
       { path: 'from', component: FromComponent},
       { path: 'blog', component: BlogComponent }, 
       { path: 'schedule', component: ScheduleComponent },    // page à propos
+      { path: 'projects', component: ProjetsComponent },    // page à propos
 
      
     ]

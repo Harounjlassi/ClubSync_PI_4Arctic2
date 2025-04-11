@@ -11,7 +11,7 @@ import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { ProjetListComponent } from 'app/projet-list/projet-list.component';
 import { ProjectReportListComponent } from 'app/project-report-list/project-report-list.component';
 import { ProjectTaskListComponent } from 'app/project-task-list/project-task-list.component';
-import { ProjetMessageComponent } from 'app/components/projet-message/projet-message.component';
+import { ProjetMessageComponent } from 'app/projet-message/projet-message.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
