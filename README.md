@@ -33,10 +33,9 @@
 </p>
 
 **AI Features**:  
-- 🔍 **Smart Task Suggestions** (NLP-powered auto-categorization)  
-- 📊 **Predictive Analytics** (Forecast project delays via historical data)  
-- 🤖 **Face Recognition** (GPT-3.5 integration for team queries)  
-- 🎯 **Priority AI** (Auto-tag task urgency with ML)  
+- 🔍 **Smart Task Suggestions** 
+- 🤖 **Face Recognition** 
+- 🎯 **Priority AI** 
 
 ---
 
