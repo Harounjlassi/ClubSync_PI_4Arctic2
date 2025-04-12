@@ -13,13 +13,18 @@
               <input matInput (keyup)="applyMembersFilter($event)" placeholder="Search by name or email">
             </mat-form-field>
           </div>
-          <div class="card-header card-header-primary d-flex justify-content-between align-items-center">
+          
+          <div class="card-header card-header-primary">
             <h4 class="card-title">Members of Club {{ clubName }}</h4>
-            <button mat-button color="primary" (click)="exportToPDF()">
-              Export to PDF
-            </button>
           </div>
           
+          <!-- Export button container with smaller button styling -->
+          <div class="mb-3 d-flex justify-content-end">
+            <button mat-button color="primary" class="btn-sm" (click)="exportToPDF()">
+              <mat-icon class="small-icon">picture_as_pdf</mat-icon>
+              Export PDF
+            </button>
+          </div>
           
           <div class="table-responsive" *ngIf="members.length > 0; else noMembers">
             <table mat-table [dataSource]="membersDataSource" class="w-100">

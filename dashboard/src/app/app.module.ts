@@ -34,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';  // <-- Ajout
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';  // <-- 
     AppRoutingModule,
     BrowserAnimationsModule,
     MatSelectModule,
-    MatAutocompleteModule,  // <-- Ajout
+    MatAutocompleteModule,
+    
 
 
      // Angular Material modules
@@ -62,7 +64,13 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';  // <-- 
      MatCardModule,
      MatSelectModule,
      MatProgressSpinnerModule,
-     MatTooltipModule
+     MatTooltipModule, 
+     ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      timeOut: 3000,
+      preventDuplicates: true,
+    })
+
 
      
 

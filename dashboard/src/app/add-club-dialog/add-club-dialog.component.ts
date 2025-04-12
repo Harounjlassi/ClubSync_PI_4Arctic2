@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef } from '@angular/material/dialog';
 import { ClubService } from '../services/club.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-club-dialog',
@@ -20,7 +21,9 @@ export class AddClubDialogComponent implements OnInit {
     private fb: FormBuilder,
     private clubService: ClubService,
     public dialogRef: MatDialogRef<AddClubDialogComponent>,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private toastr: ToastrService
+
   ) {}
 
   ngOnInit(): void {
@@ -85,32 +88,29 @@ export class AddClubDialogComponent implements OnInit {
       
       this.clubService.addClub(this.clubForm.value).subscribe({
         next: (result) => {
-          // Ferme la popup en renvoyant le résultat
           this.dialogRef.close(result);
-          this.showSuccessNotification();
+          this.toastr.success(' Club added succesfully!');
         },
         error: (error) => {
           console.error('Erreur lors de l\'ajout du club:', error);
-          this.snackBar.open('Échec de l\'ajout du club', 'Fermer', {
-            duration: 3000,
-            panelClass: ['error-snackbar']
-          });
+          this.toastr.error('❌ Échec de l\'ajout du club', 'Erreur');
           this.isSubmitting = false;
         },
         complete: () => this.isSubmitting = false
       });
     }
   }
+  
 
   private showSuccessNotification(): void {
-    this.snackBar.open('✅ Club ajouté avec succès !', 'Fermer', {
-      duration: 3000,
-      panelClass: ['success-snackbar'],
-      horizontalPosition: 'right',
-      verticalPosition: 'top'
+    this.toastr.success('✅ Club ajouté avec succès !', 'Succès', {
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      progressBar: true,
+      closeButton: true
     });
   }
-
+  
   onCancel(): void {
     this.dialogRef.close();
   }

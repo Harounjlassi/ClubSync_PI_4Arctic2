@@ -1,0 +1,12 @@
+.small-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+  }
+  
+  /* If you need further size reduction, you can add this class to make the button more compact */
+  .btn-sm.mat-button {
+    line-height: 28px;
+    padding: 0 8px;
+  }

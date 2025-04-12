@@ -12,5 +12,8 @@ export interface Club {
     logo: string;
     slogan: string;
     categorie: string;
+    showFullDescription: boolean ;  // Ajouter cette propriété
+    rating: number; // Ajoute une propriété pour le rating
+
   }
   

@@ -44,10 +44,11 @@ export class ClubsComponent implements OnInit {
     this.isLoading = true;
     this.clubService.getAllClubs().subscribe(
       (data: Club[]) => {
-        this.clubs = data;
-        this.filteredClubs = data;
+        // Initialise showFullDescription à false pour chaque club
+        this.clubs = data.map(club => ({ ...club, showFullDescription: false }));
+        this.filteredClubs = this.clubs;
         this.isLoading = false;
-        // Appliquer la recherche immédiatement après le chargement
+        // Appliquer immédiatement le filtre de recherche
         this.filterClubs(this.searchControl.value || '');
       },
       (error) => {
@@ -57,6 +58,10 @@ export class ClubsComponent implements OnInit {
       }
     );
   }
+  toggleDescription(club: Club): void {
+    club.showFullDescription = !club.showFullDescription;  // Bascule la valeur
+  }
+    
   
   filterClubs(searchText: string): void {
     this.filteredClubs = this.clubs.filter(club => {

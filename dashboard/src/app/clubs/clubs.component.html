@@ -12,7 +12,7 @@
       <div class="search-box">
         <mat-form-field appearance="outline">
           <mat-label>Rechercher un club</mat-label>
-          <input matInput [formControl]="searchControl" placeholder="Nom, description...">
+          <input matInput [formControl]="searchControl" placeholder="Nom...">
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </div>
@@ -64,31 +64,44 @@
       <button mat-button color="primary" (click)="clearFilters()">Réinitialiser les filtres</button>
     </div>
     
-    <!-- Grid View -->
     <div class="clubs-grid" *ngIf="viewMode === 'grid' && !isLoading && filteredClubs.length > 0">
       <div class="club-card" *ngFor="let club of filteredClubs" (click)="navigateToClubDetails(club.id_club)">
         <div class="club-category" [ngClass]="'category-' + club.categorie.toLowerCase()">
-          {{club.categorie}}
+          {{ club.categorie }}
         </div>
         <div class="club-logo" *ngIf="club.logo">
-            <img [src]="club.logo" alt="Logo {{club.name}}">
+          <img [src]="club.logo" alt="Logo {{ club.name }}">
         </div>
         <div class="club-content">
-          <h3>{{club.name}}</h3>
-          <p class="club-slogan" *ngIf="club.slogan">{{club.slogan}}</p>
-          <p class="club-description">{{club.description | slice:0:100}}{{club.description?.length > 100 ? '...' : ''}}</p>
+          <h3>{{ club.name }}</h3>
+          <p class="club-slogan" *ngIf="club.slogan">{{ club.slogan }}</p>
+          
+          <!-- Affiche la description complète si showFullDescription est true -->
+          <p class="club-description">
+            {{ club.showFullDescription ? club.description : (club.description | slice:0:100) }}
+            <span *ngIf="club.description?.length > 100">
+              {{ club.showFullDescription ? '' : '...' }}
+            </span>
+          </p>
           <div class="club-footer">
             <span class="members-count">
               <mat-icon>people</mat-icon>
-              {{getMemberCountText(club.members?.length || 0)}}
+              {{ getMemberCountText(club.members?.length || 0) }}
             </span>
             <div>
-              <button mat-button color="primary">En savoir plus</button>
-              <button mat-button color="accent" (click)="joinClub($event, club.id_club)">Rejoindre</button>
+              <!-- Bouton Voir plus avant Rejoindre -->
+              <button mat-button color="primary" (click)="toggleDescription(club)">
+                {{ club.showFullDescription ? 'Voir moins' : 'Voir plus' }}
+              </button>
+              <button mat-button color="accent" (click)="joinClub($event, club.id_club)">
+                Rejoindre
+              </button>
             </div>
+          </div>
         </div>
       </div>
     </div>
+    
     
     <!-- List View -->
     <div class="clubs-list" *ngIf="viewMode === 'list' && !isLoading && filteredClubs.length > 0">

@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ClubService } from '../services/club.service';
 import { Club } from '../models/club.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-club-dialog',
@@ -22,7 +23,9 @@ export class EditClubDialogComponent implements OnInit {
     private clubService: ClubService,
     public dialogRef: MatDialogRef<EditClubDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { club: Club },
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private toastr: ToastrService
+
   ) {
     // Ajouter les nouveaux champs (logo, slogan, categorie) au formulaire
     this.clubForm = this.fb.group({
@@ -93,27 +96,34 @@ export class EditClubDialogComponent implements OnInit {
   onSubmit(): void {
     if (this.clubForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
+  
       const updatedClub: Club = {
         ...this.data.club,
         ...this.clubForm.value
       };
-
+  
       this.clubService.updateClub(updatedClub).subscribe({
         next: (result) => {
           this.dialogRef.close(result);
-          this.showSuccessNotification();
+          this.toastr.success(' Club updated succesfully !');
+
         },
         error: (error) => {
           console.error('Erreur lors de la modification:', error);
-          this.snackBar.open('Échec de la mise à jour', 'Fermer', {
-            duration: 3000,
-            panelClass: ['error-snackbar']
+          this.toastr.error('❌ Échec de la mise à jour du club', 'Erreur', {
+            timeOut: 3000,
+            positionClass: 'toast-top-right',
+            progressBar: true,
+            closeButton: true
           });
+          this.isSubmitting = false;
         },
         complete: () => this.isSubmitting = false
       });
     }
   }
+  
+  
 
   private showSuccessNotification(): void {
     this.snackBar.open('✅ Modification réussie !', 'Fermer', {

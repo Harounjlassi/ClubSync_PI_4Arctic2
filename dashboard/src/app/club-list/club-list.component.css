@@ -48,6 +48,17 @@
 .clear-button:hover {
     color: #d9534f;
 }
+.club-description {
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  
+  button.mat-button {
+    margin-top: 10px;
+  }
+  
 
 /* 🌟 Bouton ADD CLUB harmonisé */
 .add-club-btn {

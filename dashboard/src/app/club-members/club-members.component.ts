@@ -141,20 +141,180 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
   }
    // Méthode d'exportation en PDF
    exportToPDF(): void {
+    // Configuration du document PDF
     const doc = new jsPDF();
-    doc.text('Liste des Membres du Club', 14, 10);
-
-    autoTable(doc, {
-      startY: 20,
-      head: [['Prénom', 'Nom', 'Email']],
-      body: this.members.map(member => [
-        member.firstname,
-        member.lastname,
-        member.email
-      ]),
-      theme: 'striped'
+    
+    // Couleurs et styles
+    const primaryColor = '#9c27b0'; // Couleur primaire (pour les en-têtes)
+    const secondaryColor = '#4a148c'; // Variante plus foncée
+    const textColor = '#333333';
+    
+    // --- En-tête du document ---
+    // Bannière d'en-tête
+    doc.setFillColor(primaryColor);
+    doc.rect(0, 0, doc.internal.pageSize.width, 40, 'F'); // Hauteur augmentée pour 3 lignes
+    
+    // Titre du club et du document - ligne 1
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`MEMBERS OF ${this.clubName.toUpperCase()}`, 14, 14);
+    
+    // Date et heure d'exportation - ligne 2
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    const exportDate = new Date().toLocaleDateString('fr-FR', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric'
     });
-
-    doc.save(`membres_club_${this.clubId}.pdf`);
+    const exportTime = new Date().toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    // Date placée en haut à droite, sur une ligne séparée
+    doc.text(`${exportDate} ${exportTime}`, doc.internal.pageSize.width - 50, 24);
+    
+    // Sous-titre avec nombre de membres - ligne 3
+    doc.setFontSize(11);
+    doc.text(`Club ID: ${this.clubId} | Total Members: ${this.members.length}`, 14, 34);
+    
+    // --- Informations sur le club ---
+    doc.setTextColor(textColor);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Club Information', 14, 52);
+    
+    // Ligne de séparation
+    doc.setDrawColor(primaryColor);
+    doc.setLineWidth(0.5);
+    doc.line(14, 54, 196, 54);
+    
+    // Informations du club
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Club Name: ${this.clubName}`, 14, 62);
+    // On pourrait ajouter d'autres informations si disponibles (date de création, description, etc.)
+    
+    // --- Tableau des membres ---
+    // Préparation des données
+    const memberRows = this.members.map(member => [
+      member.firstname || '-',
+      member.lastname || '-',
+      member.email || '-',
+      // Si vous avez d'autres attributs (rôle, date d'adhésion, etc.), vous pouvez les ajouter ici
+    ]);
+    
+    // Définition des colonnes et en-têtes
+    const columns = ['First Name', 'Last Name', 'Email'];
+    
+    // Options avancées pour le tableau
+    autoTable(doc, {
+      startY: 70, // Position ajustée
+      head: [columns],
+      body: memberRows,
+      theme: 'grid',
+      styles: {
+        fontSize: 10,
+        cellPadding: 4,
+        lineColor: [220, 220, 220]
+      },
+      headStyles: {
+        fillColor: [156, 39, 176], // Equivalent à primaryColor
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        halign: 'left'
+      },
+      alternateRowStyles: {
+        fillColor: [245, 245, 245]
+      },
+      // Largeurs de colonnes optimisées
+      columnStyles: {
+        0: { cellWidth: 40 }, // First Name
+        1: { cellWidth: 40 }, // Last Name
+        2: { cellWidth: 70 }  // Email
+      },
+      // Fonction pour gérer le pied de page à chaque page
+      didDrawPage: (data) => {
+        // Numéro de page
+        const pageHeight = doc.internal.pageSize.height;
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text(
+          `Page ${data.pageNumber} of ${doc.getNumberOfPages()}`, 
+          data.settings.margin.left, 
+          pageHeight - 10
+        );
+        
+        // Copyright/Info
+        doc.text(
+          `Club Management System © ${new Date().getFullYear()}`, 
+          doc.internal.pageSize.width - 70, 
+          pageHeight - 10
+        );
+        
+        // Si ce n'est pas la première page, redessiner l'en-tête
+        if (data.pageNumber > 1) {
+          // Mini en-tête pour les pages suivantes
+          doc.setFillColor(primaryColor);
+          doc.rect(0, 0, doc.internal.pageSize.width, 25, 'F');
+          
+          // Titre - ligne 1
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.text(`${this.clubName} - Members List (continued)`, 14, 10);
+          
+          // Date - ligne 2, clairement séparée du titre
+          doc.setFontSize(8);
+          doc.setFont('helvetica', 'normal');
+          doc.text(`${exportDate} ${exportTime}`, doc.internal.pageSize.width - 50, 20);
+        }
+      }
+    });
+    
+    // --- Section statistique (après le tableau) ---
+    if (doc.lastAutoTable) {
+      const finalY = doc.lastAutoTable.finalY + 15;
+      
+      // Vérifier s'il reste assez d'espace pour les statistiques
+      if (finalY < doc.internal.pageSize.height - 30) {
+        doc.setFontSize(12);
+        doc.setTextColor(secondaryColor);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Members Statistics', 14, finalY);
+        
+        doc.setDrawColor(primaryColor);
+        doc.setLineWidth(0.5);
+        doc.line(14, finalY + 2, 100, finalY + 2);
+        
+        // Statistiques simples
+        doc.setFontSize(10);
+        doc.setTextColor(textColor);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`• Total members: ${this.members.length}`, 20, finalY + 10);
+        
+        // Vous pourriez ajouter d'autres statistiques ici, par exemple:
+        // - Répartition hommes/femmes si vous avez le genre
+        // - Graphique des rôles si vous avez cette information
+        // - Distribution par date d'adhésion
+      }
+    }
+    
+    // --- Génération du fichier ---
+    // Nom du fichier avec le nom du club et la date
+    const sanitizedClubName = this.clubName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const dateStr = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+    const fileName = `members_${sanitizedClubName}_${dateStr}.pdf`;
+    
+    // Sauvegarde du PDF
+    doc.save(fileName);
+    
+    // Notification de succès
+    this.snackBar.open('Members list exported successfully', 'Close', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
   }
 }
