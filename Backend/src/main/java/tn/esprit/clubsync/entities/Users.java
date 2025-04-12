@@ -35,6 +35,17 @@ public class Users implements  Principal {
     private String password;
     private boolean accountLocked;
     private boolean enabled;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Column
+    private String phoneNumber;
     @ManyToMany(mappedBy = "members")
     private List<Club> clubs = new ArrayList<>();  // Ensure this is initialized to avoid NPE
 
@@ -302,4 +313,5 @@ public class Users implements  Principal {
             Long var10000 = this.id;
             return "User.UserBuilder(id=" + var10000 + ", firstname=" + this.firstname + ", lastname=" + this.lastname + ", dateOfBirth=" + String.valueOf(this.dateOfBirth) + ", email=" + this.email + ", password=" + this.password + ", accountLocked=" + this.accountLocked + ", enabled=" + this.enabled + ", createdDate=" + String.valueOf(this.createdDate) + ", LastModifiedDate=" + String.valueOf(this.LastModifiedDate) + ", role=" + String.valueOf(this.role) + ")";
         }
+
     }}

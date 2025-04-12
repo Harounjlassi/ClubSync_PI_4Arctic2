@@ -35,6 +35,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';  // <-- Ajout
 import { ToastrModule } from 'ngx-toastr';
+import { ChatComponent } from './chat/chat.component';
+
+
 
 @NgModule({
   imports: [
@@ -91,6 +94,7 @@ import { ToastrModule } from 'ngx-toastr';
     EditClubDialogComponent,
     ClubsComponent,
     ClubMembersComponent,
+    ChatComponent,
     
     
 

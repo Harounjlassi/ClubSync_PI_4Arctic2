@@ -10,6 +10,7 @@ import tn.esprit.clubsync.Repo.UserRepo;
 import tn.esprit.clubsync.entities.Club;
 import tn.esprit.clubsync.entities.Users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +24,7 @@ public class ClubServiceImpl implements iClubService {
 
     @Autowired
     private UserRepo userRepo;
+
 
     @Override
     public List<Club> retrieveAllClub() {
@@ -74,7 +76,6 @@ public class ClubServiceImpl implements iClubService {
         return ClubRepo.save(club);
     }
 
-
     // Implémentation de la méthode pour supprimer un membre du club
     @Override
     public Club removeMemberFromClub(Long clubId, Long userId) {
@@ -99,6 +100,7 @@ public class ClubServiceImpl implements iClubService {
                 .orElseThrow(() -> new RuntimeException("Club non trouvé"));
         return club.getMembers(); // Retourne la liste des membres
     }
+
 
 
 

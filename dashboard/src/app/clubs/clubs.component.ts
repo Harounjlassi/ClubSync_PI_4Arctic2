@@ -4,12 +4,26 @@ import { Club } from '../models/club.model';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { trigger, style, animate, transition } from '@angular/animations';
+
 
 @Component({
   selector: 'app-clubs',
   templateUrl: './clubs.component.html',
-  styleUrls: ['./clubs.component.css']
+  styleUrls: ['./clubs.component.css'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(20px)' }))
+      ])
+    ])
+  ]
 })
+
 export class ClubsComponent implements OnInit {
   clubs: Club[] = [];
   filteredClubs: Club[] = [];
@@ -20,6 +34,8 @@ export class ClubsComponent implements OnInit {
   isLoading = true;
   error = false;
   viewMode: 'grid' | 'list' = 'grid';
+  isChatVisible = false;
+
   
   constructor(
     private clubService: ClubService,
@@ -177,4 +193,36 @@ export class ClubsComponent implements OnInit {
       }
     }
   }
+  toggleChatPopup(): void {
+    this.isChatVisible = !this.isChatVisible;
+  }
+  // Calcule le nombre total de membres dans tous les clubs
+getTotalMembers(): number {
+  return this.clubs.reduce((total, club) => total + (club.members?.length || 0), 0);
+}
+
+// Trouve le club le plus populaire (avec le plus de membres)
+getMostPopularClub(): Club | null {
+  if (this.clubs.length === 0) return null;
+  
+  return this.clubs.reduce((mostPopular, current) => {
+    const currentMembers = current.members?.length || 0;
+    const popularMembers = mostPopular.members?.length || 0;
+    
+    return currentMembers > popularMembers ? current : mostPopular;
+  }, this.clubs[0]);
+}
+
+// Compte le nombre de clubs par catégorie
+getClubCountByCategory(category: string): number {
+  return this.clubs.filter(club => club.categorie === category).length;
+}
+
+// Calcule le pourcentage de clubs par catégorie
+getPercentageByCategory(category: string): number {
+  if (this.clubs.length === 0) return 0;
+  
+  const count = this.getClubCountByCategory(category);
+  return (count / this.clubs.length) * 100;
+}
 }

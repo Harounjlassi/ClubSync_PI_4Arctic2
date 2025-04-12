@@ -4,10 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.clubsync.Services.iClubService;
 import tn.esprit.clubsync.entities.Club;
 import tn.esprit.clubsync.entities.Users;
+import tn.esprit.clubsync.Services.iUsersService;
+
 
 
 import java.util.List;
@@ -21,6 +25,11 @@ import java.util.List;
 public class ClubController  {
     @Autowired
     iClubService iClubservice;
+
+
+    @Autowired
+    private iUsersService iUsersService;
+
     @Operation(description = "Affichage de toutes les clubs")
 
     @GetMapping("/retrieveAllClub")
@@ -54,8 +63,20 @@ public class ClubController  {
     // Ajouter un membre à un club
     @Operation(description = "Ajouter un membre à un club")
     @PostMapping("/{clubId}/addMember/{userId}")
-    public Club addMemberToClub(@PathVariable("clubId") Long clubId, @PathVariable("userId") Long userId) {
-        return iClubservice.addMemberToClub(clubId, userId);
+    public ResponseEntity<?> addMemberToClub(@PathVariable("clubId") Long clubId, @PathVariable("userId") Long userId) {
+        try {
+            // Vérifier si l'utilisateur est déjà membre du club
+            Club club = iClubservice.retrieveClub(clubId);
+            if (club.getMembers() != null && club.getMembers().stream().anyMatch(member -> member.getId().equals(userId))) {
+                return ResponseEntity.badRequest().body("L'utilisateur est déjà membre de ce club");
+            }
+
+            // Si l'utilisateur n'est pas membre, l'ajouter
+            Club updatedClub = iClubservice.addMemberToClub(clubId, userId);
+            return ResponseEntity.ok(updatedClub);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout du membre: " + e.getMessage());
+        }
     }
 
     // Supprimer un membre d'un club
@@ -70,6 +91,10 @@ public class ClubController  {
     public List<Users> getAllMembersByClubId(@PathVariable Long clubId) {
         return iClubservice.getAllMembersByClubId(clubId);
     }
+
+
+
+
 
 
 

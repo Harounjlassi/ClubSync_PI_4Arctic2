@@ -1,0 +1,57 @@
+<div class="chat-container">
+    <div class="chat-header">
+      <h2>Assistance ClubSync</h2>
+      <button class="clear-button" (click)="clearHistory()" title="Effacer l'historique">
+        <i class="fa fa-trash"></i>
+      </button>
+    </div>
+  
+    <div #scrollContainer class="messages-container">
+      <div *ngFor="let message of messages" 
+           [class.user-message]="!message.isBot"
+           [class.bot-message]="message.isBot"
+           class="message">
+        <div class="avatar" [class.bot-avatar]="message.isBot" [class.user-avatar]="!message.isBot">
+          <i class="fa" [class.fa-user]="!message.isBot" [class.fa-robot]="message.isBot"></i>
+        </div>
+        <div class="message-content">
+          <div class="content" [innerHTML]="message.content"></div>
+          <div class="timestamp" title="{{message.timestamp | date:'dd/MM/yyyy HH:mm'}}">
+            {{ formatTimestamp(message.timestamp) }}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Typing indicator -->
+      <div *ngIf="isTyping" class="message bot-message">
+        <div class="avatar bot-avatar">
+          <i class="fa fa-robot"></i>
+        </div>
+        <div class="message-content">
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="input-container">
+      <div class="attachment-button">
+        <label for="file-upload" class="custom-file-upload">
+          <i class="fa fa-paperclip"></i>
+        </label>
+        <input id="file-upload" type="file" (change)="onFileSelected($event)" />
+      </div>
+      
+      <input #messageInput type="text" 
+             [formControl]="userInput" 
+             (keyup.enter)="sendMessage()" 
+             placeholder="Tapez votre message..." />
+      
+      <button (click)="sendMessage()" class="send-button">
+        <i class="fa fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
