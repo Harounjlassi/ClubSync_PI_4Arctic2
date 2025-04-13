@@ -13,6 +13,7 @@ import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ServicesComponent } from './pages/services/services.component';
 import { ClubsComponent } from './clubs/clubs.component';
 import { ChatComponent } from './chat/chat.component';
+import { JokeComponent } from './joke/joke.component';
 
 const routes: Routes =[
   {
@@ -38,6 +39,8 @@ const routes: Routes =[
       { path: 'blog', component: BlogComponent }, 
       { path: 'schedule', component: ScheduleComponent },  
       { path: 'clubs', component: ClubsComponent },
+      { path: 'jokes', component: JokeComponent },
+
 
       
 

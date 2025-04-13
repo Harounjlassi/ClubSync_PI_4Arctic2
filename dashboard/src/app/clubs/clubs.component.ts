@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { JokeService } from '../services/joke.service';
 
 
 @Component({
@@ -35,11 +36,15 @@ export class ClubsComponent implements OnInit {
   error = false;
   viewMode: 'grid' | 'list' = 'grid';
   isChatVisible = false;
+  isJokePopupVisible = false;
+  currentJoke: string = '';
+
 
   
   constructor(
     private clubService: ClubService,
-    private router: Router
+    private router: Router,
+    private jokeService: JokeService
   ) {}
 
   ngOnInit(): void {
@@ -224,5 +229,21 @@ getPercentageByCategory(category: string): number {
   
   const count = this.getClubCountByCategory(category);
   return (count / this.clubs.length) * 100;
+}
+toggleJokePopup(): void {
+  if (!this.isJokePopupVisible) {
+    this.fetchJoke();
+  }
+  this.isJokePopupVisible = !this.isJokePopupVisible;
+}
+
+fetchJoke(): void {
+  this.jokeService.getJoke().subscribe({
+    next: (data) => this.currentJoke = data,
+    error: (err) => {
+      console.error('Erreur lors du chargement de la blague:', err);
+      this.currentJoke = 'Impossible de charger une blague pour le moment.';
+    }
+  });
 }
 }

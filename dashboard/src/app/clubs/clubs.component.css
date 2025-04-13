@@ -825,4 +825,107 @@ mat-card-actions button:hover {
   .clubs-container .hero-content h1 {
     font-size: 1.6rem;
   }
+  
+}
+
+/* Styles pour le bouton de blague */
+.joke-toggle-btn {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 90;
+}
+
+.joke-toggle-btn:hover {
+  background-color: #f57c00;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Styles pour la popup de blague */
+.joke-popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 350px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  display: none;
+}
+
+.joke-popup.active {
+  display: block;
+}
+
+.joke-popup-inner {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.joke-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #ff9800;
+  color: white;
+  border-radius: 8px 8px 0 0;
+}
+
+.joke-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.language-selector {
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.close-joke-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.joke-content {
+  padding: 20px;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #eee;
+}
+
+.joke-actions {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Pour les textes en arabe */
+[dir="rtl"] {
+  text-align: right;
+  font-family: 'Amiri', Arial, sans-serif;
 }

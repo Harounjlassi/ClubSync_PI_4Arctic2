@@ -36,6 +36,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';  // <-- Ajout
 import { ToastrModule } from 'ngx-toastr';
 import { ChatComponent } from './chat/chat.component';
+import { JokeComponent } from './joke/joke.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -52,6 +54,8 @@ import { ChatComponent } from './chat/chat.component';
     BrowserAnimationsModule,
     MatSelectModule,
     MatAutocompleteModule,
+    MatMenuModule,
+
     
 
 
@@ -95,6 +99,7 @@ import { ChatComponent } from './chat/chat.component';
     ClubsComponent,
     ClubMembersComponent,
     ChatComponent,
+    JokeComponent,
     
     
 

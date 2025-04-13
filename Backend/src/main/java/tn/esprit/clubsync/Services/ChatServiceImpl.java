@@ -1,8 +1,10 @@
 package tn.esprit.clubsync.Services;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import tn.esprit.clubsync.Repo.ClubRepo;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -11,13 +13,15 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.Month;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
+
 
 @Service
 public class ChatServiceImpl implements ChatService {
 
     private final ChatClient chatClient;
+
+    @Autowired
+    private ClubRepo clubRepo;
 
     public ChatServiceImpl(ChatClient.Builder builder) {
         this.chatClient = builder.build();

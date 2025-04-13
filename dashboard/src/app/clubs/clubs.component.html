@@ -206,3 +206,31 @@
     <app-chat></app-chat>
   </div>
 </div>
+<!-- Bouton pour afficher les blagues -->
+<button class="joke-toggle-btn" (click)="toggleJokePopup()" *ngIf="!isJokePopupVisible">
+  <mat-icon>sentiment_very_satisfied</mat-icon>
+  <span>Blague du jour</span>
+</button>
+
+<!-- Popup de blagues -->
+<div class="joke-popup" [class.active]="isJokePopupVisible" @fadeInOut>
+  <div class="joke-popup-inner">
+    <div class="joke-header">
+      <h2>Blague aléatoire</h2>
+      <button class="close-joke-btn" (click)="toggleJokePopup()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="joke-content">
+      <p *ngIf="currentJoke; else loadingJoke">{{ currentJoke }}</p>
+      <ng-template #loadingJoke>
+        <p>Chargement de la blague...</p>
+      </ng-template>
+    </div>
+    <div class="joke-actions">
+      <button mat-raised-button color="primary" (click)="fetchJoke()">
+        <mat-icon>refresh</mat-icon> Nouvelle blague
+      </button>
+    </div>
+  </div>
+</div>
