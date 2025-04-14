@@ -29,7 +29,9 @@ public class Club {
     @JoinColumn(name = "creator_id")
     private Users creator;
 
-    private String logo; // URL ou base64
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String logo;
     private String slogan;
     private String categorie;
 
