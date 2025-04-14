@@ -39,8 +39,6 @@ export class ClubsComponent implements OnInit {
   isJokePopupVisible = false;
   currentJoke: string = '';
 
-
-  
   constructor(
     private clubService: ClubService,
     private router: Router,
@@ -48,6 +46,13 @@ export class ClubsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    setTimeout(() => {
+      const preloader = document.getElementById('preloader-active');
+      if (preloader) {
+        preloader.style.display = 'none';
+      }
+    }, 1000); // Small timeout to ensure content has loaded
+  
     this.fetchClubs();
     
     // Setup search with debounce
@@ -79,11 +84,13 @@ export class ClubsComponent implements OnInit {
       }
     );
   }
-  toggleDescription(club: Club): void {
-    club.showFullDescription = !club.showFullDescription;  // Bascule la valeur
+
+  toggleDescription(event: Event, club: Club): void {
+    event.stopPropagation(); // Bloque la propagation du clic
+    event.preventDefault(); // Optionnel - empêche les comportements par défaut
+    club.showFullDescription = !club.showFullDescription;
   }
     
-  
   filterClubs(searchText: string): void {
     this.filteredClubs = this.clubs.filter(club => {
       const matchesSearch = searchText
@@ -141,30 +148,26 @@ export class ClubsComponent implements OnInit {
     
     // Liste des utilisateurs disponibles dans la base de données
     const availableUsers = [
-      { id: 3, nom: 'Doe', prenom: 'John' },
-      { id: 8, nom: 'Doe', prenom: 'John' },
-      { id: 9, nom: 'Johnson', prenom: 'Alice' },
-      { id: 10, nom: 'Smith', prenom: 'Bob' },
-      { id: 32, nom: 'System', prenom: 'Admin' },
-      { id: 33, nom: 'Admin', prenom: 'Jane' },
-      { id: 34, nom: 'Smith', prenom: 'Alice' },
-      { id: 35, nom: 'Johnson', prenom: 'Bob' },
-      { id: 36, nom: 'Wilson', prenom: 'Emma' },
-      { id: 37, nom: 'Brown', prenom: 'Michael' },
-      { id: 38, nom: 'Davis', prenom: 'Sarah' },
-      { id: 39, nom: 'Miller', prenom: 'David' },
-      { id: 40, nom: 'Wilson', prenom: 'Lisa' },
-      { id: 41, nom: 'Moore', prenom: 'James' },
-      { id: 42, nom: 'Taylor', prenom: 'Olivia' },
-      { id: 43, nom: 'Anderson', prenom: 'William' },
-      { id: 44, nom: 'Thomas', prenom: 'Ava' },
-      { id: 45, nom: 'Jackson', prenom: 'Benjamin' },
-      { id: 46, nom: 'White', prenom: 'Mia' },
-      { id: 47, nom: 'Harris', prenom: 'Ethan' },
-      { id: 48, nom: 'Martin', prenom: 'Sophia' },
-      { id: 49, nom: 'Clark', prenom: 'Alexander' },
-      { id: 50, nom: 'Rodriguez', prenom: 'Charlotte' },
-      { id: 51, nom: 'Mejri', prenom: 'Wassim' }
+      { id: 1, nom: 'Smith', prenom: 'Alice' },
+      { id: 2, nom: 'Jones', prenom: 'Bob' },
+      { id: 3, nom: 'Taylor', prenom: 'Carol' },
+      { id: 4, nom: 'Brown', prenom: 'Dan' },
+      { id: 5, nom: 'Wilson', prenom: 'Emma' },
+      { id: 6, nom: 'Johnson', prenom: 'Frank' },
+      { id: 7, nom: 'White', prenom: 'Grace' },
+      { id: 8, nom: 'Martin', prenom: 'Henry' },
+      { id: 9, nom: 'King', prenom: 'Isabel' },
+      { id: 10, nom: 'Moore', prenom: 'Jack' },
+      { id: 11, nom: 'Hall', prenom: 'Kate' },
+      { id: 12, nom: 'Allen', prenom: 'Leo' },
+      { id: 13, nom: 'Young', prenom: 'Mia' },
+      { id: 14, nom: 'Scott', prenom: 'Nick' },
+      { id: 15, nom: 'Green', prenom: 'Olivia' },
+      { id: 16, nom: 'Adams', prenom: 'Peter' },
+      { id: 17, nom: 'Nelson', prenom: 'Quinn' },
+      { id: 18, nom: 'Baker', prenom: 'Rachel' },
+      { id: 19, nom: 'Lopez', prenom: 'Steve' },
+      { id: 20, nom: 'Gonzalez', prenom: 'Tina' }
     ];
     
     // Construire les options pour le menu déroulant
@@ -198,52 +201,59 @@ export class ClubsComponent implements OnInit {
       }
     }
   }
+
   toggleChatPopup(): void {
     this.isChatVisible = !this.isChatVisible;
   }
+
   // Calcule le nombre total de membres dans tous les clubs
-getTotalMembers(): number {
-  return this.clubs.reduce((total, club) => total + (club.members?.length || 0), 0);
-}
-
-// Trouve le club le plus populaire (avec le plus de membres)
-getMostPopularClub(): Club | null {
-  if (this.clubs.length === 0) return null;
-  
-  return this.clubs.reduce((mostPopular, current) => {
-    const currentMembers = current.members?.length || 0;
-    const popularMembers = mostPopular.members?.length || 0;
-    
-    return currentMembers > popularMembers ? current : mostPopular;
-  }, this.clubs[0]);
-}
-
-// Compte le nombre de clubs par catégorie
-getClubCountByCategory(category: string): number {
-  return this.clubs.filter(club => club.categorie === category).length;
-}
-
-// Calcule le pourcentage de clubs par catégorie
-getPercentageByCategory(category: string): number {
-  if (this.clubs.length === 0) return 0;
-  
-  const count = this.getClubCountByCategory(category);
-  return (count / this.clubs.length) * 100;
-}
-toggleJokePopup(): void {
-  if (!this.isJokePopupVisible) {
-    this.fetchJoke();
+  getTotalMembers(): number {
+    return this.clubs.reduce((total, club) => total + (club.members?.length || 0), 0);
   }
-  this.isJokePopupVisible = !this.isJokePopupVisible;
-}
 
-fetchJoke(): void {
-  this.jokeService.getJoke().subscribe({
-    next: (data) => this.currentJoke = data,
-    error: (err) => {
-      console.error('Erreur lors du chargement de la blague:', err);
-      this.currentJoke = 'Impossible de charger une blague pour le moment.';
+  // Trouve le club le plus populaire (avec le plus de membres)
+  getMostPopularClub(): Club | null {
+    if (this.clubs.length === 0) return null;
+    
+    return this.clubs.reduce((mostPopular, current) => {
+      const currentMembers = current.members?.length || 0;
+      const popularMembers = mostPopular.members?.length || 0;
+      
+      return currentMembers > popularMembers ? current : mostPopular;
+    }, this.clubs[0]);
+  }
+
+  // Compte le nombre de clubs par catégorie
+  getClubCountByCategory(category: string): number {
+    return this.clubs.filter(club => club.categorie === category).length;
+  }
+
+  // Calcule le pourcentage de clubs par catégorie
+  getPercentageByCategory(category: string): number {
+    if (this.clubs.length === 0) return 0;
+    
+    const count = this.getClubCountByCategory(category);
+    return (count / this.clubs.length) * 100;
+  }
+
+  toggleJokePopup(): void {
+    if (!this.isJokePopupVisible) {
+      this.fetchJoke();
     }
-  });
-}
+    this.isJokePopupVisible = !this.isJokePopupVisible;
+  }
+
+  fetchJoke(): void {
+    this.currentJoke = ''; // Réinitialiser pour afficher le loader
+    
+    setTimeout(() => {
+      this.jokeService.getJoke().subscribe({
+        next: (data) => this.currentJoke = data,
+        error: (err) => {
+          console.error('Erreur lors du chargement de la blague:', err);
+          this.currentJoke = 'Impossible de charger une blague pour le moment.';
+        }
+      });
+    }, 800); // Délai artificiel pour voir l'animation du loader
+  }
 }
