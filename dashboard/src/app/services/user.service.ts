@@ -26,13 +26,15 @@ export class UserService {
   constructor(private http: HttpClient, private storageService: StorageService) {
     this._isLoggedIn$.next(!!this.token);
     this.user = this.getUser(this.token);
-   }
-   private getUser(token: string): User | null {
+  }
+  
+  private getUser(token: string): User | null {
     if (!token) {
       return null
     }
     return JSON.parse(atob(token.split('.')[1])) as User;
   }
+  
   // CRUD Operations
   getAllUsers(): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(`${this.apiUrl}/get/all`);
@@ -96,11 +98,24 @@ export class UserService {
   }
 
   login(loginRequest: { email: string, password: string }): Observable<any> {
-    return this.http.post<any>(`${this.authUrl}/login`, loginRequest).pipe( tap((response: any) => {
-      this._isLoggedIn$.next(true);
-      localStorage.setItem(this.TOKEN_NAME, response.token);
-      this.user = this.getUser(response.token);
-    }));
+    return this.http.post<any>(`${this.authUrl}/login`, loginRequest).pipe(
+      tap((response: any) => {
+        this._isLoggedIn$.next(true);
+        localStorage.setItem(this.TOKEN_NAME, response.token);
+        this.user = this.getUser(response.token);
+      })
+    );
+  }
+  
+  // New method for Google authentication
+  loginWithGoogle(idToken: string): Observable<any> {
+    return this.http.post<any>(`${this.authUrl}/google`, { idToken }).pipe(
+      tap((response: any) => {
+        this._isLoggedIn$.next(true);
+        localStorage.setItem(this.TOKEN_NAME, response.token);
+        this.user = this.getUser(response.token);
+      })
+    );
   }
 
   verifyCode(verifyRequest: { email: string, code: string }): Observable<any> {
@@ -112,17 +127,21 @@ export class UserService {
   }
 
   logout(): Observable<any> {
+    // Clear local storage on logout
+    this._isLoggedIn$.next(false);
+    localStorage.removeItem(this.TOKEN_NAME);
+    this.user = null;
+    
     return this.http.post<any>(`${this.authUrl}/logout`, {});
-  }  // Fixed the URL path by adding a separator
-  getUserBoard(): Observable<any> {
+  }
   
+  getUserBoard(): Observable<any> {
     const token = this.storageService.getToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${this.authUrl}/User`, { headers, responseType: 'text' });
-
   }
 
   getAdminBoard(): Observable<any> {
-    return this.http.get(`${this.authUrl}/dashboard`, { withCredentials: true,responseType: 'text' });
+    return this.http.get(`${this.authUrl}/dashboard`, { withCredentials: true, responseType: 'text' });
   }
 }

@@ -1,5 +1,10 @@
 package tn.esprit.clubsync.Controller;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,46 +20,40 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.clubsync.entities.Role;
+import tn.esprit.clubsync.entities.Sexe;
 import tn.esprit.clubsync.entities.User;
 import tn.esprit.clubsync.Repo.RoleRepository;
 import tn.esprit.clubsync.Repo.UserRepository;
 import tn.esprit.clubsync.Services.IUserService;
 import tn.esprit.clubsync.Services.JwtService;
-import tn.esprit.clubsync.dtos.LoginRequest;
-import tn.esprit.clubsync.dtos.UserRequest;
-import tn.esprit.clubsync.dtos.VerifyRequest;
+import tn.esprit.clubsync.dtos.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+
 @RestController
 @RequestMapping("/auth")
 @SecurityRequirement(name = "BearerAuth")
-@CrossOrigin(origins = "http://localhost:4200") // Permet à Angular d'accéder au backend
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
     private final Map<String, String> verificationCodes = new HashMap<>();
+    private static final String CLIENT_ID = "376533833455-qgcjilh1un1k0cfunakdab8b328a0p9f.apps.googleusercontent.com";
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private JavaMailSender mailSender;
-
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private IUserService userService;
 
-@Autowired
-private IUserService userService;
     @PostMapping("/registration")
     public ResponseEntity<Object> saveUser(@RequestBody UserRequest userRequest) {
         System.out.println("Requête POST reçue sur /auth/registration : " + userRequest.getEmail());
-
 
         if (userService.isEmailTaken(userRequest.getEmail())) {
             return ResponseEntity.status(400).body("Email already in use.");
@@ -63,7 +62,7 @@ private IUserService userService;
         Role userRole = roleRepository.findById(userRequest.getId_role())
                 .orElseThrow(() -> new RuntimeException("Role not found!"));
 
-       User user = new User();
+        User user = new User();
         user.setNom(userRequest.getNom());
         user.setPrenom(userRequest.getPrenom());
         user.setEmail(userRequest.getEmail());
@@ -76,7 +75,6 @@ private IUserService userService;
 
         userRepository.save(user);
 
-        // 🔹 Générer et envoyer le code de vérification automatiquement
         String verificationCode = String.format("%06d", new Random().nextInt(999999));
         try {
             sendEmail(user.getEmail(), verificationCode);
@@ -91,17 +89,12 @@ private IUserService userService;
 
         return ResponseEntity.ok(response);
     }
+
     @PostMapping("/verify-code")
-    public ResponseEntity<Object> verifyCode(@RequestBody VerifyRequest request){
+    public ResponseEntity<Object> verifyCode(@RequestBody VerifyRequest request) {
         return ResponseEntity.status(200).body(verificationCodes.get(request.getCode()));
     }
 
-
-    @Operation(summary = "Authentification", description = "Permet de se connecter.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Authentification réussie"),
-            @ApiResponse(responseCode = "401", description = "Identifiants incorrects")
-    })
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
         try {
@@ -120,16 +113,15 @@ private IUserService userService;
             UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                     .username(user.getEmail())
                     .password(user.getPassword())
-                    .roles(user.getRole().getRoleType().name()) // 🔹 Stocke le rôle
+                    .roles(user.getRole().getRoleType().name())
                     .build();
 
-            // ✅ Générer un nouveau token et supprimer l’ancien
             String token = jwtService.generateToken(userDetails);
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Login Successful!");
             response.put("token", token);
-            response.put("role", user.getRole().getRoleType()); // 🔥 Associe le rôle
+            response.put("role", user.getRole().getRoleType());
 
             return ResponseEntity.ok(response);
 
@@ -139,16 +131,82 @@ private IUserService userService;
         }
     }
 
-    @Operation(summary = "Obtenir les informations de l'utilisateur connecté", description = "Nécessite un JWT valide.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Informations de l'utilisateur retournées"),
-            @ApiResponse(responseCode = "401", description = "Non authentifié")
-    })
+    @PostMapping("/google")
+    public ResponseEntity<Object> loginWithGoogle(@RequestBody GoogleLoginRequest request) {
+        try {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
+                    .setAudience(Collections.singletonList(CLIENT_ID))
+                    .build();
+
+            GoogleIdToken idToken = verifier.verify(request.getIdToken());
+            if (idToken == null) {
+                return ResponseEntity.status(401).body("Invalid Google token");
+            }
+
+            Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
+
+            Optional<User> optionalUser = userRepository.findByEmail(email);
+            User user;
+
+            if (optionalUser.isEmpty()) {
+                user = new User();
+                String name = (String) payload.get("name");
+
+                if (name != null && name.contains(" ")) {
+                    String[] nameParts = name.split(" ", 2);
+                    user.setPrenom(nameParts[0]);
+                    user.setNom(nameParts[1]);
+                } else {
+                    user.setPrenom(name != null ? name : "");
+                    user.setNom("");
+                }
+
+                user.setEmail(email);
+                user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+                user.setSexe(Sexe.Homme); // Default value
+                user.setNumeroDeTelephone(0); // Default value
+                user.setPhotoProfil(null); // Explicitly set to null
+                user.setDateNaissance(new Date()); // Default to current date or set null if allowed
+
+                Role userRole = roleRepository.findById(2)
+                        .orElseThrow(() -> new RuntimeException("Default role not found!"));
+                user.setRole(userRole);
+
+                userRepository.save(user);
+            } else {
+                user = optionalUser.get();
+            }
+
+            UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+                    .username(user.getEmail())
+                    .password(user.getPassword())
+                    .roles(user.getRole().getRoleType().name())
+                    .build();
+
+            String token = jwtService.generateToken(userDetails);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Google authentication successful!");
+            response.put("token", token);
+            response.put("role", user.getRole().getRoleType());
+            response.put("email", user.getEmail());
+            response.put("nom", user.getNom());
+            response.put("prenom", user.getPrenom());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/me")
     public ResponseEntity<Object> getUserInfo(@RequestHeader("Authorization") String token) {
         try {
             if (token.startsWith("Bearer ")) {
-                token = token.substring(7); // Supprime "Bearer " pour garder le token brut
+                token = token.substring(7);
             }
 
             String email = jwtService.extractUsername(token);
@@ -170,11 +228,7 @@ private IUserService userService;
             return ResponseEntity.status(401).body("Token invalide ou expiré");
         }
     }
-    @Operation(summary = "Déconnexion", description = "Permet de se déconnecter et d'invalider le token.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Déconnexion réussie"),
-            @ApiResponse(responseCode = "400", description = "Token non valide")
-    })
+
     @PostMapping("/logout")
     public ResponseEntity<Object> logout(@RequestHeader("Authorization") String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -186,13 +240,14 @@ private IUserService userService;
 
         return ResponseEntity.ok("User successfully logged out and token invalidated.");
     }
+
     @GetMapping("/all")
     public String allAccess() {
         return "Public Content.";
     }
 
     @GetMapping("/User")
-    @PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<String> getUserContent() {
         return ResponseEntity.ok("User content");
     }
@@ -201,12 +256,6 @@ private IUserService userService;
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> getAdminContent() {
         return ResponseEntity.ok("Admin content");
-    }
-
-
-    @Autowired
-    public AuthController(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
     }
 
     private void sendEmail(String to, String code) throws MessagingException {

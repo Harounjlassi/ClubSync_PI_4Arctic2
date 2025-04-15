@@ -40,7 +40,7 @@
               <div class="col-md-6">
                 <label>Last Name</label>
                 <div class="form-group">
-                  <p>{{ currentUser.nom || getProperty(currentUser, 'nom') }}</p>
+                  <p>{{ currentUser.nom || getProperty(currentUser, 'nom') || "something"}}</p>
                 </div>
               </div>
             </div>
@@ -91,11 +91,12 @@
               </div>
             </div>
             
-            <!-- Logout button -->
+            <!-- Enhanced Logout button -->
             <div class="row">
-              <div class="col-md-12">
-                <button mat-raised-button (click)="logout()" class="btn btn-danger">
-                  <i class="material-icons">exit_to_app</i> Logout
+              <div class="col-md-12 mt-4">
+                <button mat-raised-button (click)="logout()" class="btn btn-danger btn-lg px-4 py-3 d-flex align-items-center justify-content-center">
+                  <i class="material-icons mr-2" style="font-size: 24px;">exit_to_app</i>
+                  <span style="font-size: 18px; font-weight: 500;">Logout</span>
                 </button>
               </div>
             </div>

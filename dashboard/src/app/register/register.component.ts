@@ -108,7 +108,7 @@ export class RegisterComponent implements OnInit {
       dateNaissance: new Date(formValue.dateNaissance).toISOString(),
       sexe: formValue.sexe,
       numeroDeTelephone: Number(formValue.numeroDeTelephone),
-      id_role: 1, // Automatically set role to "User" (assuming user role id is 1)
+      id_role: 2, // Automatically set role to "User" (assuming user role id is 1)
       photoProfil: ''
     };
 

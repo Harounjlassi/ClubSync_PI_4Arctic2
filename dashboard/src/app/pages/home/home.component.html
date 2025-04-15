@@ -18,6 +18,7 @@
                 <div class="preloader-circle"></div>
                 <div class="preloader-img pere-text">
                     <img src="assets/img/logo/loder.png" alt="">
+                    <p>Loading...</p>
                 </div>
             </div>
         </div>
@@ -59,8 +60,9 @@
                                         </ul>
                                     </nav>
                                 </div>
+
                                 <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                    <a href="from.html" class="btn header-btn">became a member</a>
+                                    <a href="#" class="btn header-btn" (click)="navigateToLogin(); $event.preventDefault()">Login</a>
                                 </div>
                             </div>
                         </div>   

@@ -119,6 +119,36 @@ mat-card-content {
   margin: 0 auto;
 }
 
+/* Google Sign-In styling */
+.or-divider {
+  text-align: center;
+  margin: 24px 0;
+  position: relative;
+}
+
+.or-divider:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.or-divider span {
+  background-color: white;
+  padding: 0 16px;
+  position: relative;
+  color: #666;
+}
+
+.google-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
 /* Responsive styles */
 @media (max-width: 599px) {
   .auth-card-container {

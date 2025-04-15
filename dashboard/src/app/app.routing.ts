@@ -23,7 +23,7 @@ const routes: Routes = [
   // Default route redirects to login
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'front',
     pathMatch: 'full',
   },
   // Authentication routes (outside of layouts)
@@ -38,7 +38,7 @@ const routes: Routes = [
   {
     path: 'unauthorized',
     component: UnauthorizedComponent,
-    canActivate: [IsAuthenticatedGuard],
+    
   },
   // Front layout and its child routes
   {
@@ -79,7 +79,7 @@ const routes: Routes = [
   // Wildcard route for handling 404s (should be last)
   {
     path: '**',
-    redirectTo: 'login'
+    redirectTo: 'unauthorized',
   }
 ];
 

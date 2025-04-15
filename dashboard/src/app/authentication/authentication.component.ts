@@ -5,6 +5,8 @@ import { StorageService } from '../services/storage.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+declare var google: any;
+
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
@@ -39,11 +41,59 @@ export class AuthenticationComponent implements OnInit {
       this.roles = this.storageService.getUser().roles;
       this.redirectBasedOnRole(this.storageService.getUser().role);
     }
+
+    // Initialize Google Sign-In
+    google.accounts.id.initialize({
+      client_id: "376533833455-qgcjilh1un1k0cfunakdab8b328a0p9f.apps.googleusercontent.com",
+      callback: this.handleGoogleSignIn.bind(this)
+    });
+    
+    // Render the Google Sign-In button
+    google.accounts.id.renderButton(
+      document.getElementById("google-btn"),
+      { theme: "outline", size: "large" }
+    );
   }
 
   // Form control getters for easier access in template
   get email() { return this.form.get('email'); }
   get password() { return this.form.get('password'); }
+
+  // Handle Google Sign-In response
+  handleGoogleSignIn(response: any) {
+    // Send the ID token to your backend
+    this.isLoading = true;
+    
+    this.userService.loginWithGoogle(response.credential)
+      .subscribe({
+        next: (userData) => {
+          this.storageService.saveUser(userData);
+          this.isLoggedIn = true;
+          this.isLoginFailed = false;
+          
+          this.snackBar.open('Google login successful!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar']
+          });
+          
+          this.redirectBasedOnRole(userData.role);
+        },
+        error: (error) => {
+          this.isLoginFailed = true;
+          this.isLoading = false;
+          this.errorMessage = error?.error?.message || 'Google authentication failed';
+          
+          this.snackBar.open(this.errorMessage, 'Close', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar']
+          });
+        }
+      });
+  }
 
   submitForm() {
     if (this.form.invalid) {
