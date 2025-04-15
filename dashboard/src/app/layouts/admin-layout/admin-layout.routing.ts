@@ -10,6 +10,7 @@ import { NotificationsComponent } from '../../notifications/notifications.compon
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { ClubListComponent } from 'app/club-list/club-list.component';
 import { ClubMembersComponent } from 'app/club-members/club-members.component';
+import { AnnouncementListComponent } from 'app/announcement-list/announcement-list.component';
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
@@ -63,6 +64,8 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'upgrade',        component: UpgradeComponent },
     { path: 'club-list', component: ClubListComponent },
     { path: 'club-members/:clubId', component: ClubMembersComponent },
+    { path: 'announcment-list', component: AnnouncementListComponent },
+
       
       
     // Nouvelle route pour ClubListComponent

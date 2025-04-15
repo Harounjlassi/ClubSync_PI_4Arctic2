@@ -1,8 +1,18 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from '../services/chat.service';
-import { chat } from '../models/chat.model';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+interface ChatMessage {
+  content: string;
+  isBot: boolean;
+  timestamp: Date;
+  attachment?: {
+    name: string;
+    type: string;
+    size: number;
+    url?: string;
+  };
+}
 
 @Component({
   selector: 'app-chat',
@@ -10,10 +20,13 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit, AfterViewChecked {
-  messages: chat[] = [];
+  messages: ChatMessage[] = [];
   userInput = new FormControl('');
   isTyping = false;
   currentDate = new Date();
+  showEmojiPicker = false;
+  emojis = ['😀', '😊', '😂', '😍', '👍', '❤️', '👌', '👏', '🎉', '🤔', '👋', '🙌', '🤝', '🤷‍♂️', '🤷‍♀️', '👀', '🧠', '⚡', '🔥', '✅', '⭐', '💼', '📅', '📌', '📊'];
+
   
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
   @ViewChild('messageInput') private messageInput!: ElementRef;
@@ -22,7 +35,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
   ngOnInit(): void {
     // Initialisation du chat avec un message de bienvenue
-    this.addBotMessage('Bonjour ! Comment puis-je vous aider ?');
+    this.addBotMessage('Bonjour et bienvenue sur ClubSync ! 👋 Comment puis-je vous aider aujourd\'hui ?');
 
     // Setup typing detection
     this.userInput.valueChanges.pipe(
@@ -51,27 +64,46 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     // Show typing indicator
     this.isTyping = true;
     
-    // Send request to service
-    this.chatService.sendPrompt(message).subscribe({
-      next: (response) => {
-        // Hide typing indicator
-        this.isTyping = false;
-        this.addBotMessage(response);
-      },
-      error: (error) => {
-        this.isTyping = false;
-        this.addBotMessage('Désolé, je rencontre un problème technique...');
-        console.error(error);
-      }
-    });
+    // Simuler un délai de traitement naturel
+    setTimeout(() => {
+      // Send request to service
+      this.chatService.sendPrompt(message).subscribe({
+        next: (response) => {
+          // Hide typing indicator
+          this.isTyping = false;
+          this.addBotMessage(this.formatBotResponse(response));
+        },
+        error: (error) => {
+          this.isTyping = false;
+          this.addBotMessage('Désolé, je rencontre un problème technique. Veuillez réessayer dans quelques instants.');
+          console.error(error);
+        }
+      });
+    }, Math.random() * 1000 + 500); // Délai aléatoire entre 500ms et 1500ms
   }
 
-  private addUserMessage(content: string): void {
-    this.messages.push({
+  private formatBotResponse(text: string): string {
+    // Remplacer les URLs par des liens cliquables
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, '<a href="$1" target="_blank" class="message-link">$1</a>');
+  }
+
+  private addUserMessage(content: string, attachment?: any): void {
+    const message: ChatMessage = {
       content,
       isBot: false,
       timestamp: new Date()
-    });
+    };
+    
+    if (attachment) {
+      message.attachment = {
+        name: attachment.name,
+        type: attachment.type,
+        size: attachment.size
+      };
+    }
+    
+    this.messages.push(message);
   }
 
   private addBotMessage(content: string): void {
@@ -100,35 +132,79 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       const hours = Math.floor(diff / 60);
       return `Il y a ${hours} h`;
     }
-    return new Date(date).toLocaleDateString();
+    return new Date(date).toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit' });
   }
 
   // Clear chat history
   clearHistory(): void {
     this.messages = [];
-    this.addBotMessage('Historique de conversation effacé. Comment puis-je vous aider ?');
+    this.addBotMessage('Historique de conversation effacé. Comment puis-je vous aider aujourd\'hui ?');
   }
 
-  // Handle file upload (placeholder)
+  // Handle file upload
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      // Afficher un message de chargement
-      this.addUserMessage(`J'ai partagé un fichier: ${file.name}`);
+      // Afficher un message avec le fichier partagé
+      this.addUserMessage(`J'ai partagé un fichier`, {
+        name: file.name,
+        type: file.type,
+        size: file.size
+      });
+      
       this.isTyping = true;
       
-      // Envoyer le fichier au serveur
-      this.chatService.uploadFile(file).subscribe({
-        next: (response) => {
-          this.isTyping = false;
-          this.addBotMessage(response);
-        },
-        error: (error) => {
-          this.isTyping = false;
-          this.addBotMessage('Erreur lors du téléchargement du fichier. Veuillez réessayer.');
-          console.error(error);
-        }
-      });
+      // Simuler un délai de traitement
+      setTimeout(() => {
+        // Envoyer le fichier au serveur
+        this.chatService.uploadFile(file).subscribe({
+          next: (response) => {
+            this.isTyping = false;
+            this.addBotMessage(this.formatBotResponse(response));
+          },
+          error: (error) => {
+            this.isTyping = false;
+            this.addBotMessage('Désolé, je n\'ai pas pu traiter ce fichier. Veuillez vérifier le format et réessayer.');
+            console.error(error);
+          }
+        });
+      }, Math.random() * 1500 + 800); // Délai aléatoire entre 800ms et 2300ms
     }
   }
+  // Ajouter ces méthodes à votre classe composant
+toggleEmojiPicker(): void {
+  this.showEmojiPicker = !this.showEmojiPicker;
+}
+
+addEmoji(emoji: string): void {
+  // Insérer l'emoji à la position du curseur ou à la fin
+  const input = this.messageInput.nativeElement;
+  const currentValue = this.userInput.value || '';
+  const cursorPos = input.selectionStart;
+  
+  // Insérer l'emoji à la position du curseur
+  const newValue = currentValue.slice(0, cursorPos) + emoji + currentValue.slice(cursorPos);
+  this.userInput.setValue(newValue);
+  
+  // Repositionner le curseur après l'emoji
+  setTimeout(() => {
+    input.focus();
+    input.setSelectionRange(cursorPos + emoji.length, cursorPos + emoji.length);
+  }, 0);
+  
+  // Fermer le sélecteur d'emoji
+  this.showEmojiPicker = false;
+}
+
+// Ajouter ce gestionnaire pour fermer le sélecteur d'emoji en cliquant ailleurs
+@HostListener('document:click', ['$event'])
+documentClick(event: MouseEvent): void {
+  // Vérifier si le clic est en dehors du sélecteur d'emoji et du bouton emoji
+  const clickedInsideEmojiPicker = (event.target as Element).closest('.emoji-picker');
+  const clickedEmojiButton = (event.target as Element).closest('.action-button[title="Emoji"]');
+  
+  if (!clickedInsideEmojiPicker && !clickedEmojiButton && this.showEmojiPicker) {
+    this.showEmojiPicker = false;
+  }
+}
 }

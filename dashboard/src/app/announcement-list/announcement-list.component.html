@@ -1,0 +1,142 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Search field with autocomplete -->
+          <div class="mb-3 d-flex">
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label></mat-label>
+              <div class="search-input-container">
+                <mat-icon class="search-icon">search</mat-icon>
+                <input matInput placeholder="Search announcements..." [(ngModel)]="searchText" (ngModelChange)="applyFilter()" [matAutocomplete]="auto">
+                <button mat-icon-button class="clear-button" *ngIf="searchText" aria-label="Clear" (click)="searchText=''; applyFilter();">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let announcement of filteredAnnouncements || []" [value]="announcement.title">
+                  {{ announcement.title }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+  
+          <!-- Announcements table -->
+          <div class="card">
+            <div class="card-header card-header-primary d-flex justify-content-between align-items-center">
+              <div>
+                <h4 class="card-title mb-0">ANNOUNCEMENT LIST</h4>
+                <p class="card-category mb-0">Club announcements and notifications</p>
+              </div>
+              <button class="btn add-announcement-btn" (click)="openAddAnnouncementDialog()">
+                <mat-icon>add_circle</mat-icon>
+                ADD ANNOUNCEMENT
+                <span class="badge-count">{{ (announcements || []).length }}</span>
+              </button>
+            </div>
+  
+            <div class="card-body">
+              <div *ngIf="error" class="alert alert-danger py-1 mb-1">
+                An error occurred while retrieving announcements. Please try again.
+              </div>
+              <div *ngIf="(filteredAnnouncements || []).length === 0 && !error" class="alert alert-info py-1 mb-1">
+                No announcements found.
+              </div>
+              <div class="mb-3 d-flex justify-content-between flex-wrap">
+                <div>
+                  <mat-form-field appearance="outline" class="club-filter" style="width: 300px; margin-right: 15px;">
+                    <mat-label>Filter by Club</mat-label>
+                    <mat-select [(value)]="selectedClub" (selectionChange)="applyFilter()">
+                      <mat-option [value]="null">All Clubs</mat-option>
+                      <mat-option *ngFor="let announcement of announcements || []" 
+                                 [value]="announcement.club?.id_club" 
+                                 [disabled]="!announcement.club?.id_club">
+                        {{ announcement.club?.name || 'Unknown' }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="export-buttons-container">
+                  <button class="btn export-btn export-btn-pdf" (click)="exportToPDF()">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                    Export PDF
+                  </button>
+                  <button class="btn export-btn export-btn-excel" (click)="exportToExcel()">
+                    <mat-icon>table_chart</mat-icon>
+                    Export Excel
+                  </button>
+                </div>
+              </div>
+                
+              <div class="table-responsive" *ngIf="(filteredAnnouncements || []).length > 0">
+                <table class="table table-striped table-bordered table-sm">
+                  <thead class="text-primary">
+                    <tr>
+                      <th class="col-id">ID</th>
+                      <th class="col-title">Title</th>
+                      <th class="col-content">Content</th>
+                      <th class="col-club">Club</th>
+                      <th class="col-date">Created At</th>
+                      <th class="col-actions">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let announcement of filteredAnnouncements || []">
+                      <td>{{ announcement.id }}</td>
+                      <td>{{ announcement.title || '' }}</td>
+                      <td class="content-cell" [title]="announcement.content || ''">
+                        {{ (announcement.content || '') | slice:0:100 }}{{ (announcement.content || '').length > 100 ? '...' : '' }}
+                      </td>
+                      <td>{{ announcement.club?.name || 'N/A' }}</td>
+                      <td>{{ announcement.createdAt | date:'medium' }}</td>
+                      <td class="actions-cell">
+                        <button mat-icon-button color="primary" (click)="openEditAnnouncementDialog(announcement)">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="deleteAnnouncement(announcement.id)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                        <button mat-icon-button color="accent" (click)="viewAnnouncementDetails(announcement.id)">
+                          <mat-icon>visibility</mat-icon>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+          
+      <!-- Charts Section -->
+      <div class="row mt-4">
+        <!-- Distribution by club chart -->
+        <div class="col-md-12">
+          <div class="card shadow-sm">
+            <div class="card-header card-header-info bg-gradient-info">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h4 class="card-title mb-0">Announcements by Club</h4>
+                  <p class="card-category mb-0 text-white-50">Distribution of announcements across clubs</p>
+                </div>
+                <div class="btn-group btn-group-sm" role="group">
+                  <button type="button" class="btn btn-outline-light active" (click)="toggleChartType('doughnut')" id="viewDoughnut">
+                    <mat-icon>pie_chart</mat-icon>
+                  </button>
+                  <button type="button" class="btn btn-outline-light" (click)="toggleChartType('bar')" id="viewBar">
+                    <mat-icon>bar_chart</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-container" style="position: relative; height: 350px;">
+                <canvas id="announcementChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

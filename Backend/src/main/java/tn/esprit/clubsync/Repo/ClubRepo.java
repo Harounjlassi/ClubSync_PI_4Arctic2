@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface ClubRepo extends JpaRepository<Club, Long> {
     @Query("SELECT c FROM Club c WHERE lower(c.name) LIKE lower(concat('%', :name, '%'))")
     Optional<Club> findByNameContainingIgnoreCase(@Param("name") String name);
+
+    List<Club> findByCategorieIgnoreCase(String categorie);
+
 }

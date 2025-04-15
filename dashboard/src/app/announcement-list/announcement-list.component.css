@@ -1,0 +1,180 @@
+/* Styling for the announcement list component */
+
+.search-field {
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .search-input-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    color: #999;
+  }
+  
+  input.mat-input-element {
+    padding-left: 40px;
+  }
+  
+  .clear-button {
+    position: absolute;
+    right: 0;
+  }
+  
+  .card-header-primary {
+    background: linear-gradient(60deg, #7b1fa2, #913f9e);
+  }
+  
+  .card-header-info {
+    background: linear-gradient(60deg, #26c6da, #00acc1);
+  }
+  
+  .badge-count {
+    display: inline-block;
+    background-color: #fff;
+    color: #913f9e;
+    border-radius: 50%;
+    height: 22px;
+    width: 22px;
+    line-height: 22px;
+    font-size: 12px;
+    text-align: center;
+    margin-left: 8px;
+  }
+  
+  .add-announcement-btn {
+    background-color: #ffffff;
+    color: #7b1fa2;
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .add-announcement-btn mat-icon {
+    margin-right: 8px;
+  }
+  
+  .add-announcement-btn:hover {
+    background-color: #f5f5f5;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .export-buttons-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .export-btn {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .export-btn mat-icon {
+    margin-right: 8px;
+  }
+  
+  .export-btn-pdf {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .export-btn-excel {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .export-btn:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transform: translateY(-1px);
+  }
+  
+  /* Table styles */
+  .table {
+    margin-bottom: 0;
+  }
+  
+  .table thead th {
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-top-width: 0;
+    vertical-align: middle;
+    padding: 12px 8px;
+  }
+  
+  .table tbody td {
+    padding: 8px;
+    vertical-align: middle;
+    font-size: 0.875rem;
+  }
+  
+  .content-cell {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .actions-cell {
+    white-space: nowrap;
+    width: 120px;
+  }
+  
+  .col-id {
+    width: 50px;
+  }
+  
+  .col-title {
+    width: 150px;
+  }
+  
+  .col-content {
+    width: 300px;
+  }
+  
+  .col-club {
+    width: 120px;
+  }
+  
+  .col-date {
+    width: 180px;
+  }
+  
+  .col-actions {
+    width: 120px;
+  }
+  
+  /* Chart container */
+  .chart-container {
+    margin: 0 auto;
+  }
+  
+  /* Responsive adaptations */
+  @media (max-width: 768px) {
+    .export-buttons-container {
+      margin-top: 15px;
+      width: 100%;
+      justify-content: space-between;
+    }
+    
+    .table-responsive {
+      overflow-x: auto;
+    }
+    
+    .content-cell {
+      max-width: 200px;
+    }
+  }

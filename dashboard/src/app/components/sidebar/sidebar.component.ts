@@ -17,8 +17,8 @@ export const ROUTES: RouteInfo[] = [
     { path: '/maps', title: 'Maps',  icon:'location_on', class: '' },
     { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
     { path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
-    { path: '/club-list', title: 'Club List', icon: 'groups', class: '' } // Ajout du bouton Club List
-
+    { path: '/club-list', title: 'Club List', icon: 'groups', class: '' },
+    { path: '/announcment-list', title: 'announcment List', icon: 'campaign', class: '' }
 ];
 
 @Component({

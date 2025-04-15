@@ -1,6 +1,7 @@
 package tn.esprit.clubsync.entities;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +16,9 @@ import java.util.*;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "table-club")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_club") // Utilisez le nom de votre identifiant ici
+
+
 public class Club {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -130,7 +134,18 @@ public class Club {
     @OneToMany(mappedBy = "organize", cascade = CascadeType.ALL)
     private List<Event> events = new ArrayList<>();
 
+    public List<Announcement> getAnnouncements() {
+        return announcements;
+    }
+
+    public void setAnnouncements(List<Announcement> announcements) {
+        this.announcements = announcements;
+    }
+
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
     private List<Discussion> discussions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
+    List<Announcement> announcements = new ArrayList<>();
 }
 

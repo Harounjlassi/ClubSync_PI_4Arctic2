@@ -1,3 +1,4 @@
+import { Announcement } from './announcement';
 import { Discussion } from './discussion.model';
 import { User } from './user.model';  // Import de User pour les participants
 
@@ -13,7 +14,9 @@ export interface Club {
     slogan: string;
     categorie: string;
     showFullDescription: boolean ;  // Ajouter cette propriété
-    rating: number; // Ajoute une propriété pour le rating
+    rating: number; 
+    announcements?: Announcement[]; // 👈 Ajoute cette ligne
+    // Ajoute une propriété pour le rating
 
   }
   

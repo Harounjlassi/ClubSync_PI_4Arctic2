@@ -38,6 +38,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { ChatComponent } from './chat/chat.component';
 import { JokeComponent } from './joke/joke.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { AnnouncementListComponent } from './announcement-list/announcement-list.component';
+import { AddAnnouncementDialogComponent } from './add-announcement-dialog/add-announcement-dialog.component';
+import { EditAnnouncementDialogComponent } from './edit-announcement-dialog/edit-announcement-dialog.component';
 
 
 
@@ -100,6 +103,9 @@ import { MatMenuModule } from '@angular/material/menu';
     ClubMembersComponent,
     ChatComponent,
     JokeComponent,
+    AnnouncementListComponent,
+    AddAnnouncementDialogComponent,
+    EditAnnouncementDialogComponent,
     
     
 
