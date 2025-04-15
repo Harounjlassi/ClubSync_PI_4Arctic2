@@ -615,3 +615,15 @@ button {
     width: 95%;
   }
 }
+/* Add to your component's CSS */
+.kanban-task[draggable="true"] {
+  cursor: grab;
+}
+
+.kanban-task.task-dragging {
+  opacity: 0.5;
+}
+
+.kanban-column.drop-target {
+  background-color: rgba(0, 123, 255, 0.1);
+}

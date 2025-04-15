@@ -1719,3 +1719,95 @@ $light: #f8f9fa;
     opacity: 0;
   }
 }
+.project-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+
+
+
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875em;
+}
+
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.compact-image-upload {
+  border: 2px dashed #dee2e6;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+.image-preview-wrapper {
+  position: relative;
+  max-width: 200px;
+}
+
+.image-preview-wrapper img {
+  max-width: 100%;
+  border-radius: 0.25rem;
+}
+
+.preview-actions {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 1rem;
+}
+
+.progress-input {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-value {
+  min-width: 3rem;
+  text-align: center;
+}
+
+.face-detection-results {
+  margin-top: 1rem;
+}
+
+.face-badge {
+  display: inline-block;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  margin-right: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-submit {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}

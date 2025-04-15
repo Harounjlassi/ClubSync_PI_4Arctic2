@@ -11,7 +11,7 @@
 
 ## 🚀 Features  
 ### 📌 **Task Management**  
-- ✅ Create, assign, and track tasks with deadlines  
+- ✅ Create, assign, and track tasks with deadlines  for their Projects 
 - 🔍 Filter by status (`To-Do` / `In Progress` / `Done`)  
 - 🚨 Priority labels (**High**/Medium/Low)  
 
@@ -35,7 +35,7 @@
 **AI Features**:  
 - 🔍 **Smart Task Suggestions** 
 - 🤖 **Face Recognition** 
-- 🎯 **Priority AI** 
+- 🎯 **Get Priority By Face Recognition** 
 
 ---
 

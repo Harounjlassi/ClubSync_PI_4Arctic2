@@ -74,7 +74,7 @@ export class ProjectTaskListComponent implements OnInit {
   }
 
   getTasksByStatus(status: string): ProjetTask[] {
-    console.log('GetTasksByStatus:', this.tasks.filter(task => task.status === status));
+   /// console.log('GetTasksByStatus:', this.tasks.filter(task => task.status === status));
     return this.tasks.filter(task => task.status === status);
   }
 
@@ -98,6 +98,7 @@ export class ProjectTaskListComponent implements OnInit {
     };
     this.showTaskModal = true;
   }
+  
 
   closeTaskModal() {
     this.showTaskModal = false;
@@ -174,9 +175,7 @@ export class ProjectTaskListComponent implements OnInit {
     event.dataTransfer?.setData('text/plain', task.id);
   }
 
-  allowDrop(event: DragEvent) {
-    event.preventDefault();
-  }
+ 
 
   getPriorityIcon(priority: string): string {
     switch(priority) {
@@ -190,7 +189,11 @@ export class ProjectTaskListComponent implements OnInit {
   onDrop(event: DragEvent, newStatus: 'todo' | 'inProgress' | 'done') {
     event.preventDefault();
     const taskId = event.dataTransfer?.getData('text/plain');
-    const task = this.tasks.find(t => t.id === taskId);
+    const task = this.tasks.find(t => t.id.toString() === taskId);
+    console.log('Dropped task ID:', taskId);
+    console.log('All tasks:', this.tasks);
+    
+  
     
     if (task) {
       task.status = newStatus;
@@ -201,7 +204,14 @@ export class ProjectTaskListComponent implements OnInit {
         task.progress = 100;
         task.completedDate = new Date().toISOString();
       }
-      this.taskService.updateTask(task).subscribe();
+      this.taskService.updateTask(task).subscribe(
+        () => {
+          this.listTasks();
+        },
+        (error) => {
+          console.error('Error updating task:', error);
+        }
+      );
     }
     this.draggedTaskId = null;
   }
@@ -210,7 +220,13 @@ export class ProjectTaskListComponent implements OnInit {
     event.stopPropagation();
   }
 
+ 
+  allowDrop(event: DragEvent) {
+    event.preventDefault();
+    (event.currentTarget as HTMLElement).classList.add('drop-target');
+  }
+  
   onDragLeave(event: DragEvent) {
-    (event.currentTarget as HTMLElement).style.background = '';
+    (event.currentTarget as HTMLElement).classList.remove('drop-target');
   }
 }

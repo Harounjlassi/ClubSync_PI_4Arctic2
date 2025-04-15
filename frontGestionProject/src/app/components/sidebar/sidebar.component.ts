@@ -17,9 +17,9 @@ export const ROUTES: RouteInfo[] = [
     { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
   
     { path: '/projet', title: 'projects',  icon:'unarchive', class: '' },
-    { path: '/projet-reports/:id', title: 'projet-reports',  icon:'unarchive', class: '' },
-    { path: '/projet-tasks/:id', title: 'projet-tasks',  icon:'unarchive', class: '' },
-    { path: '/projet-messages/:id', title: 'projet-messages',  icon:'unarchive', class: '' },
+    // { path: '/projet-reports/:id', title: 'projet-reports',  icon:'unarchive', class: '' },
+    // { path: '/projet-tasks/:id', title: 'projet-tasks',  icon:'unarchive', class: '' },
+    // { path: '/projet-messages/:id', title: 'projet-messages',  icon:'unarchive', class: '' },
     // { path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
 ];
 

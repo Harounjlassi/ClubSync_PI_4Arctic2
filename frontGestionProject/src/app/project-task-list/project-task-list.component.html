@@ -22,8 +22,10 @@
               <div class="empty-icon">📭</div>
               <p>No tasks here yet</p>
             </div>
-            <div class="kanban-task" *ngFor="let task of getTasksByStatus('todo')" >
-                
+<!-- In the To Do column tasks -->
+<div class="kanban-task" *ngFor="let task of getTasksByStatus('todo')" 
+     draggable="true" (dragstart)="onDragStart($event, task)"
+     [class.task-dragging]="draggedTaskId === task.id">                
               <div class="task-priority" [class.high]="task.priorite === 'HIGH'"
                    [class.medium]="task.priorite === 'MEDIUM'" [class.low]="task.priorite === 'low'"></div>
               <div class="task-content">
@@ -64,7 +66,7 @@
 
         <!-- In Progress Column -->
         <div class="kanban-column progress-column" droppable (drop)="onDrop($event, 'inProgress')" 
-             (dragover)="allowDrop($event)" (dragleave)="onDragLeave($event)">
+        (dragover)="allowDrop($event)" (dragleave)="onDragLeave($event)">
           <div class="column-header">
             <div class="header-content">
               <div class="column-icon">🔄</div>

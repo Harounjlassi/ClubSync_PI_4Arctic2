@@ -12,7 +12,7 @@
 
 .reports-header {
   padding: 20px 24px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #F44336 0%, #E53935 100%);
   color: white;
   
   .reports-tabs {
@@ -138,7 +138,7 @@
               display: flex;
               align-items: center;
               justify-content: center;
-              color: #6366f1;
+              color: #F44336;
               
               .material-icons {
                 font-size: 1.5rem;
@@ -177,7 +177,7 @@
             
             &.status-processing {
               background: rgba(59, 130, 246, 0.1);
-              color: #3b82f6;
+              color: #ef4444;
             }
             
             &.status-failed {
@@ -241,7 +241,7 @@
             
             .btn-primary {
               padding: 10px 20px;
-              background: #6366f1;
+              background: #F44336;
               color: white;
               border: none;
               border-radius: 6px;
@@ -253,7 +253,7 @@
               font-weight: 500;
               
               &:hover {
-                background: #4f46e5;
+                background: #E53935;
               }
               
               .material-icons {
@@ -326,7 +326,7 @@
     
     .new-report-btn {
       padding: 8px 16px;
-      background: #6366f1;
+      background: #F44336;
       color: white;
       border: none;
       border-radius: 6px;
@@ -338,7 +338,7 @@
       font-weight: 500;
       
       &:hover {
-        background: #4f46e5;
+        background: #E53935;
       }
       
       .material-icons {
@@ -440,7 +440,7 @@
       
       &:focus {
         outline: none;
-        border-color: #6366f1;
+        border-color: #F44336;
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
       }
     }
@@ -483,7 +483,7 @@
     
     .btn-submit {
       padding: 10px 16px;
-      background: #6366f1;
+      background: #F44336;
       color: white;
       border: none;
       border-radius: 6px;
@@ -492,7 +492,7 @@
       font-weight: 500;
       
       &:hover {
-        background: #4f46e5;
+        background: #E53935;
       }
     }
   }

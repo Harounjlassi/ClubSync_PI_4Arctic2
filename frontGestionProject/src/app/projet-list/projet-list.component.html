@@ -1,3 +1,4 @@
+
 <div class="main-content">
   <div class="container-fluid">
     <div class="row">
@@ -314,16 +315,39 @@
           <input
             type="text"
             formControlName="nom"
+            [class.is-invalid]="addProjectForm.get('nom')?.invalid && addProjectForm.get('nom')?.touched"
             placeholder="Enter project name"
+            class="form-control"
           />
+          <div *ngIf="addProjectForm.get('nom')?.invalid && addProjectForm.get('nom')?.touched" class="invalid-feedback">
+            <div *ngIf="addProjectForm.get('nom')?.hasError('required')">
+              Project name is required
+            </div>
+            <div *ngIf="addProjectForm.get('nom')?.hasError('minlength')">
+              Project name must be at least {{ addProjectForm.get('nom')?.errors?.minlength?.requiredLength }} characters
+            </div>
+            <div *ngIf="addProjectForm.get('nom')?.hasError('maxlength')">
+              Project name cannot exceed {{ addProjectForm.get('nom')?.errors?.maxlength?.requiredLength }} characters
+            </div>
+            <div *ngIf="addProjectForm.get('nom')?.hasError('pattern')">
+              Only letters, numbers, spaces, hyphens and underscores allowed
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
           <label>Description</label>
           <textarea
             formControlName="description"
+            [class.is-invalid]="addProjectForm.get('description')?.invalid && addProjectForm.get('description')?.touched"
             placeholder="Enter project description"
+            class="form-control"
           ></textarea>
+          <div *ngIf="addProjectForm.get('description')?.invalid && addProjectForm.get('description')?.touched" class="invalid-feedback">
+            <div *ngIf="addProjectForm.get('description')?.hasError('maxlength')">
+              Description cannot exceed {{ addProjectForm.get('description')?.errors?.maxlength?.requiredLength }} characters
+            </div>
+          </div>
         </div>
         <div class="compact-image-upload">
           <!-- Preview when image exists -->
@@ -346,24 +370,30 @@
             </div>
           </div>
 
-          <!-- Upload area when no image -->
-          <div
-            class="upload-area"
-            *ngIf="!imagePreview && !tempProjet?.imageUrl"
-          >
+          <div class="upload-area" *ngIf="!imagePreview">
             <input
               type="file"
               id="projectImage"
               accept="image/*"
               (change)="onImagePicked($event)"
               #fileInput
+              class="d-none"
             />
-            <label for="projectImage">
+            <label for="projectImage" class="upload-label">
               <i class="fas fa-camera"></i>
               <span>Add Image</span>
             </label>
+         
+        </div>
+        <div *ngIf="addProjectForm.get('image')?.invalid" class="invalid-feedback">
+          <div *ngIf="addProjectForm.get('image')?.hasError('fileSize')">
+            Image must be less than 2MB
+          </div>
+          <div *ngIf="addProjectForm.get('image')?.hasError('fileType')">
+            Only JPG, PNG or GIF images allowed
           </div>
         </div>
+      </div>
         <!-- <div class="form-group">
           <label>Image URL</label>
           <input type="text" formControlName="imageUrl" placeholder="Enter image URL">
@@ -377,6 +407,11 @@
             <option value="Stopped">Stopped</option>
             <option value="Finished">Finished</option>
           </select>
+          <div *ngIf="addProjectForm.get('status')?.invalid && addProjectForm.get('status')?.touched" class="invalid-feedback">
+            <div *ngIf="addProjectForm.get('status')?.hasError('required')">
+              Status is required
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
@@ -392,10 +427,18 @@
           <input
             type="text"
             formControlName="createur"
+            [class.is-invalid]="addProjectForm.get('createur')?.invalid && addProjectForm.get('createur')?.touched"
             placeholder="Enter creator name"
-            class="form-input"
+            class="form-control"
           />
+          <div *ngIf="addProjectForm.get('createur')?.invalid && addProjectForm.get('createur')?.touched" class="invalid-feedback">
+            <div *ngIf="addProjectForm.get('createur')?.hasError('required')">
+              Creator name is required
+            </div>
+          </div>
         </div>
+      
+      
         
         <div class="camera-controls">
           <button type="button" class="btn btn-start" (click)="startCamera()">

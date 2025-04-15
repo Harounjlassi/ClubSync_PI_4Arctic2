@@ -350,19 +350,51 @@ addMessage() {
       this.listProjets(); // Refresh the list
     });
   }
+  // In your component
+get nom() {
+  return this.addProjectForm.get('nom');
+}
+
 
   createAddProjectForm() {
     this.addProjectForm = this.fb.group({
       id: [null],
-      nom: ["", Validators.required],
-      description: [""],
-      imageUrl: [""],
-      status: ["Not_Started"],
-      progress: [0],
-      createur: [""],
+      //nom: ["", Validators.required],
+      // nom: ['', [
+      //   Validators.required,
+      //   Validators.minLength(3),
+      //   Validators.maxLength(50),
+      //   Validators.pattern(/^[a-zA-Z0-9\s\-_]*$/) // Alphanumeric with spaces, hyphens, underscores
+      // ]],
+      nom: ['', [
+        Validators.required,
+        Validators.minLength(3),
+ 
+      ]],
+      description: ["",[
+        Validators.required,
+ 
+      ]],
+      imageUrl: ["",[
+        Validators.required,
+
+ 
+      ]],
+      status: ["Not_Started",[
+        Validators.required,
+ 
+      ]],
+      progress: [0,[
+        Validators.required,
+ 
+      ]],
+      createur: ["",[
+        Validators.required,
+ 
+      ]],
       dateCreated: [new Date()],
       lastUpdated: [new Date()],
-      image: [null],
+ 
     });
   }
 
@@ -551,6 +583,10 @@ addMessage() {
 
   onAddProjectSubmit() {
     console.log(this.addProjectForm.value);
+    if (this.addProjectForm.invalid) {
+      alert('Please fix form errors before submitting');
+      return;
+    }
 
     if (this.addProjectForm.valid) {
       const newProject: Projet = {

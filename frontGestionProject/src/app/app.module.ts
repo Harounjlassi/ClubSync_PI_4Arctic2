@@ -31,6 +31,7 @@ import { ProjetsComponent } from './pages/projets/projets.component';
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
   ],
   declarations: [
     AppComponent,
