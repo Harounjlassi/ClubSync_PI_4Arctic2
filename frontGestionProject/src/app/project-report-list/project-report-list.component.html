@@ -37,9 +37,9 @@
                 <thead>
                   <tr>
                     <th width="5%">
-                      <input type="checkbox" 
+                      <!-- <input type="checkbox" 
                              [checked]="allSelected()"
-                             (change)="toggleSelectAll($event)">
+                             (change)="toggleSelectAll($event)"> -->
                     </th>
                     <th>Report Title</th>
                     <th width="12%">Created</th>
@@ -54,9 +54,9 @@
                   <tr *ngFor="let report of reports" 
                       [class.selected]="report.selected">
                     <td>
-                      <input type="checkbox" 
+                      <!-- <input type="checkbox" 
                              [(ngModel)]="report.selected"
-                             (click)="$event.stopPropagation()">
+                             (click)="$event.stopPropagation()"> -->
                     </td>
                     <td class="report-name">
                       <div class="report-icon">
@@ -64,7 +64,8 @@
                       </div>
                       <div>
                         <div class="title">{{report.title}}</div>
-                        <div class="subtitle">{{report.description}}</div>
+                        
+                        <!-- <div class="subtitle">{{report.description}}</div> -->
                       </div>
                     </td>
                     <td>{{report.dateCreated | date:'M/d/yy'}}</td>
