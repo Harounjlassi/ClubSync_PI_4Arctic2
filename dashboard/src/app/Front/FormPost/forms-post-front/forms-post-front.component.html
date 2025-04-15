@@ -71,11 +71,26 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mb-5 mb-lg-0">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2>Form Posts</h2>
-                        <button class="btn btn-primary" (click)="openCreateModal()">
-                            <i class="fa fa-plus"></i> Add Post
-                        </button>
+                    <!-- Add this near the top of your posts section -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2 class="h4 mb-0">Recent Discussions</h2>
+                                <div class="d-flex">
+                                    <div class="mr-3">
+                                        <select class="form-control form-control-sm" [(ngModel)]="selectedSort"
+                                            (change)="sortPosts()">
+                                            <option *ngFor="let option of sortOptions" [value]="option.value">
+                                                {{ option.label }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm" (click)="openCreateModal()">
+                                        <i class="fas fa-plus mr-1"></i> New Post
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div *ngIf="isLoading" class="text-center">
@@ -85,89 +100,154 @@
                     </div>
 
                     <div class="blog_left_sidebar">
-                        <article class="blog_item" *ngFor="let post of forumPosts">
-                            <div class="blog_item_img">
-                                <img class="card-img rounded-0"
-                                    [src]="post.imageBase64 ? post.imageBase64 : 'assets/img/blog/single_blog_1.png'"
-                                    alt="Post image" style="height: 300px;">
-                                <a class="blog_item_date">
-                                    <h3>{{post.post_date | date:'dd'}}</h3>
-                                    <p>{{post.post_date | date:'MMM'}}</p>
-                                </a>
+                        <article class="post-card mb-4" *ngFor="let post of forumPosts">
+                            <!-- Post Header with Author Info -->
+                            <div class="post-header d-flex align-items-center mb-3">
+                                <div class="author-avatar mr-3">
+                                    <img [src]="post.author.avatar || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'"
+                                        class="rounded-circle" width="48" height="48" alt="Author avatar">
+                                </div>
+                                <div class="author-info">
+                                    <h5 class="mb-0">{{post.author.name || post.author.email}}</h5>
+                                    <small class="text-muted">{{post.post_date | date:'mediumDate'}} at {{post.post_date
+                                        | date:'shortTime'}}</small>
+                                </div>
                             </div>
-                            <div class="blog_details">
-                                <a class="d-inline-block">
-                                    <h2 class="blog-head">{{post.content}}</h2>
-                                </a>
-                                <p>{{post.content}}</p>
-                                <ul class="blog-info-link">
-                                    <li><a><i class="fa fa-user"></i> {{post.author.email}}</a></li>
-                                    <li><a><i class="fa fa-comments"></i> {{post?.comments.length || 0}} Comments</a>
-                                    </li>
 
-                                </ul>
-                                <!-- Inside your post template -->
-                                <div class="react-section mt-3">
-                                    <div class="react-buttons">
-                                        <button *ngFor="let type of ReactType | keyvalue" class="btn btn-sm react-btn"
-                                            [class.active]="getUserReactType(post.id_post) === type.value"
-                                            (click)="toggleReact(post.id_post, type.value)">
-                                            {{type.value | lowercase}}
-                                            <span class="badge bg-secondary ms-1">
-                                                {{reactCounts[post.id_post]?.[type.value] || 0}}
-                                            </span>
-                                        </button>
+                            <!-- Post Content -->
+                            <div class="post-content mb-3">
+
+                                <h4 class="post-title mb-2" [innerHTML]="parseMentions(post.content)">{{post.content}}
+                                </h4>
+                            </div>
+
+                            <!-- Post Image (if exists) -->
+                            <div class="post-image mb-3" *ngIf="post.imageBase64">
+                                <img [src]="post.imageBase64" class="img-fluid rounded" alt="Post image"
+                                    style="max-height: 400px; width: 100%; object-fit: cover;">
+                            </div>
+
+                            <!-- Post Actions -->
+                            <div
+                                class="post-actions d-flex justify-content-between align-items-center border-top border-bottom py-2 mb-3">
+                                <!-- Reactions -->
+                                <!-- In your post actions section, modify the reactions display -->
+                                <div class="reactions">
+                                    <button *ngFor="let type of ReactType | keyvalue"
+                                        class="btn btn-sm btn-reaction mr-2"
+                                        [class.active]="getUserReactType(post.id_post) === type.value"
+                                        (click)="toggleReact(post.id_post, type.value)" [title]="type.value">
+                                        <span class="reaction-icon">{{reactIcons[type.value]}}</span>
+                                        <span class="reaction-count ml-1">{{reactCounts[post.id_post]?.[type.value] ||
+                                            0}}</span>
+                                    </button>
+                                    <!-- Add total reactions count -->
+                                    <span class="total-reactions small text-muted ml-2">
+                                        {{getTotalReactions(post.id_post)}} total reactions
+                                    </span>
+                                </div>
+
+                                <!-- Comment Toggle -->
+                                <button class="btn btn-sm btn-link text-muted"
+                                    (click)="toggleCommentExpansion(post.id_post)">
+                                    <i class="far fa-comment mr-1"></i>
+                                    {{post.comments?.length || 0}} comments
+                                </button>
+                            </div>
+
+                            <!-- Comments Section -->
+                            <div class="comments-section" *ngIf="expandedPosts[post.id_post]">
+                                <!-- Comment Form -->
+                                <div class="comment-form mb-4">
+                                    <div class="d-flex">
+                                        <img [src]="currentUser.avatar || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'"
+                                            class="rounded-circle mr-3" width="40" height="40" alt="User avatar">
+                                        <div class="flex-grow-1">
+                                            <textarea class="form-control mb-2" [(ngModel)]="newComments[post.id_post]"
+                                                placeholder="Add a comment..." rows="2"></textarea>
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-primary btn-sm"
+                                                    (click)="addComment(post.id_post)"
+                                                    [disabled]="!newComments[post.id_post]">
+                                                    Post Comment
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="comments-section mt-4">
-                                    <h5 class="mb-3">Comments</h5>
 
-                                    <!-- Comment Form -->
-                                    <div class="comment-form mb-4">
-                                        <div class="form-group">
-                                            <textarea class="form-control" [(ngModel)]="newComments[post.id_post]"
-                                                placeholder="Add a comment..." rows="2"></textarea>
-                                        </div>
-                                        <button class="btn btn-sm btn-primary" (click)="addComment(post.id_post)">
-                                            Post Comment
-                                        </button>
-                                    </div>
-
-                                    <!-- Comments List -->
-                                    <div class="comments-list">
-                                        <div class="comment-item mb-3" *ngFor="let comment of post.comments">
-                                            <div class="d-flex">
-                                                <div class="flex-grow-1 ms-3">
-                                                    <h6 class="mb-1">{{comment.author.name || comment.author.email}}
-                                                    </h6>
-                                                    <p class="mb-1">{{comment.content}}</p>
+                                <!-- Comments List -->
+                                <div class="comments-list">
+                                    <div class="comment mb-3" *ngFor="let comment of post.comments">
+                                        <div class="d-flex">
+                                            <img [src]="comment.author.avatar || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'"
+                                                class="rounded-circle mr-3" width="40" height="40"
+                                                alt="Commenter avatar">
+                                            <div class="flex-grow-1">
+                                                <div class="comment-header d-flex justify-content-between mb-1">
+                                                    <h6 class="mb-0 font-weight-bold">{{comment.author.name ||
+                                                        comment.author.email}}</h6>
                                                     <small class="text-muted">{{comment.createdAt |
-                                                        date:'medium'}}</small>
+                                                        date:'short'}}</small>
+                                                </div>
+                                                <p class="comment-text mb-2"
+                                                    [innerHTML]="parseMentions(comment.content)">{{comment.content}}</p>
 
-                                                    <!-- Reply Button -->
-                                                    <button class="btn btn-sm btn-link"
-                                                        (click)="toggleReplyForm(comment.id)">
-                                                        Reply
-                                                    </button>
+                                                <!-- Reply Button -->
+                                                <button class="btn btn-sm btn-outline-secondary mb-2"
+                                                    (click)="toggleReplyForm(comment.id_comment)">
+                                                    <i class="fas fa-reply mr-1"></i> Reply
+                                                </button>
 
+                                                <!-- Reply Form -->
+                                                <div *ngIf="showReplyForms[comment.id_comment]"
+                                                    class="reply-form pl-3 border-left">
+                                                    <div class="d-flex mt-2">
+                                                        <img [src]="currentUser.avatar || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'"
+                                                            class="rounded-circle mr-3" width="36" height="36"
+                                                            alt="User avatar">
+                                                        <div class="flex-grow-1">
+                                                            <textarea class="form-control mb-2"
+                                                                [(ngModel)]="newReplies[comment.id_comment]"
+                                                                placeholder="Write a reply..." rows="1"></textarea>
+                                                            <div class="d-flex justify-content-end">
+                                                                <button class="btn btn-sm btn-outline-secondary mr-2"
+                                                                    (click)="showReplyForms[comment.id_comment] = false">
+                                                                    Cancel
+                                                                </button>
+                                                                <button class="btn btn-sm btn-primary"
+                                                                    (click)="addReply(comment.id_comment)">
+                                                                    Post Reply
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                                    <!-- Replies List -->
-                                                    <div class="replies mt-2" *ngIf="comment.replies?.length">
-                                                        <div class="reply-item mb-2"
-                                                            *ngFor="let reply of comment.replies">
-                                                            <div class="d-flex">
-                                                                <div class="flex-shrink-0">
-                                                                    <img [src]="reply.author.avatar || 'assets/img/avatar.png'"
-                                                                        class="rounded-circle" width="30" height="30"
-                                                                        alt="User avatar">
+                                                <!-- Replies List -->
+                                                <div class="replies pl-3 border-left" *ngIf="comment.replies?.length">
+                                                    <div class="reply mb-2" *ngFor="let reply of comment.replies">
+                                                        <div class="d-flex">
+                                                            <img [src]="reply.author.avatar || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'"
+                                                                class="rounded-circle mr-3" width="36" height="36"
+                                                                alt="Replier avatar">
+                                                            <div class="flex-grow-1">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <h6 class="mb-0 small font-weight-bold">
+                                                                        {{reply.author.firstname}}
+                                                                        {{reply.author.lastname}}
+                                                                    </h6>
+                                                                    <small class="text-muted">{{reply.replyDate |
+                                                                        date:'short'}}</small>
                                                                 </div>
-                                                                <div class="flex-grow-1 ms-3">
-                                                                    <h6 class="mb-1">{{reply.author.name ||
-                                                                        reply.author.email}}</h6>
-                                                                    <p class="mb-1">{{reply.text}}</p>
-                                                                    <small class="text-muted">{{reply.createdAt |
-                                                                        date:'medium'}}</small>
-                                                                </div>
+                                                                <p class="small mb-1"
+                                                                    [innerHTML]="parseMentions(reply.content)">
+                                                                    {{reply.content}}</p>
+                                                                <button *ngIf="reply.author.id === currentUser.id"
+                                                                    class="btn btn-sm btn-link text-danger p-0"
+                                                                    (click)="deleteReply(reply.idReply, comment.id_comment)">
+                                                                    <i class="far fa-trash-alt mr-1"></i> Delete
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -204,19 +284,19 @@
                 <div class="col-lg-4">
                     <div class="blog_right_sidebar">
                         <aside class="single_sidebar_widget search_widget">
-                            <form action="#">
+                            <form [formGroup]="postForm">
                                 <div class="form-group">
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder='Search Keyword'
-                                            onfocus="this.placeholder = ''"
-                                            onblur="this.placeholder = 'Search Keyword'">
-                                        <div class="input-group-append">
-                                            <button class="btns" type="button"><i class="ti-search"></i></button>
-                                        </div>
+                                        <input type="text" class="form-control"
+                                            placeholder='Search posts, comments, or replies' formControlName="search"
+                                            (input)="onSearchInput()" onfocus="this.placeholder = ''"
+                                            onblur="this.placeholder = 'Search posts, comments, or replies'">
                                     </div>
                                 </div>
                                 <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                                    type="submit">Search</button>
+                                    type="button" (click)="clearSearch()">
+                                    Clear Search
+                                </button>
                             </form>
                         </aside>
                         <aside class="single_sidebar_widget post_category_widget">
@@ -390,7 +470,7 @@
             <div class="footer-top footer-padding">
                 <!-- Footer Menu -->
                 <div class="row d-flex justify-content-between">
-                    <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6">
+                    <div class="col-xl-2 col-lg-2 col-md-4 col-md-6">
                         <div class="single-footer-caption mb-50">
                             <div class="footer-tittle">
                                 <h4>COMPANY</h4>
@@ -403,7 +483,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-md-6">
                         <div class="single-footer-caption mb-50">
                             <div class="footer-tittle">
                                 <h4>Open hour</h4>
@@ -416,7 +496,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-md-6">
                         <div class="single-footer-caption mb-50">
                             <div class="footer-tittle">
                                 <h4>RESOURCES</h4>
@@ -430,7 +510,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
+                    <div class="col-xl-3 col-lg-4 col-md-5 col-md-6">
                         <div class="single-footer-caption mb-50">
                             <!-- logo -->
                             <div class="footer-logo">
@@ -483,7 +563,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="postModalLabel">{{isEditMode ? 'Edit' : 'Create'}} Post</h5>
-                <button type="button" (click)="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" (click)="closeModal()" class="close" data-dimdiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -507,7 +587,7 @@
                         </small>
                         <div *ngIf="imagePreview" class="mt-2">
                             <img [src]="imagePreview" class="img-thumbnail" style="max-height: 150px;">
-                            <button type="button" class="btn btn-sm btn-danger ml-2" (click)="removeImage()">
+                            <button type="button" class="btn btn-md btn-danger ml-2" (click)="removeImage()">
                                 Remove
                             </button>
                         </div>
@@ -515,7 +595,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" (click)="closeModal()"
-                            data-dismiss="modal">Close</button>
+                            data-dimdiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary" [disabled]="postForm.invalid">
                             {{isEditMode ? 'Update' : 'Create'}}
                         </button>

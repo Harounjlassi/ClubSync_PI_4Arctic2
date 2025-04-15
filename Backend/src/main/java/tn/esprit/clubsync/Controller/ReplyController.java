@@ -1,6 +1,7 @@
 package tn.esprit.clubsync.Controller;
 
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,20 @@ public class ReplyController {
     private iReplyService replyService;
 
     @PostMapping
-    public ResponseEntity<Reply> createReply(@RequestBody Reply reply) {
-        return ResponseEntity.ok(replyService.addReply(reply));
+    public ResponseEntity<?> createReply(@RequestBody Reply reply) {
+        try {
+            // Verify comment exists and is properly associated
+            if (reply.getComment() == null || reply.getComment().getId_comment() == null) {
+                return ResponseEntity.badRequest().body("Comment must be specified");
+            }
+
+            Reply savedReply = replyService.addReply(reply);
+            return ResponseEntity.ok(savedReply);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
 
     @PutMapping
     public ResponseEntity<Reply> updateReply(@RequestBody Reply reply) {
@@ -51,4 +63,5 @@ public class ReplyController {
     public ResponseEntity<List<Reply>> getRepliesByAuthor(@PathVariable Long authorId) {
         return ResponseEntity.ok(replyService.getRepliesByAuthor(authorId));
     }
+
 }

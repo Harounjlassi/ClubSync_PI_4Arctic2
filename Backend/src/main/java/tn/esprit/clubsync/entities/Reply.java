@@ -1,5 +1,7 @@
 package tn.esprit.clubsync.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,5 +32,42 @@ public class Reply {
 
     @ManyToOne
     @JoinColumn(name = "comment_id")
+    @JsonIgnoreProperties({"replies", "forumPost"}) // Changed from @JsonIgnore
     Comment comment;
+
+    public Long getId_reply() {
+        return id_reply;
+    }
+
+    public void setId_reply(Long id_reply) {
+        this.id_reply = id_reply;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Users getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Users author) {
+        this.author = author;
+    }
+
+    public LocalDateTime getReply_date() {
+        return reply_date;
+    }
+
+    public void setReply_date(LocalDateTime reply_date) {
+        this.reply_date = reply_date;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
 }

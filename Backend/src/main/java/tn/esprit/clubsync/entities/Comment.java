@@ -1,5 +1,6 @@
 package tn.esprit.clubsync.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +37,7 @@ public class Comment {
     ForumPost forumPost;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("comment")
     List<Reply> replies;
 
     public Long getId_comment() {

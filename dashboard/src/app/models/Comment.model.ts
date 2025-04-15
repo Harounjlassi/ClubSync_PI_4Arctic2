@@ -4,10 +4,10 @@ import { User } from "./user.model";
 
 
 export interface Comment {
-  idComment: number;
+  id_comment: number; 
   content: string;
   author: User;
-  commentDate: Date;
+  comment_date: Date; 
   forumPost: ForumPost;
   replies?: Reply[];
 }
