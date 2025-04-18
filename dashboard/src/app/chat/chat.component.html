@@ -38,9 +38,9 @@
           <i class="fas fa-file attachment-icon"></i>
           <div class="attachment-name">{{ message.attachment.name }}</div>
         </div>
-        
+
         <div class="content" [innerHTML]="message.content"></div>
-        
+
         <div class="timestamp" title="{{message.timestamp | date:'dd/MM/yyyy HH:mm'}}">
           {{ formatTimestamp(message.timestamp) }}
           <span *ngIf="!message.isBot" class="message-status">
@@ -69,7 +69,7 @@
       <button class="action-button" title="Emoji" (click)="toggleEmojiPicker()">
         <i class="far fa-smile"></i>
       </button>
-      
+
       <div class="attachment-button">
         <label for="file-upload" class="custom-file-upload action-button" title="Joindre un fichier">
           <i class="fas fa-paperclip"></i>
@@ -77,19 +77,19 @@
         <input id="file-upload" type="file" (change)="onFileSelected($event)" />
       </div>
     </div>
-  
+
     <!-- Ajout du sélecteur d'emoji qui était manquant -->
     <div class="emoji-picker" [class.active]="showEmojiPicker">
       <div class="emoji-item" *ngFor="let emoji of emojis" (click)="addEmoji(emoji)">
         {{ emoji }}
       </div>
     </div>
-  
+
     <input #messageInput type="text" 
            [formControl]="userInput" 
            (keyup.enter)="sendMessage()" 
            placeholder="Tapez votre message..." />
-  
+
     <button (click)="sendMessage()" class="send-button" [disabled]="!userInput.value?.trim()">
       <i class="fas fa-paper-plane"></i>
     </button>

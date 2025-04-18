@@ -64,30 +64,34 @@ export class AddAnnouncementDialogComponent implements OnInit {
       const formValues = this.announcementForm.value;
       const clubId = formValues.clubId;
       
-      // Create announcement object according to the model
+      console.log("Valeurs du formulaire:", JSON.stringify(formValues));
+      console.log("Club ID sélectionné:", clubId);
+      
+      // Create announcement object
       const announcement: Announcement = {
         title: formValues.title,
         content: formValues.content
       };
       
+      console.log("Objet annonce à envoyer:", JSON.stringify(announcement));
+      
       this.announcementService.addAnnouncement(clubId, announcement).subscribe({
         next: (result) => {
+          console.log("Résultat de l'ajout:", JSON.stringify(result));
           this.dialogRef.close(result);
-          this.toastr.success('Announcement added successfully!', 'Success', {
-            timeOut: 3000,
-            progressBar: true
-          });
+          this.toastr.success('Announcement added successfully!', 'Success');
         },
         error: (error) => {
-          console.error('Error adding announcement:', error);
+          console.error('Erreur lors de l\'ajout:', error);
           this.toastr.error('Failed to add announcement', 'Error');
           this.isSubmitting = false;
         },
         complete: () => this.isSubmitting = false
       });
+    } else {
+      console.log("Formulaire invalide:", this.announcementForm.errors);
     }
   }
-  
   onCancel(): void {
     this.dialogRef.close();
   }

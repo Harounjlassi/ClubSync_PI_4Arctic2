@@ -11,6 +11,8 @@ import * as XLSX from 'xlsx';
 import { ToastrService } from 'ngx-toastr';
 import { AddAnnouncementDialogComponent } from '../add-announcement-dialog/add-announcement-dialog.component';
 import { EditAnnouncementDialogComponent } from '../edit-announcement-dialog/edit-announcement-dialog.component';
+import { AnnouncementDetailsDialogComponent } from '../announcement-details-dialog/announcement-details-dialog.component';
+
 // Extend jsPDF to include the lastAutoTable property
 declare module 'jspdf' {
   interface jsPDF {
@@ -30,6 +32,10 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
   error: boolean = false;
   selectedClub: number | null = null;
   chart: any;
+  currentView: 'cards' | 'table' = 'cards'; // Default to card view
+  
+  // Club color mapping
+  private clubColors = new Map<number, string>();
   
   // Modern color palette
   chartColors = {
@@ -77,45 +83,108 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  loadAnnouncements(): void {
-    this.announcementService.getAll().subscribe(
-      (data: Announcement[]) => {
-        this.announcements = data;
-        this.filteredAnnouncements = data;
-        this.error = false;
-
-        setTimeout(() => {
-          this.generateChart();
-        }, 200);
-      },
-      (error) => {
-        console.error('Error fetching announcements:', error);
-        this.error = true;
-      }
-    );
+  // Method to get color for club cards
+  getCardColor(clubId: number | undefined): string {
+    if (!clubId) return '#607D8B'; // Default color for no club
+    
+    // If we haven't assigned a color to this club yet, do it now
+    if (!this.clubColors.has(clubId)) {
+      const colorIndex = this.clubColors.size % this.chartColors.borderColors.length;
+      this.clubColors.set(clubId, this.chartColors.borderColors[colorIndex]);
+    }
+    
+    return this.clubColors.get(clubId) || '#607D8B';
   }
 
+  loadAnnouncements(): void {
+    console.log("Chargement des annonces...");
+    this.announcementService.getAll().subscribe({
+      next: (data: Announcement[]) => {
+        console.log("Données reçues:", data);
+        // Vérifier si data est un tableau et s'il contient des éléments
+        if (Array.isArray(data) && data.length > 0) {
+          this.announcements = data.map(announcement => {
+            return {
+              ...announcement,
+              club: announcement.club || null
+            };
+          });
+          this.filteredAnnouncements = [...this.announcements];
+          console.log("Annonces traitées:", this.filteredAnnouncements);
+        } else {
+          console.warn("Aucune annonce reçue ou format incorrect");
+          this.announcements = [];
+          this.filteredAnnouncements = [];
+        }
+        this.error = false;
+        this.assignColorsToClubs();
+        setTimeout(() => {
+          this.generateChart();
+        }, 300);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération des annonces:', error);
+        this.error = true;
+      }
+    });
+  }
+
+  // Method to assign colors to clubs consistently
+  private assignColorsToClubs(): void {
+    this.clubColors.clear();
+    
+    // Get unique club IDs
+    const uniqueClubIds = Array.from(
+      new Set(
+        this.announcements
+          .filter(a => a.club && a.club.id_club)
+          .map(a => a.club!.id_club)
+      )
+    );
+    
+    // Assign colors to each club
+    uniqueClubIds.forEach((clubId, index) => {
+      const colorIndex = index % this.chartColors.borderColors.length;
+      this.clubColors.set(clubId, this.chartColors.borderColors[colorIndex]);
+    });
+  }
+  
   loadAnnouncementsByClub(clubId: number): void {
     if (!clubId) {
       this.loadAnnouncements();
       return;
     }
 
-    this.announcementService.getByClub(clubId).subscribe(
-      (data: Announcement[]) => {
+    this.announcementService.getByClub(clubId).subscribe({
+      next: (data: Announcement[]) => {
         this.announcements = data;
         this.filteredAnnouncements = data;
         this.error = false;
+        
+        // Assign colors to clubs for cards
+        this.assignColorsToClubs();
 
         setTimeout(() => {
           this.generateChart();
         }, 200);
       },
-      (error) => {
+      error: (error) => {
         console.error(`Error fetching announcements for club ${clubId}:`, error);
         this.error = true;
       }
-    );
+    });
+  }
+  
+  getClubName(club: any): string {
+    if (!club) return 'N/A';
+    
+    if (typeof club === 'object') {
+      return club?.name || 'N/A';
+    }
+    
+    // If it's just an ID, you may need to look up the club name
+    // from your clubs collection
+    return 'N/A';
   }
 
   generateChart(): void {
@@ -301,7 +370,11 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
   
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadAnnouncements();
+        // Attendre un peu avant de recharger les données
+        setTimeout(() => {
+          this.loadAnnouncements();
+          this.toastr.success('Annonce ajoutée avec succès!', 'Succès');
+        }, 500);
       }
     });
   }
@@ -340,22 +413,32 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
+  
   applyFilter(): void {
+    if (!this.announcements) {
+      this.filteredAnnouncements = [];
+      return;
+    }
+    
     this.filteredAnnouncements = this.announcements.filter(announcement => {
       const matchesSearch = this.searchText
-        ? announcement.title.toLowerCase().includes(this.searchText.toLowerCase()) || 
-          announcement.content.toLowerCase().includes(this.searchText.toLowerCase())
+        ? (announcement.title?.toLowerCase() || '').includes(this.searchText.toLowerCase()) || 
+          (announcement.content?.toLowerCase() || '').includes(this.searchText.toLowerCase())
         : true;
-
+  
       const matchesClub = this.selectedClub
         ? announcement.club?.id_club === this.selectedClub
         : true;
-
+  
       return matchesSearch && matchesClub;
     });
+    
+    // Update chart when filter changes
+    setTimeout(() => {
+      this.generateChart();
+    }, 200);
   }
-
+  
   exportToPDF(): void {
     // Create PDF document with landscape orientation
     const doc = new jsPDF('landscape');
@@ -530,25 +613,43 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // The edit dialog implementation would depend on your specific dialog component
+  // Method for viewing full announcement details
+  viewAnnouncementDetails(id: number): void {
+    if (!id) return;
+    
+    // Find the announcement
+    const announcement = this.announcements.find(a => a.id === id);
+    if (!announcement) return;
+    
+    // Show detailed view in a dialog
+    const dialogRef = this.dialog.open(AnnouncementDetailsDialogComponent, {
+      width: '600px',
+      data: { announcement }
+    });
+  }
+
+  // The edit dialog implementation
   openEditAnnouncementDialog(announcement: Announcement): void {
     const dialogRef = this.dialog.open(EditAnnouncementDialogComponent, {
       width: '500px',
       disableClose: true,
-      data: { announcement }
+      data: { announcement: {...announcement} }
     });
   
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        // Ajout des logs de débogage
+        console.log('Before update:', JSON.stringify(this.announcements));
+        console.log('Dialog result:', JSON.stringify(result));
+        
+        // Opération de mise à jour
         this.loadAnnouncements();
-        // Update chart if necessary
+        
+        // Log après mise à jour
         setTimeout(() => {
-          this.generateChart();
-        }, 200);
+          console.log('After update:', JSON.stringify(this.announcements));
+        }, 300);
       }
     });
-  }
-  viewAnnouncementDetails(announcementId: number): void {
-    this.router.navigate(['/announcement-details', announcementId]);
   }
 }

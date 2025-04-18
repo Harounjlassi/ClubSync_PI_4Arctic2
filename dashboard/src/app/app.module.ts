@@ -41,7 +41,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { AnnouncementListComponent } from './announcement-list/announcement-list.component';
 import { AddAnnouncementDialogComponent } from './add-announcement-dialog/add-announcement-dialog.component';
 import { EditAnnouncementDialogComponent } from './edit-announcement-dialog/edit-announcement-dialog.component';
-
+import { AnnouncementDetailsDialogComponent } from './announcement-details-dialog/announcement-details-dialog.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -58,6 +60,8 @@ import { EditAnnouncementDialogComponent } from './edit-announcement-dialog/edit
     MatSelectModule,
     MatAutocompleteModule,
     MatMenuModule,
+    MatButtonToggleModule,
+
 
     
 
@@ -106,12 +110,18 @@ import { EditAnnouncementDialogComponent } from './edit-announcement-dialog/edit
     AnnouncementListComponent,
     AddAnnouncementDialogComponent,
     EditAnnouncementDialogComponent,
+    AnnouncementDetailsDialogComponent,
     
     
 
 
   ],
-  providers: [],
+  providers: [
+    {
+      provide: DomSanitizer,
+      useValue: DomSanitizer
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

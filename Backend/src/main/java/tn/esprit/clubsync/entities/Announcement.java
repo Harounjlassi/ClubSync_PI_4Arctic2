@@ -1,6 +1,7 @@
 package tn.esprit.clubsync.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Ajoutez cette ligne
 public class Announcement {
 
     @Id
@@ -69,9 +70,9 @@ public class Announcement {
 
     LocalDateTime createdAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)  // Chargement immédiat au lieu de paresseux
     @JoinColumn(name = "club_id")
-    Club club;
+    private Club club;
 
     @PrePersist
     protected void onCreate() {

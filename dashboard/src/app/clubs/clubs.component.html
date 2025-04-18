@@ -68,7 +68,7 @@
               <div class="row">
                   <div class="col-xl-12">
                       <div class="hero-cap hero-cap2 text-center pt-70">
-                          <h2>Découvrez nos clubs</h2>
+                          <h2>Discover our clubs</h2>
                       </div>
                   </div>
               </div>
@@ -85,7 +85,7 @@
         </div>
         <div class="stats-content">
             <div class="stats-value">{{clubs.length}}</div>
-            <div class="stats-label">Clubs au total</div>
+            <div class="stats-label">Total clubs</div>
         </div>
     </div>
     
@@ -95,7 +95,7 @@
         </div>
         <div class="stats-content">
             <div class="stats-value">{{getTotalMembers()}}</div>
-            <div class="stats-label">Membres actifs</div>
+            <div class="stats-label">Active members</div>
         </div>
     </div>
     
@@ -105,7 +105,7 @@
         </div>
         <div class="stats-content">
             <div class="stats-value">{{categories.length}}</div>
-            <div class="stats-label">Catégories</div>
+            <div class="stats-label">Categories</div>
         </div>
     </div>
     
@@ -115,14 +115,14 @@
         </div>
         <div class="stats-content">
             <div class="stats-value">{{getMostPopularClub()?.name || '-'}}</div>
-            <div class="stats-label">Club le plus populaire</div>
+            <div class="stats-label">Most popular club</div>
         </div>
     </div>
 </div>
 
 <!-- Category Distribution avec couleurs améliorées -->
 <div class="category-distribution">
-    <h3>Distribution par catégorie</h3>
+    <h3>Distribution by category</h3>
     <div class="category-bars">
         <div *ngFor="let category of categories" class="category-bar">
             <div class="bar-label">{{category}}</div>
@@ -152,9 +152,9 @@
           
           <div class="category-filter">
               <mat-form-field appearance="outline">
-                  <mat-label>Catégorie</mat-label>
+                  <mat-label>Categorie</mat-label>
                   <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange()">
-                      <mat-option value="">Toutes les catégories</mat-option>
+                      <mat-option value=""> All categories</mat-option>
                       <mat-option *ngFor="let category of categories" [value]="category">
                           {{category}}
                       </mat-option>
@@ -174,7 +174,7 @@
       
       <!-- Results Counter -->
       <div class="results-counter">
-          <p>{{filteredClubs.length}} club(s) trouvé(s)</p>
+          <p>{{filteredClubs.length}} club(s) found(s)</p>
       </div>
       
       <!-- Loading Spinner -->
@@ -235,10 +235,10 @@
       </span>
       <div class="club-actions">
         <button mat-button class="see-more-btn" (click)="toggleDescription($event, club)">
-          {{ club.showFullDescription ? 'Voir moins' : 'Voir plus' }}
+          {{ club.showFullDescription ? 'Show less' : ' Show more' }}
         </button>
         <button mat-button class="join-btn" (click)="joinClub($event, club.id_club)">
-          <span>Rejoindre</span>
+          <span>JOIN</span>
         </button>
       </div>
     </div>
@@ -261,7 +261,7 @@
               </mat-card-content>
               <mat-card-actions align="end">
                   <button mat-button color="primary">VOIR DÉTAILS</button>
-                  <button mat-button color="accent">REJOINDRE</button>
+                  <button mat-button color="accent">JOIN</button>
               </mat-card-actions>
           </mat-card>
       </div>
@@ -287,7 +287,7 @@
 <!-- Bouton pour afficher les blagues -->
 <button class="joke-toggle-btn" (click)="toggleJokePopup()" *ngIf="!isJokePopupVisible">
   <mat-icon>sentiment_very_satisfied</mat-icon>
-  <span>Blague du jour</span>
+  <span>Joke of the day</span>
 </button>
 
 <!-- Popup de blagues -->
@@ -295,7 +295,7 @@
   <div class="joke-popup-inner">
     <div class="joke-header">
       <div class="joke-header-content">
-        <h2>Blague du jour</h2>
+        <h2>Joke of the day</h2>
         <div class="joke-emoji">😂</div>
       </div>
       <button class="close-joke-btn" (click)="toggleJokePopup()">

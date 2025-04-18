@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, of, tap } from 'rxjs';
 import { Announcement } from '../models/announcement';
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,13 @@ export class AnnouncementService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<Announcement[]> {
-    return this.http.get<Announcement[]>(`${this.API_URL}/all`).pipe(
-      catchError(this.handleError<Announcement[]>('getAll', []))
-    );
-  }
+// Dans announcement.service.ts
+getAll(): Observable<Announcement[]> {
+  return this.http.get<Announcement[]>(`${this.API_URL}/all`).pipe(
+    tap(data => console.log('Réponse API:', data)), // Debug
+    catchError(this.handleError<Announcement[]>('getAll', []))
+  );
+}
 
   getByClub(clubId: number): Observable<Announcement[]> {
     return this.http.get<Announcement[]>(`${this.API_URL}/club/${clubId}`).pipe(
@@ -42,8 +44,12 @@ export class AnnouncementService {
     };
     
   }
-  updateAnnouncement(id: number, announcement: Announcement): Observable<Announcement> {
-    return this.http.put<Announcement>(`${this.API_URL}/update/${id}`, announcement).pipe(
+  updateAnnouncement(id: number, announcement: Announcement, clubId?: number): Observable<Announcement> {
+    const url = clubId 
+      ? `${this.API_URL}/update/${id}/${clubId}`
+      : `${this.API_URL}/update/${id}`;
+      
+    return this.http.put<Announcement>(url, announcement).pipe(
       catchError(this.handleError<Announcement>('updateAnnouncement'))
     );
   }

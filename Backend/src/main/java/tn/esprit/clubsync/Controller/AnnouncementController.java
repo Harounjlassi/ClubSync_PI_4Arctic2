@@ -1,13 +1,17 @@
 package tn.esprit.clubsync.Controller;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.clubsync.Repo.AnnouncementRepo;
 import tn.esprit.clubsync.Services.iClubService;
 import tn.esprit.clubsync.entities.Announcement;
 import tn.esprit.clubsync.Services.AnnouncementService;
 
 import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/announcements")
@@ -18,6 +22,9 @@ public class AnnouncementController {
 
     @Autowired
     AnnouncementService announcementService;
+
+    @Autowired
+    AnnouncementRepo announcementRepo;
 
 
     @PostMapping("/add/{clubId}")
@@ -40,8 +47,10 @@ public class AnnouncementController {
         announcementService.deleteAnnouncement(id);
     }
     @GetMapping("/all")
-    public List<Announcement> getAllAnnouncements() {
-        return announcementService.getAllAnnouncements();
+    public List<Announcement> getAll() {
+        return announcementRepo.findAll().stream()
+                .peek(a -> Hibernate.initialize(a.getClub())) // Force le chargement
+                .collect(Collectors.toList());
     }
     @PutMapping("/update/{id}")
     public Announcement updateAnnouncement(@PathVariable Long id, @RequestBody Announcement announcement) {

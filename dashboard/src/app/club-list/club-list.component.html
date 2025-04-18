@@ -70,7 +70,6 @@
               <table class="table table-striped table-bordered table-sm">
                 <thead class="text-primary">
                   <tr>
-                    <th class="col-id">ID</th>
                     <th class="col-name">Name</th>
                     <th class="col-description">Description</th>
                     <th class="col-logo">Logo</th>
@@ -83,7 +82,6 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let club of filteredClubs">
-                    <td>{{ club.id_club }}</td>
                     <td>{{ club.name }}</td>
                     <td class="description-cell" title="{{ club.description }}">{{ club.description }}</td>
                     <td>
