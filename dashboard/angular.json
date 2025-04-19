@@ -40,6 +40,7 @@
               "src/assets/css/style.css",
               "node_modules/ngx-toastr/toastr.css"
 
+
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",

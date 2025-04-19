@@ -487,7 +487,6 @@
 }
 
 /* Conteneur principal de la section */
-/* Conteneur principal de la section */
 .clubs-container .hero-section {
   position: relative;
   height: 220px;
@@ -504,6 +503,43 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   transform: translateZ(0);
   will-change: background-position;
+}
+/* Ghibli Hero Background Styles */
+.ghibli-hero-background {
+  background: url('/assets/img/ghibli-background.jpg') center/cover no-repeat !important;
+  position: relative;
+}
+
+/* Add an overlay for better text readability */
+.ghibli-hero-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Adjust opacity as needed */
+  z-index: 1;
+}
+
+/* Make sure the text stays on top of the overlay */
+.ghibli-hero-background .container {
+  position: relative;
+  z-index: 2;
+}
+
+.ghibli-hero-background .hero-cap h2 {
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+/* Style for the new subtitle */
+.hero-subtitle {
+  color: #ffffff;
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  margin-top: 0;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards 0.5s;
 }
 .clubs-container .hero-section::after {
   content: '';
