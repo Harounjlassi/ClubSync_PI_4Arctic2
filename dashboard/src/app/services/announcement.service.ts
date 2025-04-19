@@ -13,9 +13,26 @@ export class AnnouncementService {
 
 // Dans announcement.service.ts
 getAll(): Observable<Announcement[]> {
+  console.log('Appel API getAll() en cours...');
   return this.http.get<Announcement[]>(`${this.API_URL}/all`).pipe(
-    tap(data => console.log('Réponse API:', data)), // Debug
-    catchError(this.handleError<Announcement[]>('getAll', []))
+    tap(data => {
+      console.log('Réponse API getAll():', data);
+      console.log(`Nombre d'annonces reçues: ${data.length}`);
+      // Vérifier chaque annonce pour des données manquantes
+      data.forEach((announcement, index) => {
+        console.log(`Annonce ${index + 1}:`, announcement);
+        if (!announcement.title || !announcement.content) {
+          console.warn(`⚠️ Annonce ${index + 1} (ID: ${announcement.id}) a des données manquantes!`);
+        }
+        if (!announcement.club) {
+          console.warn(`⚠️ Annonce ${index + 1} (ID: ${announcement.id}) n'a pas de club associé!`);
+        }
+      });
+    }),
+    catchError(error => {
+      console.error('❌ Erreur lors de la récupération des annonces:', error);
+      return of([]);
+    })
   );
 }
 

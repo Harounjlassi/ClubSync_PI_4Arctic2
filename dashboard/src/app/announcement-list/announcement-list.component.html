@@ -197,8 +197,9 @@
                        [id]="'announcementContent_' + announcement.id">
                       {{ (announcement.content || '') | slice:0:100 }}{{ (announcement.content || '').length > 100 ? '...' : '' }}
                     </td>
-                    <td [id]="'announcementClub_' + announcement.id">{{ getClubName(announcement.club) }}</td>
-                    <td [id]="'announcementDate_' + announcement.id">{{ announcement.createdAt | date:'medium' }}</td>
+                    <td [id]="'announcementClub_' + announcement.id">
+                      {{ (announcement.club?.name || 'Non attribué') | uppercase }}
+                    </td>                    <td [id]="'announcementDate_' + announcement.id">{{ announcement.createdAt | date:'medium' }}</td>
                     <td class="actions-cell">
                       <button 
                         mat-icon-button 

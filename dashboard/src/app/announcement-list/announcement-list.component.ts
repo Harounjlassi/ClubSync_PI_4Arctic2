@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AddAnnouncementDialogComponent } from '../add-announcement-dialog/add-announcement-dialog.component';
 import { EditAnnouncementDialogComponent } from '../edit-announcement-dialog/edit-announcement-dialog.component';
 import { AnnouncementDetailsDialogComponent } from '../announcement-details-dialog/announcement-details-dialog.component';
+import { finalize, tap } from 'rxjs';
 
 // Extend jsPDF to include the lastAutoTable property
 declare module 'jspdf' {
@@ -24,6 +25,7 @@ declare module 'jspdf' {
   selector: 'app-announcement-list',
   templateUrl: './announcement-list.component.html',
   styleUrls: ['./announcement-list.component.css']
+  
 })
 export class AnnouncementListComponent implements OnInit, AfterViewInit {
   announcements: Announcement[] = [];
@@ -54,6 +56,7 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
       'rgba(139, 92, 246, 1)',
     ]
   };
+  cdRef: any;
 
   constructor(
     private announcementService: AnnouncementService,
@@ -97,38 +100,26 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
   }
 
   loadAnnouncements(): void {
-    console.log("Chargement des annonces...");
-    this.announcementService.getAll().subscribe({
-      next: (data: Announcement[]) => {
-        console.log("Données reçues:", data);
-        // Vérifier si data est un tableau et s'il contient des éléments
-        if (Array.isArray(data) && data.length > 0) {
-          this.announcements = data.map(announcement => {
-            return {
-              ...announcement,
-              club: announcement.club || null
-            };
-          });
-          this.filteredAnnouncements = [...this.announcements];
-          console.log("Annonces traitées:", this.filteredAnnouncements);
-        } else {
-          console.warn("Aucune annonce reçue ou format incorrect");
-          this.announcements = [];
-          this.filteredAnnouncements = [];
-        }
-        this.error = false;
-        this.assignColorsToClubs();
-        setTimeout(() => {
-          this.generateChart();
-        }, 300);
-      },
-      error: (error) => {
-        console.error('Erreur lors de la récupération des annonces:', error);
-        this.error = true;
-      }
-    });
+    this.announcementService.getAll().pipe(
+      tap((data: Announcement[]) => {
+        // Filtrage strict côté frontend
+        this.announcements = data.filter(a => 
+          a?.title?.trim() && 
+          a?.content?.trim() &&
+          a?.club?.id_club > 0
+        );
+        
+        // Réinitialisation des filtres
+        this.searchText = '';
+        this.selectedClub = null;
+        
+        // Forcer la détection des changements
+        this.cdRef.detectChanges();
+      }),
+      finalize(() => this.applyFilter())
+    ).subscribe();
   }
-
+  
   // Method to assign colors to clubs consistently
   private assignColorsToClubs(): void {
     this.clubColors.clear();
@@ -369,12 +360,10 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
     });
   
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // Attendre un peu avant de recharger les données
-        setTimeout(() => {
-          this.loadAnnouncements();
-          this.toastr.success('Annonce ajoutée avec succès!', 'Succès');
-        }, 500);
+      if (result?.id) {
+        this.announcements = [result, ...this.announcements]; // Ajout immédiat
+        this.applyFilter();
+        this.toastr.success('Annonce ajoutée!', 'Succès', {positionClass: 'toast-bottom-right'});
       }
     });
   }

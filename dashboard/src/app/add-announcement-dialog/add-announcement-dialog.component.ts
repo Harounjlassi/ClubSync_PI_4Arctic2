@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AnnouncementService } from '../services/announcement.service';
 import { ClubService } from '../services/club.service';
@@ -33,15 +33,20 @@ export class AddAnnouncementDialogComponent implements OnInit {
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(100),
-        this.noConsecutiveSpaces
+        this.noConsecutiveSpaces,
+        Validators.pattern(/^[\S]+(?:[\s][\S]+)*$/) // Bloque les espaces en début/fin
       ]],
       content: ['', [
         Validators.required,
         Validators.minLength(20),
         Validators.maxLength(1000),
-        this.noConsecutiveSpaces
+        this.noConsecutiveSpaces,
+        Validators.pattern(/^[\S]+(?:[\s][\S]+)*$/m) // Validation multi-ligne
       ]],
-      clubId: ['', Validators.required]
+      clubId: ['', [
+        Validators.required,
+        Validators.pattern(/^[1-9]\d*$/) // Bloque les IDs <= 0
+      ]]
     });
   }
   
@@ -97,10 +102,14 @@ export class AddAnnouncementDialogComponent implements OnInit {
   }
   
   // Custom validator to prevent consecutive spaces
-  noConsecutiveSpaces(control: FormControl): {[key: string]: any} | null {
+  noConsecutiveSpaces(control: FormControl): ValidationErrors | null {
     const value = control.value || '';
-    if (value.includes('  ')) {
-      return { 'consecutiveSpaces': true };
+    if (
+      value.trim().length < 1 || 
+      /^\s*$/.test(value) || 
+      value.indexOf('  ') > -1
+    ) {
+      return { 'invalidSpaces': true };
     }
     return null;
   }
