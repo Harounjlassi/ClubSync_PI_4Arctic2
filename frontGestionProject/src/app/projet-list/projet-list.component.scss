@@ -1811,3 +1811,92 @@ $light: #f8f9fa;
   background-color: #6c757d;
   color: white;
 }
+
+/* Google Calendar Button Styles */
+.google-calendar-section {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.google-calendar-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #dadce0;
+  border-radius: 24px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.google-calendar-btn:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+.google-calendar-btn:active {
+  transform: translateY(0);
+}
+
+.google-calendar-icon {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.google-calendar-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.google-branding {
+  display: flex;
+  align-items: center;
+}
+
+.google-logo {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.google-logo svg {
+  width: 18px;
+  height: 18px;
+}
+
+.google-text {
+  font-weight: 500;
+  color: #5f6368;
+  font-size: 14px;
+}
+
+.google-btn-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(66, 133, 244, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.google-calendar-btn:hover .google-btn-hover {
+  opacity: 1;
+}
+
+/* Animation for Google Calendar Icon */
+.google-calendar-icon svg path:first-child {
+  animation: calendar-pulse 2s infinite;
+}
+
+@keyframes calendar-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}

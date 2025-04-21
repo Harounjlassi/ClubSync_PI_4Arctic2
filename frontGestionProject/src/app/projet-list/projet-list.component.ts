@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Message } from "app/common/message";
 import { Projet } from "app/common/projet";
 import { User } from "app/common/user";
+import { CalenderApiService } from "app/services/calender-api.service";
 import { FaceRecognitionService } from "app/services/face-recognition.service";
 import { MessageService } from "app/services/message.service";
 import { ProjetService } from "app/services/projet.service";
@@ -50,7 +51,10 @@ export class ProjetListComponent implements OnInit {
     private userService: UserService,
     private messageService: MessageService,
     private faceService: FaceRecognitionService,
-    private router: Router
+    private router: Router,
+    private calendarService: CalenderApiService,
+
+
   ) {
     this.createAddProjectForm();
     this.createEditProjectForm();
@@ -686,4 +690,44 @@ generateAITasks( projet:Projet): void {
 
 }
 
+addToGoogleCalendar(project: any): void {
+  console.log(project);
+   const eventData = {
+    summary: project.nom,
+    description: project.description+" is "+project.progress+"% complete ,"+
+    " and currently in  "+project.status+ " Status"
+    ,
+    start: {
+      dateTime: project.dateCreated+"T00:00:00" ,
+      //dateTime: "2025-04-21T12:00:00" ,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    },
+    end: {
+      //dateTime:  "2025-04-21T13:00:00",
+      dateTime: project.lastUpdated+"T00:00:00",
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    }
+  };
+  this.calendarService.initiateGoogleAuth(eventData).subscribe(
+    (response: any) => {
+      console.log('Full response:', response); // This will show the complete response structure
+      
+      // Access the authorization_url from response.body
+      if (response.body && response.body.authorization_url) {
+        console.log('Authorization URL:', response.body.authorization_url);
+        
+        // Open the authorization URL in a new browser tab
+        this.calendarService.openAuthUrlInBrowser(response.body.authorization_url);
+      } else {
+        console.error('No authorization URL received in response body');
+      }
+    },
+    (error) => {
+      console.error('Error initiating auth:', error);
+    }
+  );
 }
+
+}
+
+
