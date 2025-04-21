@@ -692,6 +692,15 @@ generateAITasks( projet:Projet): void {
 
 addToGoogleCalendar(project: any): void {
   console.log(project);
+  const originalDate = project.lastUpdated + "T00:00:00";
+const dateObj = new Date(originalDate);
+
+// Add 3 days
+dateObj.setDate(dateObj.getDate() + 3);
+
+// Format back to ISO string and split to get date part
+const newDate = dateObj.toISOString().split('T')[0];
+const dateTimeWithDays = newDate + "T00:00:00";
    const eventData = {
     summary: project.nom,
     description: project.description+" is "+project.progress+"% complete ,"+
@@ -704,7 +713,7 @@ addToGoogleCalendar(project: any): void {
     },
     end: {
       //dateTime:  "2025-04-21T13:00:00",
-      dateTime: project.lastUpdated+"T00:00:00",
+      dateTime: dateTimeWithDays,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
     }
   };
