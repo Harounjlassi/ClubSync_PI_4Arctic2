@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.clubsync.Services.iClubRecommendationService;
 import tn.esprit.clubsync.Services.iClubService;
 import tn.esprit.clubsync.entities.Club;
 import tn.esprit.clubsync.entities.Users;
@@ -29,6 +30,9 @@ public class ClubController  {
 
     @Autowired
     private iUsersService iUsersService;
+
+    @Autowired
+    private iClubRecommendationService recommendationService;
 
     @Operation(description = "Affichage de toutes les clubs")
 
@@ -90,6 +94,22 @@ public class ClubController  {
     @GetMapping("/{clubId}/members")
     public List<Users> getAllMembersByClubId(@PathVariable Long clubId) {
         return iClubservice.getAllMembersByClubId(clubId);
+    }
+
+    // Nouvel endpoint pour les recommandations
+    @Operation(description = "Recommander des clubs à un utilisateur basé sur ses inscriptions existantes")
+    @GetMapping("/recommendations/{userId}")
+    public ResponseEntity<List<Club>> getRecommendationsForUser(
+            @PathVariable("userId") Long userId,
+            @RequestParam(value = "max", defaultValue = "3") int maxRecommendations) {
+
+        List<Club> recommendations = recommendationService.recommendClubsByCategory(userId, maxRecommendations);
+
+        if (recommendations.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(recommendations);
     }
 
 

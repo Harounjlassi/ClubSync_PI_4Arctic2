@@ -48,11 +48,25 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     public void deleteAnnouncement(Long id) {
         announcementRepo.deleteById(id);
     }
+
     @Override
     public List<Announcement> getAllAnnouncements() {
-        return announcementRepo.findAll();
-    }
-    @Override
+        System.out.println("Récupération de toutes les annonces...");
+        List<Announcement> announcements = announcementRepo.findAll();
+        System.out.println("Nombre d'annonces récupérées: " + announcements.size());
+
+        // Vérifier chaque annonce
+        for (int i = 0; i < announcements.size(); i++) {
+            Announcement announcement = announcements.get(i);
+            System.out.println("Annonce " + (i+1) + " (ID: " + announcement.getId() + "):");
+            System.out.println("  - Titre: " + announcement.getTitle());
+            System.out.println("  - Club: " + (announcement.getClub() != null ?
+                    announcement.getClub().getName() + " (ID: " +
+                            announcement.getClub().getId_club() + ")" : "null"));
+        }
+
+        return announcements;
+    }    @Override
     public Announcement updateAnnouncement(Long id, Announcement newAnnouncement) {
         return announcementRepo.findById(id).map(existing -> {
             existing.setTitle(newAnnouncement.getTitle());
