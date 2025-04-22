@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { JokeService } from '../services/joke.service';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-clubs',
@@ -38,11 +38,14 @@ export class ClubsComponent implements OnInit {
   isChatVisible = false;
   isJokePopupVisible = false;
   currentJoke: string = '';
+  isSharingExpanded: boolean = false;
+  selectedLanguage: string = 'fr'; // Default language
 
   constructor(
     private clubService: ClubService,
     private router: Router,
-    private jokeService: JokeService
+    private jokeService: JokeService, 
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -236,24 +239,87 @@ export class ClubsComponent implements OnInit {
     return (count / this.clubs.length) * 100;
   }
 
+  // Methods for joke popup and sharing
   toggleJokePopup(): void {
     if (!this.isJokePopupVisible) {
       this.fetchJoke();
     }
     this.isJokePopupVisible = !this.isJokePopupVisible;
+    // Reset sharing panel when closing
+    if (!this.isJokePopupVisible) {
+      this.isSharingExpanded = false;
+    }
   }
 
   fetchJoke(): void {
     this.currentJoke = ''; // Réinitialiser pour afficher le loader
+    this.isSharingExpanded = false; // Reset sharing panel when fetching new joke
     
     setTimeout(() => {
-      this.jokeService.getJoke().subscribe({
-        next: (data) => this.currentJoke = data,
+      this.jokeService.getJoke(this.selectedLanguage).subscribe({
+        next: (data) => {
+          console.log('Joke received:', data);
+          this.currentJoke = data;
+        },
         error: (err) => {
-          console.error('Erreur lors du chargement de la blague:', err);
+          console.error('Erreur détaillée lors du chargement de la blague:', err);
           this.currentJoke = 'Impossible de charger une blague pour le moment.';
         }
       });
-    }, 800); // Délai artificiel pour voir l'animation du loader
+    }, 800);
+  }
+
+  // Toggle sharing options panel
+  toggleShareOptions(): void {
+    this.isSharingExpanded = !this.isSharingExpanded;
+  }
+
+  // Handle sharing on different platforms
+  shareJokeOn(platform: string): void {
+    if (!this.currentJoke) return;
+
+    switch (platform) {
+      case 'facebook':
+        this.jokeService.shareOnFacebook(this.currentJoke);
+        break;
+      case 'twitter':
+        this.jokeService.shareOnTwitter(this.currentJoke);
+        break;
+      case 'linkedin':
+        this.jokeService.shareOnLinkedIn(this.currentJoke);
+        break;
+      case 'whatsapp':
+        this.jokeService.shareOnWhatsApp(this.currentJoke);
+        break;
+      case 'email':
+        this.jokeService.shareByEmail(this.currentJoke);
+        break;
+      case 'copy':
+        this.jokeService.copyToClipboard(this.currentJoke)
+          .then(success => {
+            if (success) {
+              this.showNotification('Blague copiée dans le presse-papier !');
+            } else {
+              this.showNotification('Impossible de copier la blague', true);
+            }
+          });
+        break;
+    }
+  }
+
+  // Show notification using MatSnackBar
+  showNotification(message: string, isError: boolean = false): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: isError ? ['error-toast'] : ['success-toast']
+    });
+  }
+
+  // Change joke language
+  changeJokeLanguage(language: string): void {
+    this.selectedLanguage = language;
+    this.fetchJoke();
   }
 }

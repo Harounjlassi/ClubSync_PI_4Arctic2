@@ -286,48 +286,87 @@
       </div>
   </div>
 
-<!-- Bouton pour afficher les blagues -->
+<<!-- Bouton pour afficher les blagues -->
 <button class="joke-toggle-btn" (click)="toggleJokePopup()" *ngIf="!isJokePopupVisible">
-  <mat-icon>sentiment_very_satisfied</mat-icon>
-  <span>Joke of the day</span>
-</button>
-
-<!-- Popup de blagues -->
-<div class="joke-popup" [class.active]="isJokePopupVisible" @fadeInOut>
-  <div class="joke-popup-inner">
-    <div class="joke-header">
-      <div class="joke-header-content">
-        <h2>Joke of the day</h2>
-        <div class="joke-emoji">😂</div>
-      </div>
-      <button class="close-joke-btn" (click)="toggleJokePopup()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    
-    <div class="joke-content">
-      <div *ngIf="!currentJoke" class="joke-loading">
-        <div class="joke-loader"></div>
-        <p>Recherche d'une blague...</p>
+    <mat-icon>sentiment_very_satisfied</mat-icon>
+    <span>Joke of the day</span>
+  </button>
+  
+  <!-- Popup de blagues avec fonctionnalités de partage -->
+  <div class="joke-popup" [class.active]="isJokePopupVisible" @fadeInOut>
+    <div class="joke-popup-inner">
+      <div class="joke-header">
+        <div class="joke-header-content">
+          <h2>Joke of the day</h2>
+          <div class="joke-emoji">😂</div>
+        </div>
+        <button class="close-joke-btn" (click)="toggleJokePopup()" aria-label="Close joke popup">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
       
-      <div *ngIf="currentJoke" class="joke-text" @fadeInOut>
-        <p>{{ currentJoke }}</p>
+      <div class="joke-content">
+        <div *ngIf="!currentJoke" class="joke-loading">
+          <div class="joke-loader"></div>
+          <p>Searching for a joke...</p>
+        </div>
+        
+        <div *ngIf="currentJoke" class="joke-text" @fadeInOut>
+          <p>{{ currentJoke }}</p>
+        </div>
       </div>
-    </div>
-    
-    <div class="joke-actions">
-      <button mat-raised-button class="joke-refresh-btn" (click)="fetchJoke()">
-        <mat-icon>refresh</mat-icon> Nouvelle blague
-      </button>
       
-      <button mat-button class="joke-share-btn">
-        <mat-icon>share</mat-icon> Partager
-      </button>
+      <div class="joke-actions">
+        <button mat-raised-button class="joke-refresh-btn" (click)="fetchJoke()" aria-label="Get new joke">
+          <mat-icon>refresh</mat-icon> New Joke
+        </button>
+        
+        <button mat-button class="joke-share-btn" (click)="toggleShareOptions()" aria-label="Share joke">
+          <mat-icon>share</mat-icon> {{ isSharingExpanded ? 'Close sharing' : 'Share' }}
+        </button>
+      </div>
+      
+      <!-- Improved Social Share Options -->
+      <div class="social-share-options" *ngIf="isSharingExpanded && currentJoke" @fadeInOut>
+        <div class="share-title">Share this joke</div>
+        <div class="social-buttons">
+          <button mat-mini-fab 
+                  class="facebook-btn" 
+                  (click)="shareJokeOn('facebook')" 
+                  matTooltip="Share on Facebook"
+                  aria-label="Share on Facebook">
+            <mat-icon>facebook</mat-icon>
+          </button>
+          
+          
+          <button mat-mini-fab 
+                  class="linkedin-btn" 
+                  (click)="shareJokeOn('linkedin')" 
+                  matTooltip="Share on LinkedIn"
+                  aria-label="Share on LinkedIn">
+            <mat-icon>linkedin</mat-icon>
+          </button>
+          
+          
+          <button mat-mini-fab 
+                  class="email-btn" 
+                  (click)="shareJokeOn('email')" 
+                  matTooltip="Share by email"
+                  aria-label="Share by email">
+            <mat-icon>email</mat-icon>
+          </button>
+          
+          <button mat-mini-fab 
+                  class="copy-btn" 
+                  (click)="shareJokeOn('copy')" 
+                  matTooltip="Copy to clipboard"
+                  aria-label="Copy to clipboard">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
 
 <footer>
   <!--? Footer Start-->

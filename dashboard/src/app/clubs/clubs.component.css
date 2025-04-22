@@ -1750,5 +1750,185 @@ mat-card-actions button:hover {
   .club-header {
     padding: 20px 20px 10px;
   }
+  /* Joke Popup Styles with Social Sharing */
+.joke-popup {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  max-width: 400px;
+  width: 90%;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+.joke-popup.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.joke-popup-inner {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.joke-header {
+  background-color: #4e54c8;
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.joke-header-content {
+  display: flex;
+  align-items: center;
+}
+
+.joke-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.joke-emoji {
+  font-size: 24px;
+  margin-left: 12px;
+}
+
+.close-joke-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joke-content {
+  padding: 24px;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joke-text {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.joke-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.joke-loader {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4e54c8;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.joke-actions {
+  padding: 0 20px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.joke-refresh-btn, .joke-share-btn {
+  font-weight: 500;
+}
+
+.joke-refresh-btn {
+  background-color: #4e54c8;
+  color: white;
+}
+
+/* Social Share Options */
+.social-share-options {
+  padding: 0 20px 20px;
+  border-top: 1px solid #eee;
+}
+
+.share-title {
+  margin: 12px 0;
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.social-buttons button {
+  transition: transform 0.2s ease;
+}
+
+.social-buttons button:hover {
+  transform: translateY(-3px);
+}
+
+/* Social Media Button Colors */
+.facebook-btn {
+  background-color: #3b5998 !important;
+}
+
+.twitter-btn {
+  background-color: #1da1f2 !important;
+}
+
+.linkedin-btn {
+  background-color: #0077b5 !important;
+}
+
+.whatsapp-btn {
+  background-color: #25d366 !important;
+}
+
+.email-btn {
+  background-color: #dd4b39 !important;
+}
+
+.copy-btn {
+  background-color: #6c757d !important;
+}
+
+/* Animation for toast notification */
+@keyframes toastFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.toast-notification {
+  animation: toastFadeIn 0.3s ease forwards;
+}
 
 }
