@@ -175,7 +175,53 @@ export class ProjectTaskListComponent implements OnInit {
     event.dataTransfer?.setData('text/plain', task.id);
   }
 
- 
+  onDrop(event: DragEvent, newStatus: 'todo' | 'inProgress' | 'done') {
+    event.preventDefault();
+    const taskId = event.dataTransfer?.getData('text/plain');
+    const task = this.tasks.find(t => t.id.toString() === taskId);
+    
+    if (!task) return;
+  
+    if (task.status === 'inProgress' && newStatus === 'todo') {
+      alert('Cannot move task from In Progress back to Todo');
+      this.draggedTaskId = null;
+      return;
+    }
+  
+    if (task.status === 'done' && newStatus === 'inProgress') {
+      alert('Cannot move task from Done back to In Progress');
+      this.draggedTaskId = null;
+      return;
+    }
+  
+    if (task.status === 'done' && newStatus === 'todo') {
+      alert('Cannot move task from Done back to Todo');
+      this.draggedTaskId = null;
+      return;
+    }
+  
+    task.status = newStatus;
+    
+    if (newStatus === 'inProgress' && !task.progress) {
+      task.progress = 0;
+    }
+    
+    if (newStatus === 'done') {
+      task.progress = 100;
+      task.completedDate = new Date().toISOString();
+    }
+    
+    this.taskService.updateTask(task).subscribe(
+      () => {
+        this.listTasks();
+      },
+      (error) => {
+        console.error('Error updating task:', error);
+      }
+    );
+    
+    this.draggedTaskId = null;
+  }
 
   getPriorityIcon(priority: string): string {
     switch(priority) {
@@ -186,35 +232,7 @@ export class ProjectTaskListComponent implements OnInit {
     }
   }
 
-  onDrop(event: DragEvent, newStatus: 'todo' | 'inProgress' | 'done') {
-    event.preventDefault();
-    const taskId = event.dataTransfer?.getData('text/plain');
-    const task = this.tasks.find(t => t.id.toString() === taskId);
-    console.log('Dropped task ID:', taskId);
-    console.log('All tasks:', this.tasks);
-    
-  
-    
-    if (task) {
-      task.status = newStatus;
-      if (newStatus === 'inProgress' && !task.progress) {
-        task.progress = 0;
-      }
-      if (newStatus === 'done') {
-        task.progress = 100;
-        task.completedDate = new Date().toISOString();
-      }
-      this.taskService.updateTask(task).subscribe(
-        () => {
-          this.listTasks();
-        },
-        (error) => {
-          console.error('Error updating task:', error);
-        }
-      );
-    }
-    this.draggedTaskId = null;
-  }
+ 
 
   openTaskMenu(event: MouseEvent, task: ProjetTask) {
     event.stopPropagation();
