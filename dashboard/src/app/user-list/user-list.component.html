@@ -1,0 +1,84 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+              <h4 class="card-title">USER LIST</h4>
+              <p class="card-category">Here is a list of all users</p>
+            </div>
+            
+            <div class="card-body">
+              <!-- Loading state -->
+              <div *ngIf="loading" class="d-flex justify-content-center my-4">
+                <mat-spinner diameter="40"></mat-spinner>
+              </div>
+              
+              <!-- Debug info - only shown during development -->
+              <div *ngIf="!loading" class="alert alert-info">
+                API Status: {{apiStatus}}
+                <br>
+                Number of users: {{users?.length || 0}}
+              </div>
+              
+              <!-- No users state -->
+              <div *ngIf="!loading && (!users || users.length === 0)" class="alert alert-info py-3 mb-1">
+                <i class="material-icons mr-2">info</i>
+                No users found. The database might be empty or there could be a connection issue.
+              </div>
+              
+              <!-- Users table -->
+              <div class="table-responsive" *ngIf="!loading && users && users.length > 0">
+                <table class="table table-striped table-bordered table-sm">
+                  <thead class="text-primary">
+                    <tr>
+                      <th>Last Name</th>
+                      <th>First Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Phone</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of users; trackBy: trackById">
+                      <td>{{ user.lastname }}</td>
+                      <td>{{ user.firstname }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ Array.isArray(user.role) && user.role.length > 0 ? user.role[0] : 'N/A' }}</td>
+                      <td>{{ user.numeroDeTelephone || 'N/A' }}</td>
+                      <td>
+                        <span
+                          class="badge"
+                          [ngClass]="{
+                            'badge-success': !user.archived,
+                            'badge-danger': user.archived
+                          }">
+                          {{ user.archived ? 'Banned' : 'Active' }}
+                        </span>
+                      </td>
+                      <td>
+                        <button
+                          class="btn btn-sm btn-warning mr-1"
+                          (click)="onEdit(user.idUser)">
+                          <i class="material-icons">edit</i> Edit
+                        </button>
+                        <button
+                          class="btn btn-sm"
+                          [ngClass]="user.archived ? 'btn-success' : 'btn-danger'"
+                          (click)="onToggleBan(user)">
+                          <i class="material-icons">{{ user.archived ? 'how_to_reg' : 'block' }}</i>
+                          {{ user.archived ? 'Unban' : 'Ban' }}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

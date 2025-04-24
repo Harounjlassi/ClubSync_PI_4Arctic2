@@ -1,0 +1,96 @@
+<div class="chat-container">
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="header-logo">
+        <i class="fas fa-sync"></i>
+      </div>
+      <div>
+        <h2>Assistance ClubSync</h2>
+        <div class="header-status">
+          <div class="status-dot"></div>
+          En ligne
+        </div>
+      </div>
+    </div>
+    <div class="chat-header-actions">
+      <button class="header-button" title="Rechercher">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="header-button" (click)="clearHistory()" title="Effacer l'historique">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+  </div>
+
+  <div #scrollContainer class="messages-container">
+    <div *ngFor="let message of messages" 
+         [class.user-message]="!message.isBot"
+         [class.bot-message]="message.isBot"
+         class="message">
+      <div class="avatar" 
+           [class.bot-avatar]="message.isBot" 
+           [class.user-avatar]="!message.isBot">
+        <i class="fas" [class.fa-user]="!message.isBot" [class.fa-robot]="message.isBot"></i>
+      </div>
+      <div class="message-content">
+        <!-- Affichage des pièces jointes si présentes -->
+        <div *ngIf="message.attachment" class="attachment-preview">
+          <i class="fas fa-file attachment-icon"></i>
+          <div class="attachment-name">{{ message.attachment.name }}</div>
+        </div>
+
+        <div class="content" [innerHTML]="message.content"></div>
+
+        <div class="timestamp" title="{{message.timestamp | date:'dd/MM/yyyy HH:mm'}}">
+          {{ formatTimestamp(message.timestamp) }}
+          <span *ngIf="!message.isBot" class="message-status">
+            <i class="fas fa-check-double" style="margin-left: 4px; font-size: 10px;"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isTyping" class="message bot-message">
+      <div class="avatar bot-avatar">
+        <i class="fas fa-robot"></i>
+      </div>
+      <div class="message-content">
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-container">
+    <div class="input-actions">
+      <button class="action-button" title="Emoji" (click)="toggleEmojiPicker()">
+        <i class="far fa-smile"></i>
+      </button>
+
+      <div class="attachment-button">
+        <label for="file-upload" class="custom-file-upload action-button" title="Joindre un fichier">
+          <i class="fas fa-paperclip"></i>
+        </label>
+        <input id="file-upload" type="file" (change)="onFileSelected($event)" />
+      </div>
+    </div>
+
+    <!-- Ajout du sélecteur d'emoji qui était manquant -->
+    <div class="emoji-picker" [class.active]="showEmojiPicker">
+      <div class="emoji-item" *ngFor="let emoji of emojis" (click)="addEmoji(emoji)">
+        {{ emoji }}
+      </div>
+    </div>
+
+    <input #messageInput type="text" 
+           [formControl]="userInput" 
+           (keyup.enter)="sendMessage()" 
+           placeholder="Tapez votre message..." />
+
+    <button (click)="sendMessage()" class="send-button" [disabled]="!userInput.value?.trim()">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>

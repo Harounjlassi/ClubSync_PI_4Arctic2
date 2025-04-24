@@ -1,0 +1,228 @@
+<!-- project-task-list.component.html -->
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="kanban-container">
+        <div class="kanban-board">
+          <!-- To Do Column -->
+          <div class="kanban-column todo-column" droppable (drop)="onDrop($event, 'todo')" 
+               (dragover)="allowDrop($event)" (dragleave)="onDragLeave($event)">
+            <div class="column-header">
+              <div class="header-content">
+                <div class="column-icon">📋</div>
+                <h3 class="column-titre">To Do</h3>
+                <span class="task-count">{{getTasksByStatus('todo').length}} tasks</span>
+              </div>
+              <button class="btn-add-task" (click)="openTaskModal('todo')">
+                <span class="btn-icon">+</span>
+                
+              </button>
+            </div>
+            <div class="tasks-container">
+              <div class="empty-state" *ngIf="getTasksByStatus('todo').length === 0">
+                <div class="empty-icon">📭</div>
+                <p>No tasks here yet</p>
+              </div>
+  <!-- In the To Do column tasks -->
+  <div class="kanban-task" *ngFor="let task of getTasksByStatus('todo')" 
+       draggable="true" (dragstart)="onDragStart($event, task)"
+       [class.task-dragging]="draggedTaskId === task.id">                
+                <div class="task-priority" [class.high]="task.priorite === 'HIGH'"
+                     [class.medium]="task.priorite === 'MEDIUM'" [class.low]="task.priorite === 'low'"></div>
+                <div class="task-content">
+                  <div class="task-header">
+                    <h4 class="task-titre">{{task.titre}}</h4>
+                    <div class="task-priority-icon">{{getPriorityIcon(task.priorite)}}</div>
+                  </div>
+                  <p class="task-description">{{task.description}}</p>
+                  <div class="task-meta">
+                    <span class="task-date">
+                      <span class="meta-icon">📅</span>
+                      {{task.dueDate | date:'mediumDate'}}
+                    </span>
+                  </div>
+                  <div class="task-meta">
+                    <span class="task-date">
+                      <span class="meta-icon">🏷️</span>
+                      {{task.label }}
+                    </span>
+                  </div>
+                </div>
+                <div class="task-actions">
+                  <button class="btn-start" (click)="startTask(task); $event.stopPropagation()">
+                    <span class="btn-icon">▶️</span>
+                    Start
+                  </button>
+                  <button class="btn-update" (click)="openTaskModal('todo', task); $event.stopPropagation()">
+                    <span class="btn-icon">✏️</span>
+                    Edit
+                  </button>
+                  <button class="btn-delete" (click)="deleteTask(task); $event.stopPropagation()">
+                    <span class="btn-icon">✕</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- In Progress Column -->
+          <div class="kanban-column progress-column" droppable (drop)="onDrop($event, 'inProgress')" 
+          (dragover)="allowDrop($event)" (dragleave)="onDragLeave($event)">
+            <div class="column-header">
+              <div class="header-content">
+                <div class="column-icon">🔄</div>
+                <h3 class="column-titre">In Progress</h3>
+                <span class="task-count">{{getTasksByStatus('inProgress').length}} tasks</span>
+              </div>
+            </div>
+            <div class="tasks-container">
+              <div class="empty-state" *ngIf="getTasksByStatus('inProgress').length === 0">
+                <div class="empty-icon">⏳</div>
+                <p>No tasks in progress</p>
+              </div>
+              <div class="kanban-task" *ngFor="let task of getTasksByStatus('inProgress')" 
+                   draggable="true" (dragstart)="onDragStart($event, task)"
+                   [class.task-dragging]="draggedTaskId === task.id">
+                <div class="task-priority" [class.high]="task.priorite === 'high'"
+                     [class.medium]="task.priority === 'medium'" [class.low]="task.priorite === 'low'"></div>
+                <div class="task-content">
+                  <div class="task-header">
+                    <h4 class="task-titre">{{task.titre}}</h4>
+                    <div class="task-priority-icon">{{getPriorityIcon(task.priorite)}}</div>
+                  </div>
+                  <div class="progress-section">
+                    <div class="progress-info">
+                      <span>Progress</span>
+                      <span class="progress-percent ">{{task.progress}}% </span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" [style.width.%]=13></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="task-actions">
+                  <button class="btn-complete" (click)="completeTask(task); $event.stopPropagation()">
+                    <span class="btn-icon">✔️</span>
+                    Complete
+                  </button>
+                  <button class="btn-update" (click)="openTaskModal('inProgress', task); $event.stopPropagation()">
+                    <span class="btn-icon">✏️</span>
+                    Edit
+                  </button>
+                  <button class="btn-delete" (click)="deleteTask(task); $event.stopPropagation()">
+                    <span class="btn-icon">✕</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Done Column -->
+          <div class="kanban-column done-column" droppable (drop)="onDrop($event, 'done')" 
+               (dragover)="allowDrop($event)" (dragleave)="onDragLeave($event)">
+            <div class="column-header">
+              <div class="header-content">
+                <div class="column-icon">✅</div>
+                <h3 class="column-titre">Done</h3>
+                <span class="task-count">{{getTasksByStatus('done').length}} tasks</span>
+              </div>
+              <button class="btn-clear-done" *ngIf="getTasksByStatus('done').length > 0" 
+                      (click)="clearCompletedTasks()" titre="Clear completed">
+                <span class="btn-icon">🗑️</span>
+              </button>
+            </div>
+            <div class="tasks-container">
+              <div class="empty-state" *ngIf="getTasksByStatus('done').length === 0">
+                <div class="empty-icon">🎯</div>
+                <p>No completed tasks</p>
+              </div>
+              <div class="kanban-task" *ngFor="let task of getTasksByStatus('done')" 
+                   draggable="true" (dragstart)="onDragStart($event, task)"
+                   [class.task-dragging]="draggedTaskId === task.id">
+                <div class="task-priority" [class.high]="task.priority === 'high'"
+                     [class.medium]="task.priority === 'medium'" [class.low]="task.priority === 'low'"></div>
+                <div class="task-content">
+                  <div class="task-header">
+                    <h4 class="task-titre">{{task.titre}}</h4>
+                    <div class="task-priority-icon">{{getPriorityIcon(task.priority)}}</div>
+                  </div>
+                  <div class="completion-badge">
+                    <span class="badge-icon">✔️</span>
+                    Completed on {{task.completedDate | date:'mediumDate'}}
+                  </div>
+                </div>
+                <div class="task-actions">
+                  <button class="btn-reopen" (click)="reopenTask(task); $event.stopPropagation()">
+                    <span class="btn-icon">↩️</span>
+                    Reopen
+                  </button>
+                  <button class="btn-update" (click)="openTaskModal('done', task); $event.stopPropagation()">
+                    <span class="btn-icon">✏️</span>
+                    Edit
+                  </button>
+                  <button class="btn-delete" (click)="deleteTask(task); $event.stopPropagation()">
+                    <span class="btn-icon">✕</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Task Modal -->
+        <div class="modal-overlay" *ngIf="showTaskModal" (click)="closeTaskModal()">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h3>{{isUpdateMode ? 'Update Task' : 'Add New Task'}}</h3>
+              <button class="close-btn" (click)="closeTaskModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="taskForm" (ngSubmit)="handleTaskSubmit()">
+                <div class="form-group">
+                  <label for="taskTitre">titre</label>
+                  <input type="text" id="taskTitre" [(ngModel)]="currentTask.titre" name="titre" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="taskDescription">Description</label>
+                  <textarea id="taskDescription" [(ngModel)]="currentTask.description" name="description" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label for="taskStatus">Status</label>
+                  <select id="taskStatus" [(ngModel)]="currentTask.status" name="status" required>
+                    <option value="todo">To Do</option>
+                    <option value="inProgress">In Progress</option>
+                    <option value="done">Done</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="taskPriority">Priority</label>
+                  <select id="taskPriority" [(ngModel)]="currentTask.priority" name="priority" required>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+                <div class="form-group">
+  
+                <label for="taskUser">User</label>
+                <input type="text" id="taskUser" [(ngModel)]="currentTask.assignee" name="assignee" required>
+              </div>
+                
+                <div class="form-group">
+                  <label for="taskDueDate">Due Date</label>
+                  <input type="date" id="taskDueDate" [(ngModel)]="currentTask.dueDate" name="dueDate" required>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="button" class="btn-cancel" (click)="closeTaskModal()">Cancel</button>
+                  <button type="submit" class="btn-submit">{{isUpdateMode ? 'Update' : 'Add'}} Task</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

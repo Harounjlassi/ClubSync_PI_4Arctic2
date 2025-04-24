@@ -1,0 +1,28 @@
+.announcement-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 10px;
+  margin: 10px 0;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.pagination-controls {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  margin: 0 4px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3f51b5;
+  color: white;
+  cursor: pointer;
+}
+
+.pagination-controls button[disabled] {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+}

@@ -1,0 +1,121 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>
+    <mat-icon class="dialog-icon">add_circle</mat-icon>
+    Add Club
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="clubForm">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Club Name</mat-label>
+        <input matInput formControlName="name" required>
+        <mat-hint>3-50 characters, letters only</mat-hint>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('required')">
+          This field is required
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('pattern')">
+          Club name must contain letters only (no numbers)
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('minlength')">
+          Club name must be at least 3 characters long
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('maxlength')">
+          Club name cannot exceed 50 characters
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('consecutiveSpaces')">
+          Multiple consecutive spaces are not allowed
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('badWords')">
+          Club name contains inappropriate terms that are not allowed
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" required></textarea>
+        <mat-hint>10-500 characters</mat-hint>
+        <mat-error *ngIf="clubForm.get('description')?.hasError('required')">
+          This field is required
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('description')?.hasError('minlength')">
+          Description must be at least 10 characters long
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('description')?.hasError('maxlength')">
+          Description cannot exceed 500 characters
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('description')?.hasError('consecutiveSpaces')">
+          Multiple consecutive spaces are not allowed
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('description')?.hasError('badWords')">
+          Description contains inappropriate terms that are not allowed
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Logo Field -->
+      <div class="logo-upload-container">
+        <label class="upload-label">Club Logo</label>
+        
+        <div class="preview-container" *ngIf="logoPreview">
+          <img [src]="logoPreview" alt="Logo preview" class="logo-preview">
+        </div>
+        
+        <button type="button" mat-raised-button color="primary" (click)="fileInput.click()">
+          <mat-icon>cloud_upload</mat-icon> Choose an Image
+        </button>
+        
+        <input hidden type="file" #fileInput (change)="onFileSelected($event)" accept="image/*">
+        
+        <mat-error *ngIf="clubForm.get('logo').invalid && clubForm.get('logo').touched">
+          A logo image is required
+        </mat-error>
+      </div>
+
+      <!-- Slogan Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Slogan</mat-label>
+        <input matInput formControlName="slogan" required>
+        <mat-hint>5-100 characters</mat-hint>
+        <mat-error *ngIf="clubForm.get('slogan')?.hasError('required')">
+          This field is required
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('slogan')?.hasError('minlength')">
+          Slogan must be at least 5 characters long
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('slogan')?.hasError('maxlength')">
+          Slogan cannot exceed 100 characters
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('slogan')?.hasError('consecutiveSpaces')">
+          Multiple consecutive spaces are not allowed
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('slogan')?.hasError('badWords')">
+          Slogan contains inappropriate terms that are not allowed
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Category Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="categorie">
+          <mat-option *ngFor="let cat of categories" [value]="cat">
+            {{cat}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="clubForm.get('categorie')?.hasError('required')">
+          This field is required
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="onCancel()">Cancel</button>
+    <button 
+      mat-flat-button 
+      color="primary" 
+      (click)="onSubmit()" 
+      [disabled]="clubForm.invalid || isSubmitting">
+      <span *ngIf="!isSubmitting">Add</span>
+      <mat-icon *ngIf="isSubmitting" class="spinner">hourglass_empty</mat-icon>
+    </button>
+  </mat-dialog-actions>
+</div>

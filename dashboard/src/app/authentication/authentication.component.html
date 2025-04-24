@@ -1,0 +1,118 @@
+<div class="auth-page">
+    <div class="auth-card-container">
+      <mat-card class="auth-card">
+        <mat-card-header>
+          <div class="auth-logo">
+            <!-- You can add your logo here -->
+            <mat-icon class="logo-icon">lock</mat-icon>
+          </div>
+          <mat-card-title>Welcome Back</mat-card-title>
+          <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <form [formGroup]="form" (ngSubmit)="submitForm()" autocomplete="off">
+            
+            <!-- Alert for errors -->
+            <div *ngIf="isLoginFailed" class="error-alert">
+              <mat-icon>error</mat-icon>
+              <span>{{errorMessage}}</span>
+            </div>
+            
+            <!-- Email field -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="email"
+                placeholder="your.email@example.com"
+                required>
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error *ngIf="email?.hasError('required')">Email is required</mat-error>
+              <mat-error *ngIf="email?.hasError('email')">Please enter a valid email address</mat-error>
+            </mat-form-field>
+            
+            <!-- Password field -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                [type]="hidePassword ? 'password' : 'text'"
+                formControlName="password"
+                required>
+              <mat-icon matPrefix>lock</mat-icon>
+              <button
+                type="button"
+                mat-icon-button
+                matSuffix
+                (click)="hidePassword = !hidePassword"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              <mat-error *ngIf="password?.hasError('required')">Password is required</mat-error>
+              <mat-error *ngIf="password?.hasError('minlength')">Password must be at least 6 characters</mat-error>
+            </mat-form-field>
+            
+            <div class="forgot-password">
+              <a routerLink="/forgot-password">Forgot password?</a>
+            </div>
+            
+            <!-- Submit button -->
+            <button
+              mat-raised-button
+              color="primary"
+              class="full-width submit-button"
+              type="submit"
+              [disabled]="form.invalid || isLoading">
+              <span *ngIf="!isLoading">Sign In</span>
+              <mat-spinner *ngIf="isLoading" diameter="24" class="spinner-button"></mat-spinner>
+            </button>
+            
+            <!-- Google Sign-In section -->
+            <div class="or-divider">
+              <span>OR</span>
+            </div>
+            
+            <div id="google-btn" class="google-btn-container"></div>
+            
+            <button 
+              mat-raised-button 
+              color="accent" 
+              class="full-width face-login-button" 
+              type="button"
+              (click)="startFaceLogin()"
+              [disabled]="isLoading || !email?.value">
+              <mat-icon>face</mat-icon>
+              <span>Sign in with Face Recognition</span>
+            </button>
+            
+            <!-- Add helper text to inform users to enter email first -->
+            <div *ngIf="!email?.value" class="helper-text">
+              <mat-icon>info</mat-icon>
+              <span>Enter your email first to use face recognition</span>
+            </div>
+            
+            <!-- Face capture container - fixed version with only one instance -->
+            <div *ngIf="showFaceCapture" class="face-capture-container">
+              <video #videoElement autoplay class="face-video"></video>
+              <div class="face-capture-actions">
+                <button mat-icon-button color="primary" (click)="captureFace()">
+                  <mat-icon>photo_camera</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="cancelFaceCapture()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+        
+        <mat-card-actions class="register-section">
+          <span>Don't have an account?</span>
+          <button mat-button color="accent" (click)="navigateToRegister()">Create Account</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>

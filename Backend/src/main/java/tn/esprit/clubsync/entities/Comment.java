@@ -25,7 +25,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private Users author;
+    private User author;
 
     private LocalDateTime comment_date;
 
@@ -45,11 +45,11 @@ public class Comment {
         this.content = content;
     }
 
-    public Users getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Users author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

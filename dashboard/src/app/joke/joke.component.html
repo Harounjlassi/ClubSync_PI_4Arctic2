@@ -1,0 +1,8 @@
+<div class="joke-container">
+  <h2>Blague Aléatoire</h2>
+  <p *ngIf="joke; else loading">{{ joke }}</p>
+  <ng-template #loading>
+    <p class="loading-text">Loading...</p>
+  </ng-template>
+  <button (click)="fetchJoke()" class="btn-refresh">🔄 New Joke</button>
+</div>

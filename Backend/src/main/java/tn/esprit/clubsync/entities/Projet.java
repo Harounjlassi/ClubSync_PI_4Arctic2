@@ -1,64 +1,104 @@
 package tn.esprit.clubsync.entities;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Data;
+
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Table(name="projet")
-@Data
+
 public class Projet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name="nom")
+    @Column(name = "nom")
     private String nom;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="image_url")
+    @Column(name = "progress")
+    private Long progress;
+
+    @Column(name = "image_url",columnDefinition = "LONGTEXT")
+
     private String imageUrl;
 
-    @Column(name="date_created")
-    @CreationTimestamp
+    @Column(name = "date_created")
+    @Temporal (TemporalType.DATE)
+
     private Date dateCreated;
 
-    @Column(name="last_updated")
-    @UpdateTimestamp
+    @Column(name = "last_updated")
+    @Temporal (TemporalType.DATE)
+
     private Date lastUpdated;
 
-    @Column(name="status")
+    @Column(name = "status")
     private String status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users createur;
+    @JsonIgnore
+    private User createur;
+
+    @JsonProperty("createurId")
+    public Long getCreateurId() {
+        return createur != null ? createur.getIdUser() : null;
+    }
+
+    @JsonProperty("createurId")
+    public void setcreateurId(Long createurId) {
+        this.createur = new User();
+        this.createur.setIdUser(createurId);
+    }
 
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
-    private Set<Tache> taches ;
+    @JsonIgnore
+
+    private Set<ProjetTache> taches;
 
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
+    @JsonIgnore
+
     private Set<Message> messages;
 
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
-    private Set<Report> reports ;
+    @JsonIgnore
+
+    private Set<Report> reports;
 
 
-    // Methods
-/**
-    public Long getId_projet() {
-        return id_projet;
+    // Getters and Setters
+
+    public Long getId() {
+        return id;
     }
 
-    public void setId_projet(Long id_projet) {
-        this.id_projet = id_projet;
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public Long getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Long progress) {
+        this.progress = progress;
     }
 
     public String getNom() {
@@ -77,12 +117,28 @@ public class Projet {
         this.description = description;
     }
 
-    public LocalDateTime getDate_debut() {
-        return date_debut;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setDate_debut(LocalDateTime date_debut) {
-        this.date_debut = date_debut;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public String getStatus() {
@@ -93,37 +149,43 @@ public class Projet {
         this.status = status;
     }
 
-    public Users getCreateur() {
+    public User getCreateur() {
         return createur;
     }
 
-    public void setCreateur(Users createur) {
+    public void setCreateur(User createur) {
         this.createur = createur;
     }
 
-    public List<Tache> getTaches() {
+    public Set<ProjetTache> getTaches() {
         return taches;
     }
 
-    public void setTaches(List<Tache> taches) {
+    public void setTaches(Set<ProjetTache> taches) {
         this.taches = taches;
     }
 
-    public List<Message> getMessages() {
+    public Set<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<Message> messages) {
+    public void setMessages(Set<Message> messages) {
         this.messages = messages;
     }
 
-    public List<Report> getReports() {
+    public Set<Report> getReports() {
         return reports;
     }
 
-    public void setReports(List<Report> reports) {
+    public void setReports(Set<Report> reports) {
         this.reports = reports;
     }
-*/
+
+    @Override
+    public String toString() {
+        return "Projet{id=" + id + ", nom='" + nom + "', description='" + description +
+
+                "'}";
+    }
 
 }

@@ -21,9 +21,26 @@
               "src/favicon.ico"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/perfect-scrollbar/css/perfect-scrollbar.css",
               "src/assets/scss/material-dashboard.scss",
-              "src/assets/css/demo.css"
+              "src/assets/css/demo.css",
+              "src/assets/css/bootstrap.min.css",
+              "src/assets/css/owl.carousel.min.css",
+              "src/assets/css/slicknav.css",
+              "src/assets/css/flaticon.css",
+              "src/assets/css/gijgo.css",
+              "src/assets/css/animate.min.css",
+              "src/assets/css/animated-headline.css",
+              "src/assets/css/magnific-popup.css",
+              "src/assets/css/fontawesome-all.min.css",
+              "src/assets/css/themify-icons.css",
+              "src/assets/css/slick.css",
+              "src/assets/css/nice-select.css",
+              "src/assets/css/style.css",
+              "node_modules/ngx-toastr/toastr.css"
+
+
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
@@ -33,7 +50,39 @@
               "node_modules/moment/moment.js",
               "node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js",
               "node_modules/bootstrap-notify/bootstrap-notify.js",
-              "node_modules/chartist/dist/chartist.js"
+              "node_modules/chartist/dist/chartist.js",
+              "src/assets/js/vendor/modernizr-3.5.0.min.js",
+              "src/assets/js/vendor/jquery-1.12.4.min.js",
+              "src/assets/js/popper.min.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/js/jquery.slicknav.min.js",
+              "src/assets/js/owl.carousel.min.js",
+              "src/assets/js/slick.min.js",
+              "src/assets/js/wow.min.js",
+              "src/assets/js/animated.headline.js",
+              "src/assets/js/jquery.magnific-popup.js",
+              "src/assets/js/gijgo.min.js",
+              "src/assets/js/jquery.nice-select.min.js",
+              "src/assets/js/jquery.sticky.js",
+              "src/assets/js/jquery.counterup.min.js",
+              "src/assets/js/waypoints.min.js",
+              "src/assets/js/jquery.countdown.min.js",
+              "src/assets/js/hover-direction-snake.min.js",
+              "src/assets/js/contact.js",
+              "src/assets/js/jquery.form.js",
+              "src/assets/js/jquery.validate.min.js",
+              "src/assets/js/mail-script.js",
+              "src/assets/js/jquery.ajaxchimp.min.js",
+              "src/assets/js/plugins.js",
+              "src/assets/js/main.js",
+              "node_modules/flowbite/dist/flowbite.min.js",
+              "node_modules/chart.js/dist/chart.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/popper.js/dist/umd/popper.min.js"
+
+
+
+
             ],
             "allowedCommonJsDependencies": [
               "rxjs/add/operator/filter",
@@ -121,6 +170,7 @@
               "node_modules/chartist/dist/chartist.js"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/perfect-scrollbar/css/perfect-scrollbar.css",
               "src/assets/scss/material-dashboard.scss",
               "src/assets/css/demo.css"

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-declare const $: any;
+
+import * as $ from 'jquery';
 declare interface RouteInfo {
     path: string;
     title: string;
@@ -8,15 +9,19 @@ declare interface RouteInfo {
     class: string;
 }
 export const ROUTES: RouteInfo[] = [
-    { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '' },
-    { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
-    { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
-    { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
-    { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
-    { path: '/maps', title: 'Maps',  icon:'location_on', class: '' },
-    { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
-    { path: '/test', title: 'test',  icon:'notifications', class: '' },
-    { path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
+    // { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '' },
+    // { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
+    // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
+    // { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
+    // { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
+    // { path: '/maps', title: 'Maps',  icon:'location_on', class: '' },
+    // { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
+    // { path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
+    { path: '/club-list', title: 'Club List', icon: 'groups', class: '' },
+    { path: '/announcment-list', title: 'announcment List', icon: 'campaign', class: '' },
+    { path: '/user-list', title: 'User List', icon: 'groups', class: '' }, 
+    { path: '/projet', title: 'projects',  icon:'unarchive', class: '' },
+
 ];
 
 @Component({

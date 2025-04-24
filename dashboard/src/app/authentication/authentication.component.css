@@ -1,0 +1,246 @@
+.auth-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
+  
+  .auth-card-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+  }
+  
+  .auth-card {
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+  }
+  
+  .auth-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    width: 100%;
+  }
+  
+  .logo-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    color: #3f51b5;
+  }
+  
+  mat-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0 0;
+  }
+  
+  mat-card-title {
+    margin-bottom: 8px !important;
+    font-size: 24px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  mat-card-subtitle {
+    margin-bottom: 0;
+    font-size: 16px;
+    color: #666;
+  }
+  
+  mat-card-content {
+    padding: 24px 24px 0;
+  }
+  
+  .full-width {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  .submit-button {
+    height: 48px;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .register-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 0 !important;
+  }
+  
+  .register-section span {
+    color: #666;
+    margin-right: 8px;
+  }
+  
+  .error-alert {
+    display: flex;
+    align-items: center;
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  
+  .error-alert mat-icon {
+    margin-right: 8px;
+  }
+  
+  .forgot-password {
+    text-align: right;
+    margin-bottom: 20px;
+  }
+  
+  .forgot-password a {
+    color: #3f51b5;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .forgot-password a:hover {
+    text-decoration: underline;
+  }
+  
+  .spinner-button {
+    margin: 0 auto;
+  }
+  
+  /* Google Sign-In styling */
+  .or-divider {
+    text-align: center;
+    margin: 24px 0;
+    position: relative;
+  }
+  
+  .or-divider:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+  
+  .or-divider span {
+    background-color: white;
+    padding: 0 16px;
+    position: relative;
+    color: #666;
+  }
+  
+  .google-btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  
+  /* Face Login styling */
+  .face-login-button {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .face-login-button mat-icon {
+    margin-right: 8px;
+  }
+  
+  .face-capture-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #f9f9f9;
+  }
+  
+  .face-video {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 4px;
+  }
+  
+  .face-capture-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 599px) {
+    .auth-card-container {
+      padding: 16px;
+    }
+    
+    mat-card-title {
+      font-size: 20px;
+    }
+    
+    mat-card-subtitle {
+      font-size: 14px;
+    }
+    
+    mat-card-content {
+      padding: 16px 16px 0;
+    }
+    
+  /* Add this to your authentication.component.css file */
+  
+  .helper-text {
+    display: flex;
+    align-items: center;
+    background-color: #e8f0fe;
+    color: #1a73e8;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 14px;
+  }
+  
+  .helper-text mat-icon {
+    font-size: 18px;
+    margin-right: 8px;
+  }
+  
+  /* Style for indicating the face login button is disabled */
+  .face-login-button[disabled] {
+    opacity: 0.7;
+  }
+  
+  /* Optional: Add a loading indicator for the face capture process */
+  .face-capture-container {
+    position: relative;
+  }
+  
+  .capture-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 4px;
+  }
+  }

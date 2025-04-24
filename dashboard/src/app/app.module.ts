@@ -7,23 +7,129 @@ import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { FrontLayoutComponent } from './layouts/front-layout/front-layout.component';
+import { HomeComponent } from './pages/home/home.component';
+import { AboutComponent } from './pages/about/about.component';
+import { ServicesComponent } from './pages/services/services.component';
+import { BlogComponent } from './pages/blog/blog.component';
+import { ScheduleComponent } from './pages/schedule/schedule.component';
+import { FromComponent } from './pages/from/from.component';
+import { ClubListComponent } from './club-list/club-list.component';
+import { AddClubDialogComponent } from './add-club-dialog/add-club-dialog.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { EditClubDialogComponent } from './edit-club-dialog/edit-club-dialog.component';
+import { ClubsComponent } from './clubs/clubs.component';
+import { ClubMembersComponent } from './club-members/club-members.component';
+import { ChatComponent } from './chat/chat.component';
+import { JokeComponent } from './joke/joke.component';
+import { AnnouncementListComponent } from './announcement-list/announcement-list.component';
+import { AddAnnouncementDialogComponent } from './add-announcement-dialog/add-announcement-dialog.component';
+import { EditAnnouncementDialogComponent } from './edit-announcement-dialog/edit-announcement-dialog.component';
+import { AnnouncementDetailsDialogComponent } from './announcement-details-dialog/announcement-details-dialog.component';
+import { ClickOutsideDirective } from './click-outside.directive';
+import { AuthenticationComponent } from './authentication/authentication.component';
+import { RegisterComponent } from './register/register.component';
+import { ProjectTaskListComponent } from './project-task-list/project-task-list.component';
+
+// Angular Material Modules
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+// Third-party libraries
+import { ToastrModule } from 'ngx-toastr';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ProjectReportListComponent } from './project-report-list/project-report-list.component';
+import { ProjetListComponent } from './projet-list/projet-list.component';
+import { ProjetMessageComponent } from './projet-message/projet-message.component';
 
 @NgModule({
   imports: [
+    // Angular Core Modules
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ComponentsModule,
     RouterModule,
     AppRoutingModule,
+    ComponentsModule,
+    
+    // Angular Material Modules
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatTableModule,
+    MatTooltipModule,
+    
+    // Third-party Modules
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      timeOut: 3000,
+      preventDuplicates: true,
+    })
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-
+    FrontLayoutComponent,
+    HomeComponent,
+    AboutComponent,
+    ServicesComponent,
+    BlogComponent,
+    ScheduleComponent,
+    FromComponent,
+    ClubListComponent,
+    AddClubDialogComponent,
+    ConfirmDialogComponent,
+    EditClubDialogComponent,
+    ClubsComponent,
+    ClubMembersComponent,
+    ChatComponent,
+    JokeComponent,
+    AnnouncementListComponent,
+    AddAnnouncementDialogComponent,
+    EditAnnouncementDialogComponent,
+    AnnouncementDetailsDialogComponent,
+    ClickOutsideDirective,
+    AuthenticationComponent,
+    RegisterComponent,
+    ProjectTaskListComponent,
+    ProjectReportListComponent,
+    ProjetListComponent,
+    ProjetMessageComponent,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: DomSanitizer,
+      useValue: DomSanitizer
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

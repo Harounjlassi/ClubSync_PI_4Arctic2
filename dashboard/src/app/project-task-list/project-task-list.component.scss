@@ -1,0 +1,629 @@
+/* Color Variables */
+$primary-color: #4361ee;
+$primary-light: rgba(67, 97, 238, 0.1);
+$warning-color: #f8961e;
+$warning-light: rgba(248, 150, 30, 0.1);
+$success-color: #43aa8b;
+$success-light: rgba(67, 170, 139, 0.1);
+$danger-color: #f94144;
+$danger-light: rgba(249, 65, 68, 0.1);
+$text-dark: #2b2d42;
+$text-medium: #4a4e69;
+$text-light: #8e9aaf;
+$bg-light: #f8f9fa;
+$border-color: #e9ecef;
+$white: #ffffff;
+
+/* Base Styles */
+.kanban-container {
+  padding: 2.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #ffffff;
+  min-height: 100vh;
+  position: relative;
+}
+
+.kanban-board {
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+  height: calc(100vh - 7rem);
+  
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    height: 10px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+  }
+}
+
+/* Column Styles */
+.kanban-column {
+  min-width: 360px;
+  width: 360px;
+  background: $white;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  
+  &:hover {
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+  }
+  
+  &.todo-column {
+    border-left: 8px solid $primary-color;
+    
+    .column-header {
+      background: linear-gradient(135deg, $primary-light 0%, rgba($primary-color, 0.05) 100%);
+    }
+  }
+  
+  &.progress-column {
+    border-left: 8px solid $warning-color;
+    
+    .column-header {
+      background: linear-gradient(135deg, $warning-light 0%, rgba($warning-color, 0.05) 100%);
+    }
+  }
+  
+  &.done-column {
+    border-left: 8px solid $success-color;
+    
+    .column-header {
+      background: linear-gradient(135deg, $success-light 0%, rgba($success-color, 0.05) 100%);
+    }
+  }
+  
+  &.drag-over {
+    background: rgba($primary-color, 0.03);
+    border: 2px dashed rgba($primary-color, 0.3);
+    
+    .tasks-container {
+      background: rgba($primary-color, 0.02);
+    }
+  }
+}
+
+.column-header {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $border-color;
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .column-icon {
+    font-size: 1.5rem;
+  }
+  
+  .column-titre {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: $text-dark;
+  }
+  
+  .task-count {
+    font-size: 0.9rem;
+    color: $text-light;
+    background: $white;
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  }
+  
+  .btn-add-task, .btn-clear-done {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: $white;
+    color: $primary-color;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-icon {
+      font-size: 1.2rem;
+    }
+  }
+  
+  .btn-clear-done {
+    color: $danger-color;
+  }
+}
+
+.tasks-container {
+  padding: 1.5rem;
+  flex: 1;
+  overflow-y: auto;
+  transition: background 0.3s ease;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: $text-light;
+  
+  .empty-icon {
+    font-size: 3.5rem;
+    opacity: 0.3;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+/* Task Card Styles */
+.kanban-task {
+  background: $white;
+  border-radius: 12px;
+  padding: 0;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  cursor: grab;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border: 1px solid $border-color;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border-color: rgba($primary-color, 0.3);
+    
+    .task-menu-btn {
+      opacity: 1;
+    }
+  }
+  
+  &:active {
+    cursor: grabbing;
+  }
+  
+  &.task-dragging {
+    opacity: 0.5;
+    transform: scale(0.98);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.task-priority {
+  height: 5px;
+  
+  &.high {
+    background: linear-gradient(90deg, $danger-color 0%, lighten($danger-color, 10%) 100%);
+  }
+  
+  &.medium {
+    background: linear-gradient(90deg, $warning-color 0%, lighten($warning-color, 10%) 100%);
+  }
+  
+  &.low {
+    background: linear-gradient(90deg, $success-color 0%, lighten($success-color, 10%) 100%);
+  }
+}
+
+.task-content {
+  padding: 1.5rem;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  
+  .task-titre {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text-dark;
+    line-height: 1.5;
+    flex: 1;
+  }
+  
+  .task-menu-btn {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: $text-light;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: $text-dark;
+    }
+    
+    .menu-icon {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+.task-description {
+  margin: 0 0 1.25rem 0;
+  color: $text-medium;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  
+  span {
+    display: inline-flex;
+    align-items: center;
+    color: $text-light;
+    
+    .meta-icon {
+      margin-right: 0.5rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+.progress-section {
+  margin-bottom: 1.25rem;
+  
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    color: $text-light;
+  }
+  
+  .progress-percent {
+    font-weight: 600;
+    color: $primary-color;
+  }
+  
+  .progress-bar {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, $primary-color 0%, lighten($primary-color, 10%) 100%);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+}
+
+.completion-badge {
+  display: inline-flex;
+  align-items: center;
+  background: $success-light;
+  color: darken($success-color, 10%);
+  padding: 0.6rem 1rem;
+  border-radius: 24px;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+  
+  .badge-icon {
+    margin-right: 0.6rem;
+    font-size: 1rem;
+  }
+}
+
+.task-footer, .task-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid $border-color;
+}
+
+/* Button Styles */
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+  
+  .btn-icon {
+    font-size: 1.1rem;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &.btn-start {
+    background: $primary-light;
+    color: $primary-color;
+    
+    &:hover {
+      background: rgba($primary-color, 0.2);
+    }
+  }
+  
+  &.btn-complete {
+    background: $success-light;
+    color: darken($success-color, 10%);
+    
+    &:hover {
+      background: rgba($success-color, 0.2);
+    }
+  }
+  
+  &.btn-reopen {
+    background: $warning-light;
+    color: darken($warning-color, 15%);
+    margin-right: 0.75rem;
+    
+    &:hover {
+      background: rgba($warning-color, 0.2);
+    }
+  }
+  
+  &.btn-update {
+    background: $warning-light;
+    color: darken($warning-color, 10%);
+    margin-right: 0.75rem;
+    
+    &:hover {
+      background: rgba($warning-color, 0.2);
+    }
+  }
+  
+  &.btn-delete {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: $danger-light;
+    color: $danger-color;
+    
+    &:hover {
+      background: rgba($danger-color, 0.2);
+    }
+  }
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: modalFadeIn 0.3s ease;
+  overflow: hidden;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: $text-dark;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: $text-light;
+    transition: color 0.2s ease;
+    line-height: 1;
+    
+    &:hover {
+      color: $text-dark;
+    }
+  }
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $text-dark;
+    font-size: 0.95rem;
+  }
+  
+  input, textarea, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease;
+    font-family: inherit;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+  
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1rem;
+  
+  button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    border: none;
+    
+    &.btn-cancel {
+      background: $bg-light;
+      color: $text-medium;
+      
+      &:hover {
+        background: darken($bg-light, 5%);
+      }
+    }
+    
+    &.btn-submit {
+      background: $primary-color;
+      color: white;
+      
+      &:hover {
+        background: darken($primary-color, 5%);
+      }
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .kanban-board {
+    flex-wrap: wrap;
+  }
+  
+  .kanban-column {
+    width: calc(50% - 1rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .kanban-container {
+    padding: 1.5rem;
+  }
+  
+  .kanban-board {
+    gap: 1.5rem;
+  }
+  
+  .kanban-column {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .column-header {
+    padding: 1.25rem;
+  }
+  
+  .tasks-container {
+    padding: 1.25rem;
+  }
+  
+  .modal-content {
+    width: 95%;
+  }
+}
+/* Add to your component's CSS */
+.kanban-task[draggable="true"] {
+  cursor: grab;
+}
+
+.kanban-task.task-dragging {
+  opacity: 0.5;
+}
+
+.kanban-column.drop-target {
+  background-color: rgba(0, 123, 255, 0.1);
+}

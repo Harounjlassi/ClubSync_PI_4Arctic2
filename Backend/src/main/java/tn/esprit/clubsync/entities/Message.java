@@ -1,11 +1,20 @@
 package tn.esprit.clubsync.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
+import java.util.Date;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "projetMessage")
-@Data
+
 public class Message {
 
     @Id
@@ -16,18 +25,42 @@ public class Message {
     @Column(name="contenu", columnDefinition = "TEXT")
     private String contenu;
 
+    @Column(name = "date_created")
+    @Temporal (TemporalType.DATE)
+
+    private Date dateCreated;
+
+    @Column(name = "last_updated")
+    @Temporal (TemporalType.DATE)
+
+    private Date lastUpdated;
+
     @ManyToOne
     @JoinColumn(name = "projet_id")
+    @JsonIgnore
+
     private Projet projet;
 
 
-    /**
-    public Long getId_message() {
-        return id_message;
+    @JsonProperty("ProjetId")
+    public Long getProjetId() {
+        return projet != null ? projet.getId() : null;
+    }
+    @JsonProperty("ProjetId")
+    public void setProjetId(Long projetId) {
+        this.projet = new Projet();
+        this.projet.setId(projetId);
     }
 
-    public void setId_message(Long id_message) {
-        this.id_message = id_message;
+
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getContenu() {
@@ -38,41 +71,28 @@ public class Message {
         this.contenu = contenu;
     }
 
-    public Users getAuteur() {
-        return auteur;
+    public Projet getProjet() {
+        return projet;
     }
 
-    public void setAuteur(Users auteur) {
-        this.auteur = auteur;
+    public void setProjet(Projet projet) {
+        this.projet = projet;
+    }
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public Projet getProject() {
-        return project;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
-    public void setProject(Projet project) {
-        this.project = project;
+    public Date getLastUpdated() {
+        return lastUpdated;
     }
 
-    public Tache getTache() {
-        return tache;
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
-    public void setTache(Tache tache) {
-        this.tache = tache;
-    }
 
-    @ManyToOne
-    @JoinColumn(name = "auteur_id")
-    private Users auteur;
-
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Projet project;
-
-    @ManyToOne
-    @JoinColumn(name = "tache_id")
-    private Tache tache;
-
-   */
 }

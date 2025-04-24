@@ -74,11 +74,11 @@ public class Event {
         this.location = location;
     }
 
-    public List<Users> getParticipants() {
+    public List<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<Users> participants) {
+    public void setParticipants(List<User> participants) {
         this.participants = participants;
     }
 
@@ -95,6 +95,6 @@ public class Event {
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<Users> participants = new ArrayList<>();
+    private List<User> participants = new ArrayList<>();
 
 }

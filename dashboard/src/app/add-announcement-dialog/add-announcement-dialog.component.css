@@ -1,0 +1,23 @@
+.dialog-container {
+    padding: 20px;
+    min-width: 400px;
+  }
+  
+  .full-width {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .dialog-icon {
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  
+  .spinner {
+    animation: spin 1s infinite linear;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

@@ -1,0 +1,143 @@
+<div class="register-page">
+    <div class="register-card-container">
+      <mat-card class="register-card">
+        <mat-card-header>
+          <div class="register-logo">
+            <mat-icon class="logo-icon">how_to_reg</mat-icon>
+          </div>
+          <mat-card-title>Créer un compte</mat-card-title>
+          <mat-card-subtitle>Complétez votre profil pour vous inscrire</mat-card-subtitle>
+        </mat-card-header>
+  
+        <mat-card-content>
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="form-columns">
+              <!-- Left column -->
+              <div class="form-column">
+                <!-- Personal Information -->
+                <h3 class="section-title">Informations personnelles</h3>
+  
+                <!-- Nom -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Lastname</mat-label>
+                  <input matInput formControlName="lastname" required>
+                  <mat-icon matPrefix>person</mat-icon>
+                  <mat-error *ngIf="lastname?.errors?.['required']">Lastname is required</mat-error>
+                  <mat-error *ngIf="lastname?.errors?.['minlength']">Lastname needs at least two characters</mat-error>
+                </mat-form-field>
+                
+                <!-- Prénom -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Firstname</mat-label>
+                  <input matInput formControlName="firstname" required>
+                  <mat-icon matPrefix>person_outline</mat-icon>
+                  <mat-error *ngIf="firstname?.errors?.['required']">Firstname required </mat-error>
+                  <mat-error *ngIf="firstname?.errors?.['minlength']">Firstname needs to have at least 2 characters</mat-error>
+                </mat-form-field>
+  
+                <!-- Date de naissance -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Date de naissance</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="dateNaissance" [max]="maxDate" required>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-icon matPrefix>cake</mat-icon>
+                  <mat-error *ngIf="dateNaissance?.errors?.['required']">La date de naissance est requise</mat-error>
+                </mat-form-field>
+  
+                <!-- Sexe -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Sexe</mat-label>
+                  <mat-select formControlName="sexe" required>
+                    <mat-option value="Homme">Homme</mat-option>
+                    <mat-option value="Femme">Femme</mat-option>
+                  </mat-select>
+                  <mat-icon matPrefix>wc</mat-icon>
+                </mat-form-field>
+              </div>
+              
+              <!-- Right column -->
+              <div class="form-column">
+                <!-- Contact Information -->
+                <h3 class="section-title">Coordonnées & Accès</h3>
+  
+                <!-- Email -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Email</mat-label>
+                  <input matInput type="email" formControlName="email" required>
+                  <mat-icon matPrefix>email</mat-icon>
+                  <mat-error *ngIf="email?.errors?.['required']">L'email est requis</mat-error>
+                  <mat-error *ngIf="email?.errors?.['email']">Veuillez entrer une adresse email valide</mat-error>
+                </mat-form-field>
+  
+                <!-- Numéro de téléphone -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Numéro de téléphone</mat-label>
+                  <input matInput type="tel" formControlName="numeroDeTelephone" required>
+                  <mat-icon matPrefix>phone</mat-icon>
+                  <mat-error *ngIf="numeroDeTelephone?.errors?.['required']">Le numéro de téléphone est requis</mat-error>
+                  <mat-error *ngIf="numeroDeTelephone?.errors?.['pattern']">Veuillez entrer un numéro valide (8-12 chiffres)</mat-error>
+                </mat-form-field>
+  
+                <!-- Mot de passe -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Mot de passe</mat-label>
+                  <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+                  <mat-icon matPrefix>lock</mat-icon>
+                  <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                    <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                  <mat-error *ngIf="password?.errors?.['required']">Le mot de passe est requis</mat-error>
+                  <mat-error *ngIf="password?.errors?.['minlength']">Le mot de passe doit comporter au moins 6 caractères</mat-error>
+                </mat-form-field>
+  
+                <!-- Confirmer le mot de passe -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Confirmer le mot de passe</mat-label>
+                  <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" required>
+                  <mat-icon matPrefix>lock_outline</mat-icon>
+                  <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+                    <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                  <mat-error *ngIf="confirmPassword?.errors?.['required']">La confirmation du mot de passe est requise</mat-error>
+                  <mat-error *ngIf="confirmPassword?.errors?.['passwordMismatch']">Les mots de passe ne correspondent pas</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+  
+            <!-- Photo Upload -->
+            <div class="photo-upload-section">
+              <div class="photo-upload-label">
+                <mat-icon>photo_camera</mat-icon>
+                <span>Photo de profil</span>
+              </div>
+              
+              <div class="photo-upload-content">
+                <div class="photo-preview" [class.has-image]="imagePreview">
+                  <img *ngIf="imagePreview" [src]="imagePreview" alt="Photo de profil">
+                  <mat-icon *ngIf="!imagePreview">account_circle</mat-icon>
+                </div>
+                
+                <div class="photo-actions">
+                  <button type="button" mat-stroked-button color="primary" (click)="fileInput.click()">
+                    <mat-icon>upload</mat-icon> Choisir une photo
+                  </button>
+                  <input hidden type="file" #fileInput (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/jpg">
+                  <p class="photo-tip">JPG ou PNG, max 2MB</p>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Submit Button -->
+            <div class="action-buttons">
+              <button mat-button type="button" (click)="navigateToLogin()">Déjà inscrit? Se connecter</button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="isLoading" class="submit-button">
+                <span *ngIf="!isLoading">S'inscrire</span>
+                <mat-spinner *ngIf="isLoading" diameter="24" class="spinner-button"></mat-spinner>
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>

@@ -1,105 +1,152 @@
 <div class="main-content">
   <div class="container-fluid">
-      <div class="row">
-          <div class="col-md-8">
-              <div class="card">
-                  <div class="card-header card-header-danger">
-                      <h4 class="card-title">Edit Profile</h4>
-                      <p class="card-category">Complete your profile</p>
-                  </div>
-                  <div class="card-body">
-                      <form>
-                          <div class="row">
-                              <div class="col-md-5">
-                                <mat-form-field class="example-full-width">
-                                    <input matInput placeholder="Company (disabled)" disabled>
-                                  </mat-form-field>
-                              </div>
-                              <div class="col-md-3">
-                                  <mat-form-field class="example-full-width">
-                                    <input matInput placeholder="Username">
-                                  </mat-form-field>
-                              </div>
-                              <div class="col-md-4">
-                                  <mat-form-field class="example-full-width">
-                                    <input matInput placeholder="Email address" type="email">
-                                  </mat-form-field>
-                              </div>
-                          </div>
-                          <div class="row">
-                              <div class="col-md-6">
-                                <mat-form-field class="example-full-width">
-                                  <input matInput placeholder="Fist Name" type="text">
-                                </mat-form-field>
-                              </div>
-                              <div class="col-md-6">
-                                <mat-form-field class="example-full-width">
-                                  <input matInput placeholder="Last Name" type="text">
-                                </mat-form-field>
-                              </div>
-                          </div>
-                          <div class="row">
-                              <div class="col-md-12">
-                                <mat-form-field class="example-full-width">
-                                  <input matInput placeholder="Adress" type="text">
-                                </mat-form-field>
-                              </div>
-                          </div>
-                          <div class="row">
-                              <div class="col-md-4">
-                                <mat-form-field class="example-full-width">
-                                  <input matInput placeholder="City" type="text">
-                                </mat-form-field>
-                              </div>
-                              <div class="col-md-4">
-                                <mat-form-field class="example-full-width">
-                                  <input matInput placeholder="Country" type="text">
-                                </mat-form-field>
-                              </div>
-                              <div class="col-md-4">
-                                <mat-form-field class="example-full-width">
-                                  <input matInput placeholder="Postal Code" type="text">
-                                </mat-form-field>
-                              </div>
-                          </div>
-                          <div class="row">
-                              <div class="col-md-12">
-                                <label>About Me</label>
-                                <mat-form-field class="example-full-width">
-                                   <textarea matInput placeholder="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."></textarea>
-                                 </mat-form-field>
-                                  <!-- <div class="form-group">
-
-                                      <div class="form-group">
-                                          <label class="bmd-label-floating"> Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</label>
-                                          <textarea class="form-control" rows="5"></textarea>
-                                      </div>
-                                  </div> -->
-                              </div>
-                          </div>
-                          <button mat-raised-button type="submit" class="btn btn-danger pull-right">Update Profile</button>
-                          <div class="clearfix"></div>
-                      </form>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="card card-profile">
-                  <div class="card-avatar">
-                      <a href="javascript:void(0)">
-                          <img class="img" src="./assets/img/faces/marc.jpg" />
-                      </a>
-                  </div>
-                  <div class="card-body">
-                      <h6 class="card-category text-gray">CEO / Co-Founder</h6>
-                      <h4 class="card-title">Alec Thompson</h4>
-                      <p class="card-description">
-                          Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
-                      </p>
-                      <a href="javascript:void(0)" class="btn btn-danger btn-round">Follow</a>
-                  </div>
-              </div>
-          </div>
+    <!-- Loading spinner -->
+    <div class="row" *ngIf="loading">
+      <div class="col-12 text-center p-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <p class="mt-2">Loading user data...</p>
       </div>
+    </div>
+    
+    <!-- Error message -->
+    <div class="row" *ngIf="error">
+      <div class="col-12">
+        <div class="alert alert-danger">
+          {{ error }}
+        </div>
+      </div>
+    </div>
+    
+    <!-- User profile content -->
+    <div class="row" *ngIf="!loading && !error && currentUser">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">User Profile</h4>
+            <p class="card-category">Your personal information</p>
+          </div>
+          <div class="card-body">
+            <!-- Profile Picture -->
+            <div class="row" *ngIf="currentUser.photoProfil">
+              <div class="col-md-12 text-center mb-4">
+                <img [src]="currentUser.photoProfil || defaultAvatar" 
+                     alt="Profile Picture" 
+                     class="rounded-circle"
+                     style="width: 150px; height: 150px; object-fit: cover;">
+              </div>
+            </div>
+
+            <!-- Basic Info -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>First Name</label>
+                <div class="form-group">
+                  <p>{{ currentUser.lastname || 'Not provided' }}</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label>Last Name</label>
+                <div class="form-group">
+                  <p>{{ currentUser.firstname || 'Not provided' }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <label>Email Address</label>
+                <div class="form-group">
+                  <p>{{ currentUser.email || 'Not provided' }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Personal Details -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Birth Date</label>
+                <div class="form-group">
+                  <p>{{ currentUser.dateNaissance | date:'mediumDate' || 'Not provided' }}</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label>Gender</label>
+                <div class="form-group">
+                  <p>{{ getGenderDisplay() }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <label>Phone Number</label>
+                <div class="form-group">
+                  <p>{{ currentUser.numeroDeTelephone || 'Not provided' }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Account Info -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>User ID</label>
+                <div class="form-group">
+                  <p>{{ currentUser.idUser || 'Not available' }}</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label>Role</label>
+                <div class="form-group">
+                  <p>{{ getRoleName() }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Status -->
+            <div class="row">
+              <div class="col-md-12">
+                <label>Account Status</label>
+                <div class="form-group">
+                  <p>{{ currentUser.archived ? 'Archived' : 'Active' }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Logout button -->
+            <div class="row">
+              <div class="col-md-12 mt-4">
+                <button mat-raised-button 
+                        (click)="logout()" 
+                        class="btn btn-danger btn-lg px-4 py-3 d-flex align-items-center justify-content-center">
+                  <i class="material-icons mr-2" style="font-size: 24px;">exit_to_app</i>
+                  <span style="font-size: 18px; font-weight: 500;">Logout</span>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 mt-4">
+                <button mat-raised-button 
+                        (click)="onEdit(currentUser.idUser)" 
+                        class="btn btn-danger btn-lg px-4 py-3 d-flex align-items-center justify-content-center">
+                  <i class="material-icons mr-2" style="font-size: 24px;">exit_to_app</i>
+                  <span style="font-size: 18px; font-weight: 500;">Edit</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- No user data available message -->
+    <div class="row" *ngIf="!loading && !error && !currentUser">
+      <div class="col-12">
+        <div class="alert alert-warning">
+          No user data available. Please try logging in again.
+        </div>
+      </div>
+    </div>
   </div>
 </div>
