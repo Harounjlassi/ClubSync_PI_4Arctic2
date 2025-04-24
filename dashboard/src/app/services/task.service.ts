@@ -1,7 +1,7 @@
 // task.service.ts
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ProjetTask } from 'app/common/projet-task';
+import { ProjetTask } from 'app/models/projet-task';
 import { User } from "app/models/user.model";
 import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
 import { UserService } from './user.service';

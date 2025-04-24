@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class CalenderApiService {
 
-  private apiUrl = 'http://localhost:8080/api'; 
+  private apiUrl = 'http://localhost:8080/clubsync'; 
 
   constructor(private http: HttpClient) { }
 

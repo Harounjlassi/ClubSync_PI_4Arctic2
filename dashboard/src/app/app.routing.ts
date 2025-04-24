@@ -55,8 +55,7 @@ const routes: Routes =[
       { path: 'schedule', component: ScheduleComponent },  
       { path: 'clubs', component: ClubsComponent },
       { path: 'jokes', component: JokeComponent },
-      { path: 'projects', component: ProjetsComponent },    // page à propos
-
+      { path: 'projects', component: ProjetsComponent },    
 
 
       

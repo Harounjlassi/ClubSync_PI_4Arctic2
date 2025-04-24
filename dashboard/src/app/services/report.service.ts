@@ -1,9 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, forkJoin, switchMap, tap, throwError } from "rxjs";
-import { Report } from "app/common/report";
+import { Report } from "app/models/report";
 import { TaskService } from "./task.service";
-import { ProjetTask } from "app/common/projet-task";
+import { ProjetTask } from "app/models/projet-task";
 import { UserService } from "./user.service";
 import { User } from "app/models/user.model";
 import { NotificationService } from './notification.service'; // Use NotificationService without importing a component

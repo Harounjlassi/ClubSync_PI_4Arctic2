@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Message } from "app/common/message";
-import { Projet } from "app/common/projet";
+import { Message } from "app/models/message";
+import { Projet } from "app/models/projet";
 import { User } from "app/models/user.model";
 import { CalenderApiService } from "app/services/calender-api.service";
 import { FaceRecognitionService } from "app/services/face-recognition.service";
@@ -557,7 +557,7 @@ get nom() {
       (data) => {
         console.log("Received user:", data);
         this.user = data;
-        console.log("Received user:", this.user[0].username);
+        console.log("Received user:", this.user.lastname);
 
         this.editProjectForm.patchValue({
           id: project.id || null,
@@ -566,7 +566,7 @@ get nom() {
           imageUrl: project.imageUrl || "",
           status: project.status || "Not_Started",
           progress: project.progress || 0,
-          createur: this.user[0].username || "",
+          createur: this.user.lastname || "",
           dateCreated: project.dateCreated || new Date(),
           lastUpdated: new Date(),
         });

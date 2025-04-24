@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReportService } from 'app/services/report.service';
-import { Report } from 'app/common/report';
+import { Report } from 'app/models/report';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 
@@ -25,11 +25,11 @@ export class ProjectReportListComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.reportForm = this.fb.group({
-      title: ['', Validators.required],
-      description: [''],
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(500)]],
       status: ['Pending', Validators.required],
-      TacheTitre: [''],
-      ReporterFirstName: ['']
+      TacheTitre: ['', [Validators.maxLength(100)]],
+      ReporterFirstName: ['', [Validators.maxLength(50)]]
     });
   }
 
@@ -81,6 +81,7 @@ export class ProjectReportListComponent implements OnInit {
   submitReport(): void {
     console.log('Form valsssssssssues:', this.reportForm.value);
     console.log('Selected report:', this.selectedReport);
+
     if (this.reportForm.valid && this.selectedReport && !this.isSaving) {
       this.isSaving = true;
       const updatedReport = {
@@ -105,6 +106,9 @@ export class ProjectReportListComponent implements OnInit {
           console.error('Error saving report:', error);
         }
       });
+    }else{
+      alert('Form is invalid or already saving');
+      this.isSaving = false;
     }
   }
 

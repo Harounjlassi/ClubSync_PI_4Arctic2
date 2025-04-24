@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProjetTask } from 'app/common/projet-task';
+import { ProjetTask } from 'app/models/projet-task';
 import { TaskService } from 'app/services/task.service';
 
 @Component({

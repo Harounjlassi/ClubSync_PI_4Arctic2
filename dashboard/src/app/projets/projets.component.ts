@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
-import { Message } from 'app/common/message';
-import { Projet } from 'app/common/projet';
-import { ProjetTask } from 'app/common/projet-task';
+import { Message } from 'app/models/message';
+import { Projet } from 'app/models/projet';
+import { ProjetTask } from 'app/models/projet-task';
 import { User } from "app/models/user.model";
 import { ProjetService } from 'app/services/projet.service';
 import { TaskService } from 'app/services/task.service';
 import { UserService } from 'app/services/user.service';
 import { finalize } from 'rxjs';
-import { Report } from 'app/common/report';
+import { Report } from 'app/models/report';
 import { ReportService } from 'app/services/report.service';
 import { MessageService } from 'app/services/message.service';
 
@@ -89,19 +89,16 @@ completedP:number;
     uniqueUserIds.forEach(userId => {
       if (!this.users[userId]) {  
         this.userService.getUserById(userId).subscribe({
-          next: (response) => {
-            // Handle both array and single object responses
-            const user = Array.isArray(response) ? response[0] : response;
-            
-            if (user && user.id) {
+          next: (user) => {  // Directly get the user object
+            if (user && user.idUser) {  // Check for idUser instead of id
               this.users[userId] = user;
-              //console.log(`Loaded user ${userId}:`, user.username);
+              console.log(`Loaded user ${userId}:`, user.lastname);
             } else {
-              console.warn(`Invalid user data for ID ${userId}:`, response);
+              console.warn(`Invalid user data for ID ${userId}:`, user);
             }
           },
           error: (err) => {
-            //console.error(`Error loading user ${userId}:`, err);
+            console.error(`Error loading user ${userId}:`, err);
           }
         });
       }

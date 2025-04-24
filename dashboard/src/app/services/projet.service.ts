@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Projet } from 'app/common/projet';
+import { Projet } from 'app/models/projet';
 import { Observable } from 'rxjs/internal/Observable';
 import { throwError } from 'rxjs/internal/observable/throwError';
 import { catchError } from 'rxjs/internal/operators/catchError';
@@ -60,6 +60,7 @@ export class ProjetService {
     return this.userService.getUserByUsername(newProject.createur).pipe(
       switchMap(users => {
         if (!users || users.length === 0) {
+          alert('No  found User for the given project');
           return throwError(() => new Error('No  found for the given user'));
         }
 
@@ -93,6 +94,8 @@ export class ProjetService {
       return this.userService.getUserByUsername(newProject.createur).pipe(
         switchMap(users => {
           if (!users || users.length === 0) {
+            alert('No  found User for the given project');
+
             return throwError(() => new Error('No  found for the given user'));
           }
   
@@ -107,8 +110,7 @@ export class ProjetService {
             status: newProject.status,
             progress: newProject.progress || 0,
           
-            createurId: users[0].idUser, // Accessing the first task's ID
-            // ProjetId: task.ProjetId
+            createurId: users[0].idUser, 
           };
   
           console.log('Submitting report:', payload);

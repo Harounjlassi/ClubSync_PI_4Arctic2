@@ -52,7 +52,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Third-party libraries
 import { ToastrModule } from 'ngx-toastr';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ProjectReportListComponent } from './project-report-list/project-report-list.component';
 import { ProjetListComponent } from './projet-list/projet-list.component';
 import { ProjetMessageComponent } from './projet-message/projet-message.component';
@@ -125,10 +124,10 @@ import { ProjetMessageComponent } from './projet-message/projet-message.componen
     ProjetMessageComponent,
   ],
   providers: [
-    {
-      provide: DomSanitizer,
-      useValue: DomSanitizer
-    }
+    // {
+    //   provide: DomSanitizer,
+    //   useValue: DomSanitizer
+    // }
   ],
   bootstrap: [AppComponent]
 })
