@@ -41,17 +41,29 @@
                                           </ul>
                                       </li>
                                       <li><a href="contact.html">Contact</a></li>
+                                      
                                   </ul>
                               </nav>
                           </div>
                           <div class="header-right-btn f-right d-none d-lg-block ml-30">
                               <a href="from.html" class="btn header-btn">became a member</a>
                           </div>
+                          <!-- Bouton My Clubs comme bouton d'action -->
+                          <div class="header-right-btn f-right d-none d-lg-block ml-15">
+                              <a routerLink="/my-clubs" class="btn header-btn my-clubs-btn">
+                                  <mat-icon>bookmarks</mat-icon> My Clubs
+                              </a>
+                          </div>
                       </div>
                   </div>   
                   <!-- Mobile Menu -->
                   <div class="col-12">
-                      <div class="mobile_menu d-block d-lg-none"></div>
+                      <div class="mobile_menu d-block d-lg-none">
+                          <!-- Ajouter un lien My Clubs pour mobile -->
+                          <a routerLink="/my-clubs" class="mobile-my-clubs-link">
+                              <mat-icon>bookmarks</mat-icon> My Clubs
+                          </a>
+                      </div>
                   </div>
               </div>
           </div>
@@ -367,6 +379,7 @@
       </div>
     </div>
   </div>
+</main>
 
 <footer>
   <!--? Footer Start-->

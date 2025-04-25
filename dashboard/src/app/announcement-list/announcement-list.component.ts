@@ -34,8 +34,7 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
   error: boolean = false;
   selectedClub: number | null = null;
   chart: any;
-  currentView: 'cards' | 'table' = 'cards'; // Default to card view
-  
+  currentView: string = 'table';  // Properly initialize with a value  
   // Club color mapping
   private clubColors = new Map<number, string>();
   

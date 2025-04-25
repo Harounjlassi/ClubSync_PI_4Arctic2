@@ -88,16 +88,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="view-options mb-2 ms-2">
-                <mat-button-toggle-group [(ngModel)]="currentView" aria-label="View options">
-                  <mat-button-toggle value="cards" aria-label="Card view">
-                    <mat-icon>view_module</mat-icon>
-                  </mat-button-toggle>
-                  <mat-button-toggle value="table" aria-label="Table view">
-                    <mat-icon>view_list</mat-icon>
-                  </mat-button-toggle>
-                </mat-button-toggle-group>
-              </div>
+
               <div class="export-buttons-container">
                 <button 
                   class="btn export-btn export-btn-pdf" 
@@ -122,59 +113,7 @@
               </div>
             </div>
             
-            <!-- Card View -->
-            <div *ngIf="currentView === 'cards'" class="announcement-cards">
-              <div class="row">
-                <div *ngFor="let announcement of filteredAnnouncements || []; let i = index" class="col-md-4 mb-4">
-                  <mat-card class="announcement-card h-100" [id]="'announcementCard_' + announcement.id">
-                    <mat-card-header [style.background-color]="getCardColor(announcement.club?.id_club)">
-                      <mat-card-title [id]="'cardTitle_' + announcement.id">{{ announcement.title || '' }}</mat-card-title>
-                      <mat-card-subtitle [id]="'cardClub_' + announcement.id">
-                        <mat-icon class="club-icon">group</mat-icon>{{ getClubName(announcement.club) }}
-                      </mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                      <p class="announcement-content" [id]="'cardContent_' + announcement.id">
-                        {{ (announcement.content || '') | slice:0:150 }}{{ (announcement.content || '').length > 150 ? '...' : '' }}
-                      </p>
-                      <div class="announcement-date" [id]="'cardDate_' + announcement.id">
-                        <mat-icon class="date-icon">calendar_today</mat-icon>
-                        <span>{{ announcement.createdAt | date:'medium' }}</span>
-                      </div>
-                    </mat-card-content>
-                    <mat-card-actions align="end">
-                      <button 
-                        mat-icon-button 
-                        color="primary" 
-                        (click)="openEditAnnouncementDialog(announcement)" 
-                        aria-label="Edit announcement"
-                        [id]="'editCardBtn_' + announcement.id"
-                        matTooltip="Edit">
-                        <mat-icon>edit</mat-icon>
-                      </button>
-                      <button 
-                        mat-icon-button 
-                        color="warn" 
-                        (click)="deleteAnnouncement(announcement.id)" 
-                        aria-label="Delete announcement"
-                        [id]="'deleteCardBtn_' + announcement.id"
-                        matTooltip="Delete">
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                      <button 
-                        mat-icon-button 
-                        color="accent" 
-                        (click)="viewAnnouncementDetails(announcement.id)" 
-                        aria-label="View announcement details"
-                        [id]="'viewCardBtn_' + announcement.id"
-                        matTooltip="View details">
-                        <mat-icon>visibility</mat-icon>
-                      </button>
-                    </mat-card-actions>
-                  </mat-card>
-                </div>
-              </div>
-            </div>
+           
               
             <!-- Table View (Original) -->
             <div class="table-responsive" *ngIf="currentView === 'table' && (filteredAnnouncements || []).length > 0" id="announcementTableContainer">
