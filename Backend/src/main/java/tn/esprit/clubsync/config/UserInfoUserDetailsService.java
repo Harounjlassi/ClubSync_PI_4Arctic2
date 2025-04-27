@@ -1,12 +1,12 @@
-package tn.esprit.clubsync.config;
+package tn.esprit.clubsync.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import tn.esprit.clubsync.entities.User;
 import tn.esprit.clubsync.Repo.UserRepository;
+import tn.esprit.clubsync.entities.User;
 
 @Configuration
 public class UserInfoUserDetailsService implements UserDetailsService {

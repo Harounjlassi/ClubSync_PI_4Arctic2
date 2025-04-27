@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule, } from '@angular/common';
+import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
@@ -12,22 +12,19 @@ import { HomeComponent } from './pages/home/home.component';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ServicesComponent } from './pages/services/services.component';
 import { ClubsComponent } from './clubs/clubs.component';
-import { AuthenticationComponent } from './authentication/authentication.component';
+import { ChatComponent } from './chat/chat.component';
+import { JokeComponent } from './joke/joke.component';
 import { RegisterComponent } from './register/register.component';
-import { TestCompsComponent } from './test-comps/test-comps.component';
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
-import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
-import { HasRoleGuard } from './guards/has-role.guard';
+import { AuthenticationComponent } from './authentication/authentication.component';
 
-const routes: Routes = [
-  // Default route redirects to login
+const routes: Routes =[
   {
     path: '',
     redirectTo: 'front',
     pathMatch: 'full',
   },
-  // Authentication routes (outside of layouts)
-  {
+   // Authentication routes (outside of layouts)
+   {
     path: 'login',
     component: AuthenticationComponent
   },
@@ -35,26 +32,7 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent
   },
-  {
-    path: 'unauthorized',
-    component: UnauthorizedComponent,
-    
-  },
-  // Front layout and its child routes
-  {
-    path: 'front',
-    component: FrontLayoutComponent,
-    children: [
-      { path: '', component: HomeComponent },
-      { path: 'about', component: AboutComponent },
-      { path: 'services', component: ServicesComponent },
-      { path: 'from', component: FromComponent },
-      { path: 'blog', component: BlogComponent },
-      { path: 'schedule', component: ScheduleComponent },
-      { path: 'clubs', component: ClubsComponent },
-    ]
-  },
-  // Admin layout must be AFTER the specific routes to prevent conflicts
+
   {
     path: '',
     component: AdminLayoutComponent,
@@ -63,35 +41,37 @@ const routes: Routes = [
       loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
     }]
   },
-  // Standalone routes
   {
-    path: 'clubs',
-    component: ClubsComponent
+    path: 'front',
+    component: FrontLayoutComponent, // layout pour le front-office
+    children: [
+      { path: '', component: HomeComponent },        // page d'accueil
+      { path: 'about', component: AboutComponent },    // page à propos
+      { path: 'services', component: ServicesComponent },
+      { path: 'from', component: FromComponent},
+      { path: 'blog', component: BlogComponent }, 
+      { path: 'schedule', component: ScheduleComponent },  
+      { path: 'clubs', component: ClubsComponent },
+      { path: 'jokes', component: JokeComponent },
+
+
+      
+
+     
+    ]
   },
-  {
-    path: 'test-comps',
-    component: TestCompsComponent,
-    canActivate: [IsAuthenticatedGuard, HasRoleGuard],
-    data: {
-      role: 'Admin',
-    },
-  },
-  // Wildcard route for handling 404s (should be last)
-  {
-    path: '**',
-    redirectTo: 'unauthorized',
-  }
+  { path: 'chat', component: ChatComponent },
+
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forRoot(routes, {
-      useHash: true
+       useHash: true
     })
   ],
   exports: [
-    RouterModule
   ],
 })
 export class AppRoutingModule { }

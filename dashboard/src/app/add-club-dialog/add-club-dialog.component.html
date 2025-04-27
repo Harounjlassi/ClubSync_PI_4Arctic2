@@ -9,16 +9,45 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Club Name</mat-label>
         <input matInput formControlName="name" required>
+        <mat-hint>3-50 characters, letters only</mat-hint>
         <mat-error *ngIf="clubForm.get('name')?.hasError('required')">
           This field is required
         </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('pattern')">
+          Club name must contain letters only (no numbers)
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('minlength')">
+          Club name must be at least 3 characters long
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('maxlength')">
+          Club name cannot exceed 50 characters
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('consecutiveSpaces')">
+          Multiple consecutive spaces are not allowed
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('name')?.hasError('badWords')">
+          Club name contains inappropriate terms that are not allowed
+        </mat-error>
       </mat-form-field>
-
+      
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
         <textarea matInput formControlName="description" required></textarea>
+        <mat-hint>10-500 characters</mat-hint>
         <mat-error *ngIf="clubForm.get('description')?.hasError('required')">
           This field is required
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('description')?.hasError('minlength')">
+          Description must be at least 10 characters long
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('description')?.hasError('maxlength')">
+          Description cannot exceed 500 characters
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('description')?.hasError('consecutiveSpaces')">
+          Multiple consecutive spaces are not allowed
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('description')?.hasError('badWords')">
+          Description contains inappropriate terms that are not allowed
         </mat-error>
       </mat-form-field>
 
@@ -45,8 +74,21 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Slogan</mat-label>
         <input matInput formControlName="slogan" required>
+        <mat-hint>5-100 characters</mat-hint>
         <mat-error *ngIf="clubForm.get('slogan')?.hasError('required')">
           This field is required
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('slogan')?.hasError('minlength')">
+          Slogan must be at least 5 characters long
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('slogan')?.hasError('maxlength')">
+          Slogan cannot exceed 100 characters
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('slogan')?.hasError('consecutiveSpaces')">
+          Multiple consecutive spaces are not allowed
+        </mat-error>
+        <mat-error *ngIf="clubForm.get('slogan')?.hasError('badWords')">
+          Slogan contains inappropriate terms that are not allowed
         </mat-error>
       </mat-form-field>
 

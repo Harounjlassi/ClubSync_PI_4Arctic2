@@ -6,6 +6,7 @@ import tn.esprit.clubsync.entities.Role;
 import tn.esprit.clubsync.entities.Roletype;
 
 import java.util.Optional;
+
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
     Optional<Role> findByRoleType(Roletype roleType);

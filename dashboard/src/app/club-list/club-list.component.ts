@@ -8,8 +8,17 @@ import { EditClubDialogComponent } from '../edit-club-dialog/edit-club-dialog.co
 import { AddClubDialogComponent } from 'app/add-club-dialog/add-club-dialog.component';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+
+// Extend jsPDF to include the lastAutoTable property
+declare module 'jspdf' {
+  interface jsPDF {
+    lastAutoTable?: { finalY: number };
+  }
+}
 import Chart from 'chart.js/auto';
 import * as XLSX from 'xlsx';
+import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-club-list',
@@ -49,12 +58,15 @@ export class ClubListComponent implements OnInit, AfterViewInit {
       'rgba(234, 179, 8, 1)'
     ]
   };
+loading: any;
 
 
   constructor(
     private clubService: ClubService, 
     private dialog: MatDialog,   
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService // <-- Ajout
+
   ) {}
 
   ngOnInit(): void {
@@ -69,9 +81,12 @@ export class ClubListComponent implements OnInit, AfterViewInit {
       }
     }, 500);
   }
+  private destroy$ = new Subject<void>();
 
   fetchClubs(): void {
-    this.clubService.getAllClubs().subscribe(
+    this.clubService.getAllClubs().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(
       (data: Club[]) => {
         this.clubs = data;
         this.filteredClubs = data;
@@ -88,7 +103,20 @@ export class ClubListComponent implements OnInit, AfterViewInit {
       }
     );
   }
+// In both components
 
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+  
+  // Clean up charts
+  if (this.chart) {
+    this.chart.destroy();
+  }
+  if (this.chartTopMembers) {
+    this.chartTopMembers.destroy();
+  }
+}
   generateChart(): void {
     if (this.chart) {
       this.chart.destroy();
@@ -375,31 +403,39 @@ export class ClubListComponent implements OnInit, AfterViewInit {
 
   deleteClub(id: number | undefined): void {
     if (!id) return;
-
+  
     const dialogData: ConfirmDialogData = {
       title: 'Confirmation of Deletion',
       message: 'Are you sure you want to delete this club?'
     };
-
+  
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '350px',
       data: dialogData
     });
-
+  
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this.clubService.deleteClub(id).subscribe(
-          () => {
-            console.log('Club supprimé avec succès');
+        this.clubService.deleteClub(id).subscribe({
+          next: () => {
             this.fetchClubs();
+            this.toastr.success('Club deleted successfully!', 'Success', {
+              timeOut: 3000,
+              progressBar: true
+            });
           },
-          (error) => {
+          error: (error) => {
             console.error('Erreur lors de la suppression du club:', error);
+            this.toastr.error('Failed to delete the club', 'Error', {
+              timeOut: 3000,
+              progressBar: true
+            });
           }
-        );
+        });
       }
     });
   }
+  
 
   applyFilter(): void {
     this.filteredClubs = this.clubs.filter(club => {
@@ -416,25 +452,165 @@ export class ClubListComponent implements OnInit, AfterViewInit {
   }
 
   exportToPDF(): void {
-    const doc = new jsPDF();
-    doc.text('Liste des Clubs', 14, 10);
-
-    autoTable(doc, {
-      startY: 20,
-      head: [['ID', 'Nom', 'Description', 'Catégorie', 'Slogan', 'Créateur', 'Membres']],
-      body: this.clubs.map(club => [
-        club.id_club,
-        club.name,
-        club.description,
-        club.categorie,
-        club.slogan || 'Pas de slogan',
-        club.creator?.email || 'N/A',
-        club.members?.length || 0
-      ]),
-      theme: 'striped'
+    // Création du document PDF avec orientation paysage pour mieux présenter les données
+    const doc = new jsPDF('landscape');
+    
+    // Configuration des styles et couleurs
+    const primaryColor = '#d32f2f'; // Couleur primaire (danger) de votre thème
+    const textColor = '#343a40';
+    const titleFontSize = 20;
+    const subtitleFontSize = 12;
+    
+    // Ajout d'un en-tête stylisé
+    doc.setFillColor(primaryColor);
+    doc.rect(0, 0, doc.internal.pageSize.width, 26, 'F');
+    
+    // Titre du document
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(titleFontSize);
+    doc.setFont('helvetica', 'bold');
+    doc.text('CLUB MANAGEMENT SYSTEM', 14, 14);
+    
+    // Sous-titre et date d'exportation
+    doc.setFontSize(subtitleFontSize);
+    doc.setFont('helvetica', 'normal');
+    const date = new Date().toLocaleDateString('fr-FR', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
-
-    doc.save('liste_clubs.pdf');
+    doc.text(`Exported on: ${date}`, doc.internal.pageSize.width - 60, 14);
+    
+    // Information sur le filtre appliqué
+    doc.setTextColor(textColor);
+    doc.setFontSize(12);
+    let filterInfo = 'All Clubs';
+    if (this.selectedCategory) {
+      filterInfo = `Filtered by Category: ${this.selectedCategory}`;
+    }
+    if (this.searchText) {
+      filterInfo += ` | Search: "${this.searchText}"`;
+    }
+    doc.text(filterInfo, 14, 34);
+    
+    // Information sur le nombre de clubs
+    doc.setFontSize(11);
+    doc.text(`Total Clubs: ${this.filteredClubs.length}`, doc.internal.pageSize.width - 60, 34);
+    
+    // Préparation des données pour le tableau
+    // Utilisons les clubs filtrés plutôt que tous les clubs
+    const tableData = this.filteredClubs.map(club => [
+      club.id_club,
+      club.name,
+      this.truncateText(club.description, 60),
+      club.categorie || 'Uncategorized',
+      this.truncateText(club.slogan || 'No Slogan', 30),
+      club.creator?.firstname || 'N/A',
+      club.members?.length || 0
+    ]);
+    
+    // Configuration avancée du tableau
+    autoTable(doc, {
+      startY: 40,
+      head: [['ID', 'Club Name', 'Description', 'Category', 'Slogan', 'Creator', 'Members']],
+      body: tableData,
+      theme: 'grid', // Plus détaillé que 'striped'
+      headStyles: {
+        fillColor: [211, 47, 47], // Rouge primaire
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        halign: 'center'
+      },
+      styles: {
+        fontSize: 10,
+        cellPadding: 3,
+        lineColor: [220, 220, 220]
+      },
+      columnStyles: {
+        0: { cellWidth: 15 }, // ID
+        1: { cellWidth: 40 }, // Name
+        2: { cellWidth: 60 }, // Description
+        3: { cellWidth: 30 }, // Category
+        4: { cellWidth: 40 }, // Slogan
+        5: { cellWidth: 30 }, // Creator
+        6: { cellWidth: 20, halign: 'center' } // Members
+      },
+      alternateRowStyles: {
+        fillColor: [245, 245, 245]
+      },
+      didDrawPage: (data) => {
+        // Pied de page
+        const pageHeight = doc.internal.pageSize.height;
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text(
+          `Page ${data.pageNumber} of ${doc.getNumberOfPages()}`, 
+          data.settings.margin.left, 
+          pageHeight - 10
+        );
+        
+        const pageWidth = doc.internal.pageSize.width;
+        doc.text(
+          'Club Management System © 2025', 
+          pageWidth - 60, 
+          pageHeight - 10
+        );
+      }
+    });
+    
+    // Ajout d'un résumé statistique à la fin du document (après le tableau)
+    if (doc.lastAutoTable) {
+      const finalY = doc.lastAutoTable.finalY + 20;
+      
+      // Titre de la section statistique
+      doc.setFontSize(14);
+      doc.setTextColor(primaryColor);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Statistics Summary', 14, finalY);
+      
+      // Préparation des données statistiques par catégorie
+      const categoryCounts = {};
+      this.filteredClubs.forEach(club => {
+        const category = club.categorie || 'Uncategorized';
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+      });
+      
+      // Affichage des statistiques par catégorie
+      doc.setFontSize(10);
+      doc.setTextColor(textColor);
+      doc.setFont('helvetica', 'normal');
+      
+      let yPosition = finalY + 10;
+      doc.text('Distribution by Category:', 14, yPosition);
+      yPosition += 6;
+      
+      Object.entries(categoryCounts).forEach(([category, count], index) => {
+        const percentage = Math.round((count as number / this.filteredClubs.length) * 100);
+        doc.text(`${category}: ${count} clubs (${percentage}%)`, 20, yPosition);
+        yPosition += 5;
+      });
+    }
+    
+    // Sauvegarde du fichier PDF avec un nom explicite
+    const fileName = this.selectedCategory 
+      ? `club_list_${this.selectedCategory.toLowerCase()}.pdf` 
+      : 'club_list_complete.pdf';
+    
+    doc.save(fileName);
+    
+    // Notification de succès
+    this.toastr.success('The PDF has been exported successfully!', 'Export Complete', {
+      timeOut: 3000,
+      progressBar: true
+    });
+  }
+  
+  // Méthode utilitaire pour tronquer les textes longs
+  private truncateText(text: string, maxLength: number): string {
+    if (!text) return '';
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   }
   exportToExcel(): void {
     // Prepare data for Excel export
@@ -444,7 +620,7 @@ export class ClubListComponent implements OnInit, AfterViewInit {
       'Description': club.description,
       'Category': club.categorie || 'Uncategorized',
       'Slogan': club.slogan || 'No Slogan',
-      'Creator': club.creator?.nom || 'N/A',
+      'Creator': club.creator?.firstname || 'N/A',
       'Members Count': club.members?.length || 0
     }));
 

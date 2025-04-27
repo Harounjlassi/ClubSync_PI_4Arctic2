@@ -41,6 +41,13 @@ public class ForumPost {
         this.content = content;
     }
 
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
     public LocalDateTime getPost_date() {
         return post_date;

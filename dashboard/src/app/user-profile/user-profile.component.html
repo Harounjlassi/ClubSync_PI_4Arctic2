@@ -21,7 +21,6 @@
     
     <!-- User profile content -->
     <div class="row" *ngIf="!loading && !error && currentUser">
-      <!-- Left column with profile information -->
       <div class="col-md-8">
         <div class="card">
           <div class="card-header card-header-danger">
@@ -29,49 +28,58 @@
             <p class="card-category">Your personal information</p>
           </div>
           <div class="card-body">
-            <!-- First name and last name -->
+            <!-- Profile Picture -->
+            <div class="row">
+              <div class="col-md-12 text-center mb-4">
+                <img [src]="defaultAvatar" 
+                     alt="Profile Picture" 
+                     class="rounded-circle"
+                     style="width: 150px; height: 150px; object-fit: cover;">
+                <p class="mt-2 text-muted">*Profile image temporarily using placeholder</p>
+              </div>
+            </div>
+
+            <!-- Basic Info -->
             <div class="row">
               <div class="col-md-6">
                 <label>First Name</label>
                 <div class="form-group">
-                  <p>{{ currentUser.prenom || getProperty(currentUser, 'prenom') }}</p>
+                  <p>{{ currentUser.firstname || 'Not provided' }}</p>
                 </div>
               </div>
               <div class="col-md-6">
                 <label>Last Name</label>
                 <div class="form-group">
-                  <p>{{ currentUser.nom || getProperty(currentUser, 'nom') || "something"}}</p>
+                  <p>{{ currentUser.lastname || 'Not provided' }}</p>
                 </div>
               </div>
             </div>
             
-            <!-- Email -->
             <div class="row">
               <div class="col-md-12">
                 <label>Email Address</label>
                 <div class="form-group">
-                  <p>{{ currentUser.email || currentUser.sub || 'Not provided' }}</p>
+                  <p>{{ currentUser.email || 'Not provided' }}</p>
                 </div>
               </div>
             </div>
             
-            <!-- Birth Date and Gender -->
+            <!-- Personal Details -->
             <div class="row">
               <div class="col-md-6">
                 <label>Birth Date</label>
                 <div class="form-group">
-                  <p>{{ currentUser.dateNaissance ? (currentUser.dateNaissance | date:'mediumDate') : 'Not provided' }}</p>
+                  <p>{{ formatDate(currentUser.dateNaissance) }}</p>
                 </div>
               </div>
               <div class="col-md-6">
                 <label>Gender</label>
                 <div class="form-group">
-                  <p>{{ currentUser.sexe === 'HOMME' ? 'Male' : (currentUser.sexe === 'FEMME' ? 'Female' : 'Not provided') }}</p>
+                  <p>{{ getGenderDisplay() }}</p>
                 </div>
               </div>
             </div>
             
-            <!-- Phone Number -->
             <div class="row">
               <div class="col-md-12">
                 <label>Phone Number</label>
@@ -81,20 +89,30 @@
               </div>
             </div>
             
-            <!-- Role -->
+            <!-- Account Info -->
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <label>Role</label>
                 <div class="form-group">
-                  <p>{{ currentUser.role?.name || currentUser.role || 'Standard User' }}</p>
+                  <p>{{ getRoleName() }}</p>
                 </div>
               </div>
             </div>
             
-            <!-- Enhanced Logout button -->
+            <!-- Buttons -->
             <div class="row">
-              <div class="col-md-12 mt-4">
-                <button mat-raised-button (click)="logout()" class="btn btn-danger btn-lg px-4 py-3 d-flex align-items-center justify-content-center">
+              <div class="col-md-6 mt-4">
+                <button mat-raised-button 
+                        (click)="onEdit(currentUser.idUser)" 
+                        class="btn btn-primary btn-lg px-4 py-3 d-flex align-items-center justify-content-center">
+                  <i class="material-icons mr-2" style="font-size: 24px;">edit</i>
+                  <span style="font-size: 18px; font-weight: 500;">Edit Profile</span>
+                </button>
+              </div>
+              <div class="col-md-6 mt-4">
+                <button mat-raised-button 
+                        (click)="logout()" 
+                        class="btn btn-danger btn-lg px-4 py-3 d-flex align-items-center justify-content-center">
                   <i class="material-icons mr-2" style="font-size: 24px;">exit_to_app</i>
                   <span style="font-size: 18px; font-weight: 500;">Logout</span>
                 </button>

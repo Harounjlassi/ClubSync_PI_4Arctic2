@@ -18,5 +18,3 @@ export class BlogComponent implements OnInit {
     }, 1000); // Small timeout to ensure content has loaded
   }
   }
-
-

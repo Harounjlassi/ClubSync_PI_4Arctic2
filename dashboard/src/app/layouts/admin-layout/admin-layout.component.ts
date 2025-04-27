@@ -4,8 +4,7 @@ import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import PerfectScrollbar from 'perfect-scrollbar';
 import * as $ from "jquery";
 import { filter, Subscription } from 'rxjs';
-import { UserService } from 'app/services/user.service';
-import { StorageService } from 'app/services/storage.service';
+
 @Component({
   selector: 'app-admin-layout',
   templateUrl: './admin-layout.component.html',
@@ -15,11 +14,10 @@ export class AdminLayoutComponent implements OnInit {
   private _router: Subscription;
   private lastPoppedUrl: string;
   private yScrollStack: number[] = [];
-  content?: string;
-  constructor( public location: Location, private router: Router, private userService: UserService, private storageService: StorageService) {}
+
+  constructor( public location: Location, private router: Router) {}
 
   ngOnInit() {
-    document.querySelector('.fixed-plugin')?.remove();
       const isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
 
       if (isWindows && !document.getElementsByTagName('body')[0].classList.contains('sidebar-mini')) {
@@ -131,11 +129,6 @@ export class AdminLayoutComponent implements OnInit {
   ngAfterViewInit() {
       this.runOnRouteChange();
   }
-  logout(): void {
-    this.storageService.clean();
-    this.router.navigate(['/login']);
-  }
-  
   isMaps(path){
       var titlee = this.location.prepareExternalUrl(this.location.path());
       titlee = titlee.slice( 1 );

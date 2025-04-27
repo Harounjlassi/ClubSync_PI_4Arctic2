@@ -1,7 +1,7 @@
-import { UserStatsResponse } from './user-stats-response.model';
+import { UserStatsResponseModel } from './user-stats-response.model';
 
-describe('UserStatsResponse', () => {
+describe('UserStatsResponseModel', () => {
   it('should create an instance', () => {
-    expect(new UserStatsResponse()).toBeTruthy();
+    expect(new UserStatsResponseModel()).toBeTruthy();
   });
 });

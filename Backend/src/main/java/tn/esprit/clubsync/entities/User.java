@@ -1,5 +1,6 @@
 package tn.esprit.clubsync.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,23 +23,49 @@ public class User implements UserDetails {
     @Column(name = "id_user")
     private long idUser;
 
-    @Column(name = "nom", length = 100, nullable = false)
-    private String nom;
+    @Column(name = "firstname", length = 100)
+    private String firstname;
 
-    public String getNom() {
-        return nom;
+    @OneToMany(mappedBy = "nuser", cascade = CascadeType.ALL)
+    private List<Reclamation> reclamationsCreees;
+
+    @ManyToMany(mappedBy = "members")
+    @JsonIgnore
+
+    private List<Club> clubs = new ArrayList<>();  // Ensure this is initialized to avoid NPE
+
+    public List<Reclamation> getReclamationsCreees() {
+        return reclamationsCreees;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setReclamationsCreees(List<Reclamation> reclamationsCreees) {
+        this.reclamationsCreees = reclamationsCreees;
     }
 
-    public String getPrenom() {
-        return prenom;
+    public List<Reclamation> getReclamationsTraitees() {
+        return reclamationsTraitees;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setReclamationsTraitees(List<Reclamation> reclamationsTraitees) {
+        this.reclamationsTraitees = reclamationsTraitees;
+    }
+
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
+    private List<Reclamation> reclamationsTraitees;
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {
@@ -57,6 +84,7 @@ public class User implements UserDetails {
     public void setDateNaissance(Date dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
+
 
     public String getPhotoProfil() {
         return photoProfil;
@@ -79,8 +107,8 @@ public class User implements UserDetails {
 
 
 
-    @Column(name = "prenom", length = 100, nullable = false)
-    private String prenom;
+    @Column(name = "lastname", length = 100, nullable = false)
+    private String lastname;
 
     @Column(name = "email", length = 255, unique = true, nullable = false)
     private String email;
@@ -119,7 +147,7 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    @Column(name = "photo_profil", length = 255)
+    @Column(name = "photo_profil", length = 512)
     private String photoProfil;
 
     @Column(name = "numero_de_telephone")
@@ -186,5 +214,7 @@ public class User implements UserDetails {
     public void setPassword(String motDePasse) {
         this.motDePasse = motDePasse;
     }
+
+
 
 }

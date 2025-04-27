@@ -16,64 +16,84 @@ import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { FromComponent } from './pages/from/from.component';
 import { ClubListComponent } from './club-list/club-list.component';
 import { AddClubDialogComponent } from './add-club-dialog/add-club-dialog.component';
-// Import Angular Material modules
-import { MatNativeDateModule } from '@angular/material/core'; //
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { EditClubDialogComponent } from './edit-club-dialog/edit-club-dialog.component';
+import { ClubsComponent } from './clubs/clubs.component';
+import { ClubMembersComponent } from './club-members/club-members.component';
+import { ChatComponent } from './chat/chat.component';
+import { JokeComponent } from './joke/joke.component';
+import { AnnouncementListComponent } from './announcement-list/announcement-list.component';
+import { AddAnnouncementDialogComponent } from './add-announcement-dialog/add-announcement-dialog.component';
+import { EditAnnouncementDialogComponent } from './edit-announcement-dialog/edit-announcement-dialog.component';
+import { AnnouncementDetailsDialogComponent } from './announcement-details-dialog/announcement-details-dialog.component';
+import { ClickOutsideDirective } from './click-outside.directive';
+import { AuthenticationComponent } from './authentication/authentication.component';
+import { RegisterComponent } from './register/register.component';
+
+// Angular Material Modules
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { MatIconModule } from '@angular/material/icon';
-import { EditClubDialogComponent } from './edit-club-dialog/edit-club-dialog.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ClubsComponent } from './clubs/clubs.component';
-import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatCardModule } from '@angular/material/card';
-import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
+// Third-party libraries
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { UserListComponent } from './user-list/user-list.component';
-import { AuthenticationComponent } from './authentication/authentication.component';
-import { RegisterComponent } from './register/register.component';
-import { UpdateUserComponent } from './update-user/update-user.component';
-import { TestCompsComponent } from './test-comps/test-comps.component';
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { UserRegisterDialogComponent } from './user-register-dialog/user-register-dialog.component';
+import { UserEditDialogComponent } from './user-edit-dialog/user-edit-dialog.component';
 
 @NgModule({
   imports: [
-
-    BrowserAnimationsModule as any,
+    // Angular Core Modules
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ComponentsModule,
     RouterModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
+    ComponentsModule,
+    CommonModule,  
+    BrowserModule,
+    // Angular Material Modules
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
-    MatAutocompleteModule,  // <-- Ajout
-
-
-     // Angular Material modules
-     MatNativeDateModule,
-     MatDialogModule,
-     MatFormFieldModule,
-     MatInputModule,
-     MatButtonModule,
-     MatSnackBarModule,
-     MatIconModule,
-     MatTableModule,       // Ajout du module pour les tables Angular Material
-     MatPaginatorModule,
-     MatCardModule,
-     MatSelectModule,
-     MatProgressSpinnerModule,
-     MatTooltipModule,
-     MatDatepickerModule,
-     
-
+    MatSnackBarModule,
+    MatTableModule,
+    MatTooltipModule,
+    
+    // Third-party Modules
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      timeOut: 3000,
+      preventDuplicates: true,
+    })
   ],
   declarations: [
     AppComponent,
@@ -90,17 +110,26 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
     ConfirmDialogComponent,
     EditClubDialogComponent,
     ClubsComponent,
-    UserListComponent,
+    ClubMembersComponent,
+    ChatComponent,
+    JokeComponent,
+    AnnouncementListComponent,
+    AddAnnouncementDialogComponent,
+    EditAnnouncementDialogComponent,
+    AnnouncementDetailsDialogComponent,
+    ClickOutsideDirective,
     AuthenticationComponent,
     RegisterComponent,
-    UpdateUserComponent,
-    TestCompsComponent,
-    UnauthorizedComponent,
-    
-
-
+    UserListComponent,
+    UserRegisterDialogComponent,
+    UserEditDialogComponent
   ],
-  providers: [],
+  providers: [
+    {
+      provide: DomSanitizer,
+      useValue: DomSanitizer
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

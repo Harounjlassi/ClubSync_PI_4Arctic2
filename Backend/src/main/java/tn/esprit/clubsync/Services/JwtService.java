@@ -2,16 +2,17 @@ package tn.esprit.clubsync.Services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import tn.esprit.clubsync.entities.Token;
-import tn.esprit.clubsync.entities.User;
 import tn.esprit.clubsync.Repo.TokenRepository;
 import tn.esprit.clubsync.Repo.UserRepository;
+import tn.esprit.clubsync.entities.Token;
+import tn.esprit.clubsync.entities.User;
 
 import java.security.Key;
 import java.time.LocalDateTime;
@@ -43,19 +44,34 @@ public class JwtService {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Delete any existing tokens for this user
         tokenRepository.findByUser(user).ifPresent(tokenRepository::delete);
 
+        // Prepare claims with all user information
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", user.getRole().getRoleType().name());
 
+        // Ensure role is always uppercase in the token
+        claims.put("role", user.getRole().getRoleType().name().toUpperCase());  // <-- Key change
+        claims.put("idUser",user.getIdUser());
+        claims.put("firstName", user.getLastname());
+        claims.put("lastName", user.getFirstname());
+        claims.put("email", user.getEmail());
+        claims.put("birthDate", user.getDateNaissance() != null ?
+                user.getDateNaissance().getTime() : null);
+        claims.put("gender", user.getSexe() != null ? user.getSexe().name() : null);
+        claims.put("phoneNumber", user.getNumeroDeTelephone());
+        claims.put("profilePicture", user.getPhotoProfil());
+
+        // Build JWT token
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(getSigningKey())
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
+        // Create and save token entity
         Token newToken = Token.builder()
                 .token(token)
                 .createdAt(LocalDateTime.now())

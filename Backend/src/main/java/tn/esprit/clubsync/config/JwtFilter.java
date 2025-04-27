@@ -1,4 +1,4 @@
-package tn.esprit.clubsync.config;
+package tn.esprit.clubsync.Config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

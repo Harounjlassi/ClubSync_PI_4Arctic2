@@ -1,7 +1,7 @@
-import { UserRequest } from './user-request.model';
+import { UserRequestModel } from './user-request.model';
 
-describe('UserRequest', () => {
+describe('UserRequestModel', () => {
   it('should create an instance', () => {
-    expect(new UserRequest()).toBeTruthy();
+    expect(new UserRequestModel()).toBeTruthy();
   });
 });

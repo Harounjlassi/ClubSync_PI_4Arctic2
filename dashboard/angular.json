@@ -2,7 +2,6 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  
   "projects": {
     "material-dashboard-angular": {
       "root": "",
@@ -38,7 +37,10 @@
               "src/assets/css/themify-icons.css",
               "src/assets/css/slick.css",
               "src/assets/css/nice-select.css",
-              "src/assets/css/style.css"
+              "src/assets/css/style.css",
+              "node_modules/ngx-toastr/toastr.css"
+
+
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",

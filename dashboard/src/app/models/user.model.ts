@@ -1,29 +1,43 @@
 import { Role } from './role.model';
+import { Club } from './club.model';
 
 export enum Sexe {
-  HOMME = 'HOMME',
-  FEMME = 'FEMME'
+  HOMME = 'Homme',
+  FEMME = 'Femme',
 }
 
 export class User {
   idUser?: number;
-  nom: string;
-  prenom: string;
-  email: string;
-  motDePasse?: string; // Used for registration/updates but not typically stored client-side
-  dateNaissance: Date;
-  sexe: Sexe;
+  firstname: string = '';
+  lastname: string = '';
+  email: string = '';
+  motDePasse?: string;
+  dateNaissance: Date = new Date();
+  sexe: Sexe = Sexe.HOMME;
   photoProfil?: string;
   numeroDeTelephone?: number;
-  role?: Role;
-  archived?: boolean;
-  
+  role?: Role | string | string[];
+  archived?: boolean = false;
+  clubs?: Club[];
+
   constructor(data?: Partial<User>) {
-    Object.assign(this, data || {});
-    
-    // Convert string date to Date object if needed
-    if (data?.dateNaissance && typeof data.dateNaissance === 'string') {
-      this.dateNaissance = new Date(data.dateNaissance);
+    if (data) {
+      Object.assign(this, data);
+      
+      if (data.dateNaissance && typeof data.dateNaissance === 'string') {
+        this.dateNaissance = new Date(data.dateNaissance);
+      }
+      
+      // Handle role conversion
+      if (data.role) {
+        if (data.role instanceof Role) {
+          this.role = data.role;
+        } else if (Array.isArray(data.role)) {
+          this.role = data.role;
+        } else if (typeof data.role === 'object') {
+          this.role = new Role(data.role);
+        }
+      }
     }
   }
 }

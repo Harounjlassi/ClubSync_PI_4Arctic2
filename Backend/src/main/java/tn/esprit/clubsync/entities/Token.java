@@ -1,11 +1,8 @@
 package tn.esprit.clubsync.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +17,7 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false,columnDefinition = "LONGTEXT")
     private String token;
 
     private LocalDateTime createdAt;
@@ -30,6 +27,8 @@ public class Token {
     private boolean isValid; // bch na3rf el token actif wale
 
     @ManyToOne
+    @JsonIgnore          // <– NE PAS sérialiser la référence inverse
+
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 

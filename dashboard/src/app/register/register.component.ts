@@ -26,8 +26,8 @@ export class RegisterComponent implements OnInit {
   ) {
     // Initialize form with validators
     this.registerForm = this.fb.group({
-      nom: ['', [Validators.required, Validators.minLength(2)]],
-      prenom: ['', [Validators.required, Validators.minLength(2)]],
+      firstname: ['', [Validators.required, Validators.minLength(2)]],
+      lastname: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
@@ -101,32 +101,19 @@ export class RegisterComponent implements OnInit {
     const formValue = this.registerForm.value;
 
     const userRequest = {
-      nom: formValue.nom,
-      prenom: formValue.prenom,
+      firstname: formValue.firstname,
+      lastname: formValue.lastname,
       email: formValue.email,
       password: formValue.password,
       dateNaissance: new Date(formValue.dateNaissance).toISOString(),
       sexe: formValue.sexe,
       numeroDeTelephone: Number(formValue.numeroDeTelephone),
-      id_role: 2, // Automatically set role to "User" (assuming user role id is 1)
-      photoProfil: ''
+      id_role: 2, // Automatically set role to "User" (assuming user role id is 2)
+      photoProfil: this.selectedFile // Now passing the File object directly
     };
 
-    if (this.selectedFile) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        userRequest.photoProfil = reader.result as string;
-        this.registerUser(userRequest);
-      };
-      reader.readAsDataURL(this.selectedFile);
-    } else {
-      this.registerUser(userRequest);
-    }
-  }
-
-  private registerUser(user: any): void {
     this.isLoading = true;
-    this.userService.register(user).subscribe({
+    this.userService.register(userRequest).subscribe({
       next: () => {
         this.isLoading = false;
         this.snackBar.open('Inscription réussie! Vous pouvez maintenant vous connecter.', 'Fermer', {
@@ -158,8 +145,8 @@ export class RegisterComponent implements OnInit {
   }
 
   // Form control getters for easier access in template
-  get nom() { return this.registerForm.get('nom'); }
-  get prenom() { return this.registerForm.get('prenom'); }
+  get firstname() { return this.registerForm.get('firstname'); }
+  get lastname() { return this.registerForm.get('lastname'); }
   get email() { return this.registerForm.get('email'); }
   get password() { return this.registerForm.get('password'); }
   get confirmPassword() { return this.registerForm.get('confirmPassword'); }

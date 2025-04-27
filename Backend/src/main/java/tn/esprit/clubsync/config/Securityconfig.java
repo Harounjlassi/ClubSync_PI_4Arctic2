@@ -1,4 +1,4 @@
-package tn.esprit.clubsync.config;
+package tn.esprit.clubsync.Config;
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -24,7 +24,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -58,6 +57,12 @@ public class SecurityConfig {
                                 "/oauth2/**",
                                 "/login/oauth2/**",
                                 "/error",
+                                "/club/**",
+                               "/announcements/**",
+                                "/joke/**",
+                                "/club/recommendation/**",
+                                "/chat/**",
+                                "/reclamations/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",

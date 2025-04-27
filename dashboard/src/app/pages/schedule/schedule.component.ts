@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class ScheduleComponent implements OnInit {
 
   constructor() { }
+
   ngOnInit(): void {
     setTimeout(() => {
       const preloader = document.getElementById('preloader-active');
@@ -17,3 +18,4 @@ export class ScheduleComponent implements OnInit {
     }, 1000); // Small timeout to ensure content has loaded
   }
   }
+

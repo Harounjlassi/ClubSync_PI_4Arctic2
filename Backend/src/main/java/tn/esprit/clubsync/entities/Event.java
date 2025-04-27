@@ -74,7 +74,13 @@ public class Event {
         this.location = location;
     }
 
+    public List<User> getParticipants() {
+        return participants;
+    }
 
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
+    }
 
     @ManyToOne
     @JoinColumn(name = "club_id")
@@ -83,6 +89,12 @@ public class Event {
     private LocalDateTime event_date;
     private String location;
 
-
+    @ManyToMany
+    @JoinTable(
+            name = "event_participants",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> participants = new ArrayList<>();
 
 }

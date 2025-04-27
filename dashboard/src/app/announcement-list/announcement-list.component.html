@@ -1,0 +1,219 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Search field with autocomplete -->
+        <div class="mb-3 d-flex">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label for="searchInput"></mat-label>
+            <div class="search-input-container">
+              <mat-icon class="search-icon">search</mat-icon>
+              <input 
+                matInput 
+                id="searchInput"
+                name="searchInput"
+                placeholder="Search announcements..." 
+                [(ngModel)]="searchText" 
+                (ngModelChange)="applyFilter()" 
+                [matAutocomplete]="auto"
+                aria-label="Search announcements">
+              <button 
+                mat-icon-button 
+                class="clear-button" 
+                *ngIf="searchText" 
+                aria-label="Clear search" 
+                (click)="searchText=''; applyFilter();"
+                type="button"
+                id="clearSearchBtn"
+                name="clearSearchBtn">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let announcement of filteredAnnouncements || []; let i = index"
+                         [value]="announcement.title"
+                         [id]="'autoOption_' + i"
+                         [attr.name]="'autoOption_' + i">
+                {{ announcement.title }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <!-- Announcements Header Card -->
+        <div class="card" id="announcementHeaderCard">
+          <div class="card-header card-header-primary d-flex justify-content-between align-items-center">
+            <div>
+              <h4 class="card-title mb-0">ANNOUNCEMENT LIST</h4>
+              <p class="card-category mb-0">Club announcements and notifications</p>
+            </div>
+            <button 
+              class="btn add-announcement-btn" 
+              (click)="openAddAnnouncementDialog()" 
+              aria-label="Add announcement"
+              id="addAnnouncementBtn"
+              name="addAnnouncementBtn"
+              type="button">
+              <mat-icon>add_circle</mat-icon>
+              ADD ANNOUNCEMENT
+              <span class="badge-count">{{ (announcements || []).length }}</span>
+            </button>
+          </div>
+
+          <div class="card-body">
+            <div *ngIf="error" class="alert alert-danger py-1 mb-1" role="alert" id="errorAlert">
+              An error occurred while retrieving announcements. Please try again.
+            </div>
+            <div *ngIf="(filteredAnnouncements || []).length === 0 && !error" class="alert alert-info py-1 mb-1" role="alert" id="noAnnouncementsAlert">
+              No announcements found.
+            </div>
+            <div class="mb-3 d-flex justify-content-between flex-wrap">
+              <div>
+                <mat-form-field appearance="outline" class="club-filter" style="width:300px">
+                  <mat-label>Filter by Club</mat-label>
+                  <mat-select [(value)]="selectedClub" (selectionChange)="applyFilter()">
+                    <mat-option [value]="null">All Clubs</mat-option>
+                    <mat-option *ngFor="let c of clubs" [value]="c.id">
+                      {{ c.name | uppercase }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="export-buttons-container">
+                <button 
+                  class="btn export-btn export-btn-pdf" 
+                  (click)="exportToPDF()"
+                  aria-label="Export to PDF"
+                  id="exportPdfBtn"
+                  name="exportPdfBtn"
+                  type="button">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                  Export PDF
+                </button>
+                <button 
+                  class="btn export-btn export-btn-excel" 
+                  (click)="exportToExcel()"
+                  aria-label="Export to Excel"
+                  id="exportExcelBtn"
+                  name="exportExcelBtn"
+                  type="button">
+                  <mat-icon>table_chart</mat-icon>
+                  Export Excel
+                </button>
+              </div>
+            </div>
+            
+           
+              
+            <!-- Table View (Original) -->
+            <div class="table-responsive" *ngIf="currentView === 'table' && (filteredAnnouncements || []).length > 0" id="announcementTableContainer">
+              <table class="table table-striped table-bordered table-sm" aria-label="Announcements table" id="announcementTable">
+                <thead class="text-primary">
+                  <tr>
+                    <th scope="col" class="col-title" id="titleHeader">Title</th>
+                    <th scope="col" class="col-content" id="contentHeader">Content</th>
+                    <th scope="col" class="col-club" id="clubHeader">Club</th>
+                    <th scope="col" class="col-date" id="dateHeader">Created At</th>
+                    <th scope="col" class="col-actions" id="actionsHeader">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let announcement of filteredAnnouncements || []; let i = index"
+   [id]="'announcementRow_' + announcement.id">
+  <td [id]="'announcementTitle_' + announcement.id">{{ announcement.title || 'Sans titre' }}</td>
+  <td class="content-cell" 
+     [title]="announcement.content || ''"
+     [id]="'announcementContent_' + announcement.id">
+    {{ announcement.content ? (announcement.content | slice:0:100) + (announcement.content.length > 100 ? '...' : '') : 'Pas de contenu' }}
+  </td>
+  <td [id]="'announcementClub_' + announcement.id">
+    {{ (announcement.club?.name || 'Non attribué') | uppercase }}
+  </td>
+  <td [id]="'announcementDate_' + announcement.id">
+    {{ announcement.createdAt ? (announcement.createdAt | date:'medium') : 'Date inconnue' }}
+  </td>
+  <td class="actions-cell">
+                      <button 
+                        mat-icon-button 
+                        color="primary" 
+                        (click)="openEditAnnouncementDialog(announcement)" 
+                        aria-label="Edit announcement"
+                        [id]="'editAnnouncementBtn_' + announcement.id"
+                        [attr.name]="'editAnnouncementBtn_' + announcement.id"
+                        type="button">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button 
+                        mat-icon-button 
+                        color="warn" 
+                        (click)="deleteAnnouncement(announcement.id)" 
+                        aria-label="Delete announcement"
+                        [id]="'deleteAnnouncementBtn_' + announcement.id"
+                        [attr.name]="'deleteAnnouncementBtn_' + announcement.id"
+                        type="button">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                      <button 
+                        mat-icon-button 
+                        color="accent" 
+                        (click)="viewAnnouncementDetails(announcement.id)" 
+                        aria-label="View announcement details"
+                        [id]="'viewAnnouncementBtn_' + announcement.id"
+                        [attr.name]="'viewAnnouncementBtn_' + announcement.id"
+                        type="button">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+        
+    <!-- Charts Section -->
+    <div class="row mt-4">
+      <!-- Distribution by club chart -->
+      <div class="col-md-12">
+        <div class="card shadow-sm" id="chartCard">
+          <div class="card-header card-header-info bg-gradient-info">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h4 class="card-title mb-0">Announcements by Club</h4>
+                <p class="card-category mb-0 text-white-50">Distribution of announcements across clubs</p>
+              </div>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Chart view options">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-light active" 
+                  (click)="toggleChartType('doughnut')" 
+                  id="viewDoughnutBtn"
+                  name="viewDoughnutBtn"
+                  aria-label="View as doughnut chart">
+                  <mat-icon>pie_chart</mat-icon>
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-light" 
+                  (click)="toggleChartType('bar')" 
+                  id="viewBarBtn"
+                  name="viewBarBtn"
+                  aria-label="View as bar chart">
+                  <mat-icon>bar_chart</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="position: relative; height: 350px;">
+              <canvas id="announcementChart" aria-label="Club announcements chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

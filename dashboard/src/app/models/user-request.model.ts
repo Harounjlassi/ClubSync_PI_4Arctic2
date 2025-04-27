@@ -1,8 +1,8 @@
 import { Sexe } from './user.model';
 
 export class UserRequest {
-  nom: string;
-  prenom: string;
+  firstname: string;
+  lastname: string;
   email: string;
   password: string;
   dateNaissance: Date;

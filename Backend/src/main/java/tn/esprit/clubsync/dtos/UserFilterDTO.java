@@ -5,8 +5,8 @@ import tn.esprit.clubsync.entities.Sexe;
 import java.util.Date;
 
 public class UserFilterDTO {
-    private String nom;
-    private String prenom;
+    private String firstname;
+    private String lastname;
     private String email;
     private Sexe sexe;
     private Date dateNaissanceMin;
@@ -14,8 +14,8 @@ public class UserFilterDTO {
     private Boolean archived;
     private Long idRole;
 
-    public String getNom() {
-        return nom;
+    public String getFirstname() {
+        return firstname;
     }
 
     public Long getIdRole() {
@@ -26,16 +26,16 @@ public class UserFilterDTO {
         this.idRole = idRole;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getPrenom() {
-        return prenom;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {

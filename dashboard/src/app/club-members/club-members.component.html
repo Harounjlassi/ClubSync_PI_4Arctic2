@@ -1,0 +1,139 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary d-flex justify-content-between align-items-center">
+          <h4 class="card-title">{{ clubName }}</h4>
+        </div>
+        <div class="card-body">
+          <!-- Filtre pour les membres -->
+          <div class="mb-3">
+            <mat-form-field appearance="standard" class="w-100">
+              <mat-label>Filter Members</mat-label>
+              <input matInput (keyup)="applyMembersFilter($event)" placeholder="Search by name or email">
+            </mat-form-field>
+          </div>
+          
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">Members of Club {{ clubName }}</h4>
+          </div>
+          
+          <!-- Export button container with smaller button styling -->
+          <div class="mb-3 d-flex justify-content-end">
+            <button mat-button color="primary" class="btn-sm" (click)="exportToPDF()">
+              <mat-icon class="small-icon">picture_as_pdf</mat-icon>
+              Export PDF
+            </button>
+          </div>
+          
+          <div class="table-responsive" *ngIf="members.length > 0; else noMembers">
+            <table mat-table [dataSource]="membersDataSource" class="w-100">
+              <!-- First Name Column -->
+              <ng-container matColumnDef="firstname">
+                <th mat-header-cell *matHeaderCellDef> First Name </th>
+                <td mat-cell *matCellDef="let member"> {{member.firstname}} </td>
+              </ng-container>
+              
+              <!-- Last Name Column -->
+              <ng-container matColumnDef="lastname">
+                <th mat-header-cell *matHeaderCellDef> Last Name </th>
+                <td mat-cell *matCellDef="let member"> {{member.lastname}} </td>
+              </ng-container>
+              
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let member"> {{member.email}} </td>
+              </ng-container>
+              
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let member">
+                  <button mat-button color="warn" (click)="removeMember(member.idUser)">
+                    <mat-icon>delete</mat-icon> Remove
+                  </button>
+                </td>
+              </ng-container>
+              
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            
+            <mat-paginator #membersPaginator 
+                          [pageSize]="8"
+                          [pageSizeOptions]="[5, 10, 25]"
+                          showFirstLastButtons>
+            </mat-paginator>
+          </div>
+          <ng-template #noMembers>
+            <p class="text-center text-muted">No members found for this club.</p>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-header card-header-info d-flex justify-content-between align-items-center">
+          <h4 class="card-title">Available Users</h4>
+        </div>
+        <div class="card-body">
+          <!-- Filtre pour les utilisateurs disponibles -->
+          <div class="mb-3">
+            <mat-form-field appearance="standard" class="w-100">
+              <mat-label>Filter Users</mat-label>
+              <input matInput (keyup)="applyUsersFilter($event)" placeholder="Search by name or email">
+            </mat-form-field>
+          </div>
+          
+          <div class="table-responsive" *ngIf="availableUsers.length > 0; else noAvailableUsers">
+            <table mat-table [dataSource]="usersDataSource" class="w-100">
+              <!-- First Name Column -->
+              <ng-container matColumnDef="firstname">
+                <th mat-header-cell *matHeaderCellDef> First Name </th>
+                <td mat-cell *matCellDef="let user"> {{user.firstname}} </td>
+              </ng-container>
+              
+              <!-- Last Name Column -->
+              <ng-container matColumnDef="lastname">
+                <th mat-header-cell *matHeaderCellDef> Last Name </th>
+                <td mat-cell *matCellDef="let user"> {{user.lastname}} </td>
+              </ng-container>
+              
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+              </ng-container>
+              
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let user">
+                  <button mat-button color="primary" (click)="addMember(user.idUser)">
+                    <mat-icon>add</mat-icon> Add
+                  </button>
+                </td>
+              </ng-container>
+              
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsWithActions"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsWithActions;"></tr>
+            </table>
+            
+            <mat-paginator #usersPaginator 
+                          [pageSize]="8"
+                          [pageSizeOptions]="[5, 10, 25]"
+                          showFirstLastButtons>
+            </mat-paginator>
+          </div>
+          <ng-template #noAvailableUsers>
+            <p class="text-center text-muted">No available users.</p>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-3">
+        <button mat-button color="warn" routerLink="/club-list">Back to Clubs</button>
+      </div>
+    </div>
+  </div>
+</div>

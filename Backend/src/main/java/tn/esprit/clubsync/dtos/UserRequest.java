@@ -12,8 +12,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequest {
-    private String nom;
-    private String prenom;
+    private String firstname;
+    private String lastname;
     private String email;
     private String password;
     private Date dateNaissance;
@@ -22,20 +22,20 @@ public class UserRequest {
     private String photoProfil;
     private Integer id_role;
 
-    public String getNom() {
-        return nom;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getPrenom() {
-        return prenom;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {

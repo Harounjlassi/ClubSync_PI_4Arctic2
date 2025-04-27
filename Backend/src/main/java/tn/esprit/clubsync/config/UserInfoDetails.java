@@ -1,37 +1,48 @@
-package tn.esprit.clubsync.config;
+package tn.esprit.clubsync.Config;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import tn.esprit.clubsync.entities.Roletype;
+import tn.esprit.clubsync.entities.Sexe;
 import tn.esprit.clubsync.entities.User;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
-
 
 public class UserInfoDetails implements UserDetails {
 
-    private String email;
-    private String password;
-    private Roletype authorities;
+    private final String email;
+    private final String password;
+    private final Roletype authorities;
+    private final String firstName;
+    private final String lastName;
+    private final Date birthDate;
+    private final Sexe gender;
+    private final String phoneNumber;
+    private final String profilePicture;
+    private final boolean isArchived;
 
     public UserInfoDetails(User user) {
-        // Récupérer les informations dynamiquement à partir de l'entité User
         this.email = user.getEmail();
         this.password = user.getPassword();
-        // Vous devez ajuster la gestion des rôles en fonction de votre modèle d'attributs
-        this.authorities = user.getRole().getRoleType(); // user.getRoles() renvoie une liste d'objets Role
-                 // Extraire le roleType de chaque role et le convertir en SimpleGrantedAuthority
-
-
+        this.authorities = user.getRole().getRoleType();
+        this.firstName = user.getLastname();
+        this.lastName = user.getFirstname();
+        this.birthDate = user.getDateNaissance();
+        this.gender = user.getSexe();
+        this.phoneNumber = user.getNumeroDeTelephone() != null ?
+                user.getNumeroDeTelephone().toString() : null;
+        // Convertir le tableau d'octets en Base64
+        this.profilePicture = user.getPhotoProfil();
+        this.isArchived = user.isArchived();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + this.authorities.name()));
     }
-
 
     @Override
     public String getPassword() {
@@ -45,21 +56,21 @@ public class UserInfoDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // Vous pouvez adapter selon votre logique métier
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Vous pouvez adapter selon votre logique métier
+        return !isArchived;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // Vous pouvez adapter selon votre logique métier
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // Vous pouvez adapter selon votre logique métier
+        return !isArchived;
     }
 }

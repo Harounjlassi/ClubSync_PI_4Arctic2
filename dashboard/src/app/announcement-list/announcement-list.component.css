@@ -1,0 +1,503 @@
+/* 🌟 Styles communs pour les champs de recherche */
+.search-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  color: #666;
+  font-size: 20px;
+  z-index: 2;
+}
+
+.search-field .mat-input-element {
+  padding-left: 40px !important;
+  padding-right: 36px;
+  height: 45px;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  transition: all 0.3s ease;
+}
+
+.search-field .mat-input-element:focus {
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-field .mat-form-field-outline {
+  border-radius: 8px;
+}
+
+.clear-button {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+.clear-button:hover {
+  color: #d9534f;
+}
+
+/* 🌟 Styles communs pour les boutons d'ajout */
+.add-announcement-btn, .add-club-btn {
+  font-size: 13px;
+  padding: 6px 16px;
+  font-weight: 600;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+  color: white;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.add-announcement-btn:hover, .add-club-btn:hover {
+  background-color: #449d44;
+  border-color: #398439;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.add-announcement-btn .mat-icon, .add-club-btn .mat-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+  margin-right: 6px;
+}
+
+.badge-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #f8f9fa;
+  color: #333;
+  border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* 🌟 Table compacte */
+.table {
+  font-size: 14px;
+  border-collapse: collapse;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 🌟 En-têtes compacts */
+.table thead {
+  background-color: #d9534f;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table thead th {
+  font-size: 14px;
+  padding: 8px 10px;
+  text-align: center;
+  color: #ffffff !important;
+  border-bottom: 2px solid #fff;
+}
+
+/* 🌟 Cellules compactes */
+.table tbody td {
+  padding: 6px 8px;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 🌟 Content column - larger with ellipsis */
+.table td.content-cell {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+/* 🌟 Optionel: montrer plus de texte au survol */
+.table td.content-cell:hover {
+  white-space: normal;
+  word-wrap: break-word;
+  max-height: 100px;
+  overflow: auto;
+  z-index: 1;
+  position: relative;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 🌟 Colonne d'actions plus compacte */
+.table td.actions-cell {
+  white-space: nowrap;
+  width: 1%;
+}
+
+/* 🌟 Configurer les largeurs relatives des colonnes pour les annonces */
+.table th.col-title {
+  width: 20%;
+}
+
+.table th.col-content {
+  width: 40%;
+}
+
+.table th.col-club {
+  width: 15%;
+}
+
+.table th.col-date {
+  width: 15%;
+}
+
+.table th.col-actions {
+  width: 10%;
+}
+
+/* 🌟 Style des boutons - version compacte */
+.btn-danger {
+  font-size: 12px;
+  padding: 4px 8px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.btn-success {
+  font-size: 14px;
+  padding: 6px 10px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+/* 🌟 Réduire la taille des icônes Material */
+.mat-icon-button {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+/* 🌟 Card header plus compact */
+.card-header {
+  padding: 8px 15px;
+}
+
+.card-header h4 {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.card-header p {
+  font-size: 12px;
+  margin-bottom: 0; 
+}
+
+/* 🌟 Card body plus compact */
+.card-body {
+  padding: 10px;
+}
+
+/* 🌟 Champ de recherche plus compact */
+.mat-form-field {
+  font-size: 14px;
+}
+
+/* 🌟 Export buttons container */
+.export-buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Common styles for both export buttons */
+.export-btn {
+  font-size: 13px;
+  padding: 6px 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  min-width: 130px;
+  transition: all 0.2s ease;
+}
+
+/* PDF button specific styles */
+.export-btn-pdf {
+  background-color: #d9534f;
+  border-color: #d43f3a;
+  color: white;
+}
+
+.export-btn-pdf:hover {
+  background-color: #c9302c;
+  border-color: #ac2925;
+}
+
+/* Excel button specific styles */
+.export-btn-excel {
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+  color: white;
+}
+
+.export-btn-excel:hover {
+  background-color: #449d44;
+  border-color: #398439;
+}
+
+/* Adjust the icon within the buttons */
+.export-btn .mat-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+  margin-right: 6px;
+}
+
+/* Make the buttons more responsive */
+@media (max-width: 768px) {
+  .export-buttons-container {
+      margin-top: 10px;
+      width: 100%;
+      justify-content: space-between;
+  }
+  
+  .export-btn {
+      min-width: 48%;
+      font-size: 12px;
+  }
+}
+
+/* Override Angular Material styles for search field */
+::ng-deep .search-field .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+::ng-deep .search-field .mat-form-field-flex {
+  padding: 0 !important;
+  background: #f5f5f5 !important;
+  border-radius: 8px !important;
+}
+
+::ng-deep .search-field .mat-form-field-underline {
+  display: none;
+}
+
+::ng-deep .search-field .mat-form-field-outline {
+  color: #ddd;
+}
+
+::ng-deep .search-field.mat-focused .mat-form-field-outline {
+  color: #d9534f;
+}
+
+::ng-deep .search-field .mat-form-field-infix {
+  padding: 0.5em 0;
+  border-top: 0;
+}
+
+/* 🌟 Styles pour les cartes d'annonce */
+.announcement-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 10px 0;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.announcement-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* 🌟 Style pour la pagination */
+.pagination-controls {
+  text-align: center;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pagination-controls button {
+  margin: 0;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #d9534f;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.pagination-controls button:hover:not([disabled]) {
+  background-color: #c9302c;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.pagination-controls button[disabled] {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* 🌟 Styles pour le dialogue d'édition */
+.dialog-container {
+  padding: 0;
+}
+
+/* Titre du dialogue */
+.dialog-container h2 {
+  background-color: #d9534f;
+  color: white;
+  margin: -24px -24px 20px -24px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.dialog-icon {
+  margin-right: 10px;
+}
+
+/* Contenu du dialogue */
+mat-dialog-content {
+  padding: 0;
+}
+
+/* Style pour les champs de formulaire */
+.full-width {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Apparence des champs */
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #ddd;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+  color: #d9534f;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 0.5em 0;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-select-arrow {
+  color: #666;
+}
+
+/* Style pour les boutons du dialogue */
+mat-dialog-actions {
+  padding: 16px 0 0 0;
+  margin-bottom: 0;
+}
+
+mat-dialog-actions button {
+  font-weight: 600;
+  font-size: 14px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+mat-dialog-actions button[mat-stroked-button] {
+  color: #666;
+  border-color: #ddd;
+}
+
+mat-dialog-actions button[mat-stroked-button]:hover {
+  background-color: #f5f5f5;
+}
+
+mat-dialog-actions button[mat-flat-button] {
+  background-color: #d9534f;
+  color: white;
+}
+
+mat-dialog-actions button[mat-flat-button]:hover:not([disabled]) {
+  background-color: #c9302c;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+mat-dialog-actions button[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Animation pour l'icône de chargement */
+.spinner {
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Club description */
+.club-description {
+  font-size: 14px;
+  color: #333;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* Styles pour les notifications SnackBar */
+::ng-deep .success-snackbar {
+  background-color: #4caf50;
+  color: white;
+  border-radius: 8px;
+}
+
+::ng-deep .error-snackbar {
+  background-color: #f44336;
+  color: white;
+  border-radius: 8px;
+}
+
+::ng-deep .mat-simple-snackbar-action {
+  color: white;
+}
+
+::ng-deep .mat-snack-bar-container {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
