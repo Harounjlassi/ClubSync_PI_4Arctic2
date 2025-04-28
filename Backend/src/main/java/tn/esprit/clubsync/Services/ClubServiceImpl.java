@@ -5,12 +5,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.clubsync.Repo.ClubRepo;
-import tn.esprit.clubsync.Repo.UserRepo;
 
+import tn.esprit.clubsync.Repo.UserRepository;
 import tn.esprit.clubsync.entities.Club;
-import tn.esprit.clubsync.entities.Users;
+import tn.esprit.clubsync.entities.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,7 +22,7 @@ public class ClubServiceImpl implements iClubService {
     ClubRepo ClubRepo;
 
     @Autowired
-    private UserRepo userRepo;
+    private UserRepository userRepo;
 
 
     @Override
@@ -39,9 +38,10 @@ public class ClubServiceImpl implements iClubService {
     @Override
     public Club addClub(Club club) {
         // Vérifie si un créateur est spécifié dans le club
-        if (club.getCreator() != null && club.getCreator().getId() != null) {
-            Users creator = userRepo.findById(club.getCreator().getId()).orElseThrow(() ->
-                    new RuntimeException("Creator with ID " + club.getCreator().getId() + " not found"));
+        if (club.getCreator() != null && club.getCreator().getIdUser() != 0)
+        {
+            User creator = userRepo.findById(club.getCreator().getIdUser()).orElseThrow(() ->
+                    new RuntimeException("Creator with ID " + club.getCreator().getIdUser() + " not found"));
             club.setCreator(creator);
         }
         return ClubRepo.save(club); // Sauvegarde le club avec le créateur associé
@@ -64,7 +64,7 @@ public class ClubServiceImpl implements iClubService {
                 new RuntimeException("Club with ID " + clubId + " not found"));
 
         // Trouver l'utilisateur par son ID
-        Users user = userRepo.findById(userId).orElseThrow(() ->
+        User user = userRepo.findById(userId).orElseThrow(() ->
                 new RuntimeException("User with ID " + userId + " not found"));
 
         // Ajouter l'utilisateur à la liste des membres du club
@@ -84,7 +84,7 @@ public class ClubServiceImpl implements iClubService {
                 new RuntimeException("Club with ID " + clubId + " not found"));
 
         // Trouver l'utilisateur par son ID
-        Users user = userRepo.findById(userId).orElseThrow(() ->
+        User user = userRepo.findById(userId).orElseThrow(() ->
                 new RuntimeException("User with ID " + userId + " not found"));
 
         // Supprimer l'utilisateur de la liste des membres du club
@@ -95,10 +95,14 @@ public class ClubServiceImpl implements iClubService {
     }
 
     @Override
-    public List<Users> getAllMembersByClubId(Long clubId) {
+    public List<User> getAllMembersByClubId(Long clubId) {
         Club club = ClubRepo.findById(clubId)
                 .orElseThrow(() -> new RuntimeException("Club non trouvé"));
         return club.getMembers(); // Retourne la liste des membres
+    }
+    @Override
+    public List<Club> getClubsByUserId(Long userId) {
+        return ClubRepo.findClubsByUserId(userId);
     }
 
 

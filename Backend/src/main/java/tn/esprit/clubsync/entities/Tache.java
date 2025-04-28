@@ -31,7 +31,7 @@ public class Tache {
 
     @ManyToOne
     @JoinColumn(name = "assignee_id")
-    private Users assignee;
+    private User assignee;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
@@ -93,11 +93,11 @@ public class Tache {
         this.priorite = priorite;
     }
 
-    public Users getAssignee() {
+    public User getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(Users assignee) {
+    public void setAssignee(User assignee) {
         this.assignee = assignee;
     }
 

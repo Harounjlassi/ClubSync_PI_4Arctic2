@@ -1,7 +1,7 @@
 package tn.esprit.clubsync.Services;
 
 import tn.esprit.clubsync.entities.Club;
-import tn.esprit.clubsync.entities.Users;
+import tn.esprit.clubsync.entities.User;
 
 import java.util.List;
 
@@ -18,7 +18,9 @@ public interface iClubService {
     // Supprimer un membre d'un club
     public Club removeMemberFromClub(Long clubId, Long userId);
 
-    public  List<Users> getAllMembersByClubId(Long clubId);
+    public  List<User> getAllMembersByClubId(Long clubId);
+
+    List<Club> getClubsByUserId(Long userId); // Ajoutez cette ligne
 
 
 }

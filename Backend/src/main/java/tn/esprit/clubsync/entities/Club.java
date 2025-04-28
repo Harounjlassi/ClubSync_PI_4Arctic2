@@ -1,6 +1,7 @@
 package tn.esprit.clubsync.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;import jakarta.persistence.*;
 
 import lombok.*;
@@ -31,7 +32,9 @@ public class Club {
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
-    private Users creator;
+    @JsonIgnore // Ignore la sérialisation du créateur pour éviter les cycles
+
+    private User creator;
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
@@ -87,21 +90,21 @@ public class Club {
         this.description = description;
     }
 
-    public Users getCreator() {
+    public User getCreator() {
         return creator;
     }
 
-    public void setCreator(Users creator) {
+    public void setCreator(User creator) {
         this.creator = creator;
     }
 
 
 
-    public List<Users> getMembers() {
+    public List<User> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Users> members) {
+    public void setMembers(List<User> members) {
         this.members = members;
     }
 
@@ -123,12 +126,15 @@ public class Club {
 
 
     @ManyToMany
+    @JsonIgnore // Add this to break the cycle
+
     @JoinTable(
             name = "club_members",                  // Name of the join table
             joinColumns = @JoinColumn(name = "club_id"),   // Column in the join table that references the Club entity
             inverseJoinColumns = @JoinColumn(name = "id")  // Column in the join table that references the Users entity (using id instead of user_id)
     )
-    private List<Users> members = new ArrayList<>();
+
+    private List<User> members = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "organize", cascade = CascadeType.ALL)

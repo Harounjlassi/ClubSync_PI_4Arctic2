@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.clubsync.Services.iClubRecommendationService;
 import tn.esprit.clubsync.Services.iClubService;
 import tn.esprit.clubsync.entities.Club;
-import tn.esprit.clubsync.entities.Users;
-import tn.esprit.clubsync.Services.iUsersService;
+import tn.esprit.clubsync.entities.User;
+import tn.esprit.clubsync.Services.IUserService;
 
 
 
@@ -29,7 +29,7 @@ public class ClubController  {
 
 
     @Autowired
-    private iUsersService iUsersService;
+    private IUserService iUsersService;
 
     @Autowired
     private iClubRecommendationService recommendationService;
@@ -71,7 +71,8 @@ public class ClubController  {
         try {
             // Vérifier si l'utilisateur est déjà membre du club
             Club club = iClubservice.retrieveClub(clubId);
-            if (club.getMembers() != null && club.getMembers().stream().anyMatch(member -> member.getId().equals(userId))) {
+            if (club.getMembers() != null &&
+                    club.getMembers().stream().anyMatch(member -> member.getIdUser() == userId)) {
                 return ResponseEntity.badRequest().body("L'utilisateur est déjà membre de ce club");
             }
 
@@ -92,7 +93,7 @@ public class ClubController  {
 
     @Operation(description = "Récupérer tous les membres d'un club")
     @GetMapping("/{clubId}/members")
-    public List<Users> getAllMembersByClubId(@PathVariable Long clubId) {
+    public List<User> getAllMembersByClubId(@PathVariable Long clubId) {
         return iClubservice.getAllMembersByClubId(clubId);
     }
 
@@ -112,12 +113,24 @@ public class ClubController  {
         return ResponseEntity.ok(recommendations);
     }
 
+    @Operation(description = "Récupérer les clubs d'un utilisateur")
+    @GetMapping("/retrieveClubsByUser/{userId}")
+    public ResponseEntity<List<Club>> getClubsByUser(@PathVariable Long userId) {
+        try {
+            List<Club> userClubs = iClubservice.getClubsByUserId(userId);
+            return ResponseEntity.ok(userClubs);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    }
 
 
 
 
 
 
-}
 
 

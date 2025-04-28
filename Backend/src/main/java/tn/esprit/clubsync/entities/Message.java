@@ -37,11 +37,11 @@ public class Message {
         this.contenu = contenu;
     }
 
-    public Users getAuteur() {
+    public User getAuteur() {
         return auteur;
     }
 
-    public void setAuteur(Users auteur) {
+    public void setAuteur(User auteur) {
         this.auteur = auteur;
     }
 
@@ -63,7 +63,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "auteur_id")
-    private Users auteur;
+    private User auteur;
 
     @ManyToOne
     @JoinColumn(name = "project_id")

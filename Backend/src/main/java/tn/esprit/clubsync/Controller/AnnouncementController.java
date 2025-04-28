@@ -73,6 +73,7 @@ public class AnnouncementController {
     public void deleteAnnouncement(@PathVariable Long id) {
         announcementService.deleteAnnouncement(id);
     }
+
     @GetMapping("/all")
     public List<Map<String, Object>> getAllStandardized() {
         List<Announcement> announcements = announcementRepo.findAll();

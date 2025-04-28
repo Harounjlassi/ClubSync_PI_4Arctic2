@@ -47,6 +47,7 @@
     "jquery": "^3.6.0",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
+    "jwt-decode": "^4.0.0",
     "moment": "2.29.1",
     "ng-starrating": "^1.0.20",
     "ngx-rating": "^0.0.9",

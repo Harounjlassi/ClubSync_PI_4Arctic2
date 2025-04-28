@@ -1,0 +1,175 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Stats cards -->
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card stats-card">
+          <div class="card-header card-header-info">
+            <div class="card-icon">
+              <i class="material-icons">people</i>
+            </div>
+            <h3 class="card-category">Total Users</h3>
+            <h2 class="card-title">{{users.length}}</h2>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">update</i> Just Updated
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card stats-card">
+          <div class="card-header card-header-primary">
+            <div class="card-icon">
+              <i class="material-icons">admin_panel_settings</i>
+            </div>
+            <h3 class="card-category">Admins</h3>
+            <h2 class="card-title">{{getAdminCount()}}</h2>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">update</i> Just Updated
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card stats-card">
+          <div class="card-header card-header-success">
+            <div class="card-icon">
+              <i class="material-icons">person</i>
+            </div>
+            <h3 class="card-category">Regular Users</h3>
+            <h2 class="card-title">{{getUserCount()}}</h2>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">update</i> Just Updated
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card stats-card">
+          <div class="card-header card-header-danger">
+            <div class="card-icon">
+              <i class="material-icons">lock</i>
+            </div>
+            <h3 class="card-category">Banned Users</h3>
+            <h2 class="card-title">{{getBannedCount()}}</h2>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">update</i> Just Updated
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Main table card -->
+      <div class="col-md-12">
+        <div class="card custom-card">
+          <div class="card-header card-header-danger">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h2 class="card-title">USER LIST</h2>
+                <p class="card-category">Here is a list of all users</p>
+              </div>
+              <button mat-raised-button color="primary" class="add-user-btn" (click)="openRegisterDialog()">
+                <mat-icon>person_add</mat-icon> Register New User
+              </button>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <!-- Filter controls -->
+            <div class="filter-controls">
+              <mat-form-field appearance="fill" class="role-filter">
+                <mat-label>Filter by Role</mat-label>
+                <mat-select [(ngModel)]="selectedRoleFilter" (selectionChange)="applyFilters()">
+                  <mat-option value="all">All Roles</mat-option>
+                  <mat-option value="admin">Admin</mat-option>
+                  <mat-option value="user">User</mat-option>
+                </mat-select>
+              </mat-form-field>
+              
+              <div class="filter-info" *ngIf="filteredUsers.length !== users.length">
+                <span>Showing {{filteredUsers.length}} of {{users.length}} users</span>
+                <button mat-button color="primary" (click)="clearFilters()">Clear Filters</button>
+              </div>
+            </div>
+
+            <!-- Loading state -->
+            <div *ngIf="loading" class="d-flex justify-content-center my-5">
+              <mat-spinner diameter="60"></mat-spinner>
+              <span class="loading-text ml-3">{{apiStatus}}</span>
+            </div>
+
+            <!-- Tableau principal -->
+            <div class="table-responsive modern-table" *ngIf="!loading && filteredUsers?.length > 0">
+              <table class="table table-hover">
+                <thead class="text-primary">
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of filteredUsers; trackBy: trackById" [ngClass]="{'archived-user': user.archived}">
+                    <td class="user-id">{{ user.idUser }}</td>
+                    <td class="user-name">
+                      <div *ngIf="user.firstname || user.lastname; else noName">
+                        {{ user.firstname }} {{ user.lastname }}
+                      </div>
+                      <ng-template #noName>
+                        <span class="text-muted">No name provided</span>
+                      </ng-template>
+                    </td>
+                    <td class="user-email">{{ user.email }}</td>
+                    <td class="user-role">
+                      <span class="role-badge" [ngClass]="{'admin-badge': isAdmin(user), 'user-badge': !isAdmin(user)}">
+                        {{ getRole(user) }}
+                      </span>
+                    </td>
+                    <td class="user-phone">
+                      {{ user.numeroDeTelephone || 'N/A' }}
+                    </td>
+                    <td class="user-actions">
+                      <button mat-icon-button class="edit-button" (click)="onEdit(user.idUser)" matTooltip="Edit User">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button 
+                              class="ban-button"
+                              [ngClass]="user.archived ? 'unban-button' : 'ban-button'"
+                              (click)="onToggleBan(user)"
+                              [matTooltip]="user.archived ? 'Unban User' : 'Ban User'">
+                        <mat-icon>{{ user.archived ? 'lock_open' : 'lock' }}</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Message quand vide -->
+            <div *ngIf="!loading && (!filteredUsers || filteredUsers.length === 0)" 
+                 class="alert alert-warning empty-list">
+              <i class="material-icons warning-icon">warning</i>
+              <span class="empty-message">
+                No users found{{ selectedRoleFilter !== 'all' ? ' with selected filter' : '' }}.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

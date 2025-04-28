@@ -1,5 +1,13 @@
-export interface Role {
-    id: number;
-    name: string;
-    // autres propriétés si nécessaire
+export enum RoleType {
+  ADMIN = 'ADMIN',
+  USER = 'USER'
+}
+
+export class Role {
+  id?: number;
+  roleType: RoleType;
+  
+  constructor(data?: Partial<Role>) {
+    Object.assign(this, data || {});
   }
+}

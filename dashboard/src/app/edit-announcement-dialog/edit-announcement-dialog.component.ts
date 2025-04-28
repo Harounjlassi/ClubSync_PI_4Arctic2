@@ -42,8 +42,12 @@ export class EditAnnouncementDialogComponent implements OnInit {
         Validators.maxLength(1000),
         this.noConsecutiveSpaces
       ]],
-      clubId: [this.data.announcement.club?.id_club || '', Validators.required]
-    });
+      clubId: [
+        typeof this.data.announcement.club === 'object' && this.data.announcement.club !== null
+          ? this.data.announcement.club.id_club
+          : this.data.announcement.club || '',
+        Validators.required
+      ]    });
   }
   
   loadClubs(): void {

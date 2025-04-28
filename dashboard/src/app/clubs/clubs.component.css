@@ -1930,5 +1930,301 @@ mat-card-actions button:hover {
 .toast-notification {
   animation: toastFadeIn 0.3s ease forwards;
 }
+/* Styles pour la section de recommandations */
+.recommendations-section {
+  background-color: #f5f9ff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
 
+.recommendations-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.recommendations-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.recommendations-subtitle {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.recommendations-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 10px 0;
+  scrollbar-width: thin;
+}
+
+.recommendation-card {
+  min-width: 280px;
+  max-width: 300px;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.recommendation-category {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.recommendation-actions {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.recommendation-card:hover .recommendation-actions {
+  opacity: 1;
+}
+
+.ignore-btn {
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+
+.ignore-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+}
+
+.recommendation-content {
+  padding: 20px 15px;
+}
+
+.recommendation-content h4 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.recommendation-slogan {
+  font-style: italic;
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.recommendation-description {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.recommendation-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #eee;
+}
+
+.recommendation-members {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #666;
+}
+
+.recommendation-members mat-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+  margin-right: 4px;
+}
+
+/* Animation pour les cartes de recommandation */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.recommendation-card {
+  animation: fadeInScale 0.3s ease-out forwards;
+}
+
+/* Style pour les catégories spécifiques dans les recommandations */
+.category-sport { background-color: #FF5252; }
+.category-art { background-color: #536DFE; }
+.category-culture { background-color: #FFC107; }
+.category-musique { background-color: #9C27B0; }
+.category-technologie { background-color: #00BCD4; }
+.category-science { background-color: #4CAF50; }
+.category-littérature { background-color: #8D6E63; }
+.category-autre { background-color: #795548; }
+
+/* My Clubs Dropdown */
+.my-clubs-wrapper {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.my-clubs-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.my-clubs-btn:hover:not([disabled]) {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.my-clubs-btn[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.dropdown-spinner {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.my-clubs-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dropdown-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #2d3436;
+}
+
+.club-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.2s;
+}
+
+.club-item:hover {
+  background: #f8f9fa;
+}
+
+.club-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.club-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.club-details h5 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #2d3436;
+}
+
+.club-category {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #636e72;
+}
+
+.club-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #636e72;
+}
+
+.members {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+}
+
+.no-clubs-message {
+  padding: 2rem;
+  text-align: center;
+  color: #636e72;
+}
+
+.no-clubs-message mat-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 1rem;
+  color: #74b9ff;
+}
+
+.no-clubs-message p {
+  margin: 0.5rem 0 0;
+  line-height: 1.4;
+}
 }

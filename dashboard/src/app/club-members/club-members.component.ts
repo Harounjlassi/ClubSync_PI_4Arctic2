@@ -63,32 +63,38 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
 
   loadMembers(): void {
     this.clubService.getClubMembers(this.clubId).subscribe(
-      (data) => {
-        this.members = data;
-        this.membersDataSource.data = this.members; // Attribuer les données après les avoir reçues
+      (members: User[]) => {
+        console.log('Members received:', members); // Debug log
+        this.members = members;
+        this.membersDataSource = new MatTableDataSource<User>(this.members);
         
-        // Utilisation de setTimeout pour attendre que la pagination soit prête
-        setTimeout(() => {
+        // Vérifiez que les données sont correctement mappées
+        if (this.members.length > 0) {
+          console.log('First member sample:', this.members[0]);
+        }
+  
+        if (this.membersPaginator) {
           this.membersDataSource.paginator = this.membersPaginator;
-        });
+        }
       },
       (error) => console.error('Erreur lors du chargement des membres', error)
     );
   }
+  
 
   loadAvailableUsers(): void {
-    this.userService.getAllUsers().subscribe(users => {
-      this.clubService.getClubMembers(this.clubId).subscribe(members => {
-        const memberIds = members.map(member => member.id);
-        this.availableUsers = users.filter(user => !memberIds.includes(user.id));
-  
-        // Assigne les données *après* un petit délai pour être sûr que le paginator est prêt
-        setTimeout(() => {
-          this.usersDataSource.data = this.availableUsers;
-          if (this.usersPaginator) {
-            this.usersDataSource.paginator = this.usersPaginator;
-          }
-        });
+    this.userService.getAllUsers().subscribe((users: User[]) => {
+      this.clubService.getClubMembers(this.clubId).subscribe((members: User[]) => {
+        // Utilisez le même champ ID partout (idUser ou id selon votre modèle)
+        const memberIds = members.map(member => member.idUser || member.idUser);
+        this.availableUsers = users.filter(user => 
+          !memberIds.includes(user.idUser || user.idUser)
+        );
+        
+        this.usersDataSource = new MatTableDataSource<User>(this.availableUsers);
+        if (this.usersPaginator) {
+          this.usersDataSource.paginator = this.usersPaginator;
+        }
       });
     });
   }
@@ -99,7 +105,7 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
       () => {
         this.loadMembers();
         this.loadAvailableUsers();
-        this.snackBar.open('Membre ajouté avec succès', 'Fermer', {
+        this.snackBar.open('New member added successfully', 'Close', {
           duration: 3000
         });
       },
@@ -117,7 +123,7 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
       () => {
         this.loadMembers();
         this.loadAvailableUsers();
-        this.snackBar.open('Membre supprimé avec succès', 'Fermer', {
+        this.snackBar.open('Member removed successfully', 'Close', {
           duration: 3000
         });
       },

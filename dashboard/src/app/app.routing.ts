@@ -14,13 +14,26 @@ import { ServicesComponent } from './pages/services/services.component';
 import { ClubsComponent } from './clubs/clubs.component';
 import { ChatComponent } from './chat/chat.component';
 import { JokeComponent } from './joke/joke.component';
+import { RegisterComponent } from './register/register.component';
+import { AuthenticationComponent } from './authentication/authentication.component';
 
 const routes: Routes =[
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'front',
     pathMatch: 'full',
-  }, {
+  },
+   // Authentication routes (outside of layouts)
+   {
+    path: 'login',
+    component: AuthenticationComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+
+  {
     path: '',
     component: AdminLayoutComponent,
     children: [{

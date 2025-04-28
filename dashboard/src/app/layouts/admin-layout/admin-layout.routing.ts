@@ -11,6 +11,9 @@ import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { ClubListComponent } from 'app/club-list/club-list.component';
 import { ClubMembersComponent } from 'app/club-members/club-members.component';
 import { AnnouncementListComponent } from 'app/announcement-list/announcement-list.component';
+import { UserListComponent } from 'app/user-list/user-list.component';
+import { UserRegisterDialogComponent } from 'app/user-register-dialog/user-register-dialog.component';  
+
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
@@ -65,7 +68,8 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'club-list', component: ClubListComponent },
     { path: 'club-members/:clubId', component: ClubMembersComponent },
     { path: 'announcment-list', component: AnnouncementListComponent },
-
+    { path: 'user-list', component: UserListComponent },
+    {path: 'user-register', component: UserRegisterDialogComponent},// Nouvelle route pour UserRegisterDialogComponent
       
       
     // Nouvelle route pour ClubListComponent
