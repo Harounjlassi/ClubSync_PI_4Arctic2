@@ -33,7 +33,7 @@ public class User implements UserDetails {
     @JsonIgnore
 
     private List<Club> clubs = new ArrayList<>();  // Ensure this is initialized to avoid NPE
-
+    @JsonIgnore
     public List<Reclamation> getReclamationsCreees() {
         return reclamationsCreees;
     }
@@ -49,7 +49,7 @@ public class User implements UserDetails {
     public void setReclamationsTraitees(List<Reclamation> reclamationsTraitees) {
         this.reclamationsTraitees = reclamationsTraitees;
     }
-
+    @JsonIgnore
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     private List<Reclamation> reclamationsTraitees;
     public String getFirstname() {

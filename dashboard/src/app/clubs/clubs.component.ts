@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ClubService } from '../services/club.service';
 import { Club } from '../models/club.model';
 import { Router } from '@angular/router';
@@ -7,6 +7,9 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { JokeService } from '../services/joke.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { StorageService } from 'app/services/storage.service';
+import { RecommendationService } from 'app/services/recommendation.service';
+import { UserService } from 'app/services/user.service';
 
 @Component({
   selector: 'app-clubs',
@@ -40,20 +43,45 @@ export class ClubsComponent implements OnInit {
   currentJoke: string = '';
   isSharingExpanded: boolean = false;
   selectedLanguage: string = 'fr'; // Default language
+  recommendedClubs: Club[] = [];
+  showRecommendations: boolean = false;
+  userClubs: Club[] = [];
+  isMyClubsDropdownOpen = false;
+  isLoadingClubs = false;
+  errorLoadingClubs = false;
+
+  isLoggedIn = false;
+  userEmail: string = '';
+  showDropdown = false;
+
+  
+
 
   constructor(
     private clubService: ClubService,
     private router: Router,
     private jokeService: JokeService, 
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private storageService: StorageService ,// Ajoutez cette ligne
+    private recommendationService: RecommendationService ,// Ajoutez cette ligne
+    private userService: UserService,
+    
+
+
   ) {}
 
   ngOnInit(): void {
+    this.checkLoginStatus();
+    // Ajouter cette subscription
+  this.clubService.clubUpdates$.subscribe(() => {
+    this.loadUserClubs();
+  });
     setTimeout(() => {
       const preloader = document.getElementById('preloader-active');
       if (preloader) {
         preloader.style.display = 'none';
       }
+      
     }, 1000); // Small timeout to ensure content has loaded
   
     this.fetchClubs();
@@ -67,7 +95,39 @@ export class ClubsComponent implements OnInit {
       .subscribe(value => {
         this.filterClubs(value || '');
       });
+      this.loadRecommendations();
+
   }
+  loadRecommendations(): void {
+    const token = this.storageService.getToken();
+    if (!token) return;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userId = payload.idUser;
+
+      if (!userId) {
+        this.showRecommendations = false;
+        return;
+      }
+
+      this.recommendationService.getRecommendedClubs(userId).subscribe({
+        next: (recommendations) => {
+          this.recommendedClubs = recommendations;
+          this.showRecommendations = this.recommendedClubs.length > 0;
+        },
+        error: (error) => {
+          console.error('Erreur des recommandations:', error);
+          this.recommendedClubs = [];
+          this.showRecommendations = false;
+        }
+      });
+    } catch (error) {
+      console.error('Erreur token:', error);
+      this.showRecommendations = false;
+    }
+  }
+
   
   fetchClubs(): void {
     this.isLoading = true;
@@ -147,61 +207,68 @@ export class ClubsComponent implements OnInit {
   }
 
   joinClub(event: Event, clubId: number): void {
-    event.stopPropagation(); // Empêche la navigation vers les détails du club
+    event.stopPropagation();
     
-    // Liste des utilisateurs disponibles dans la base de données
-    const availableUsers = [
-      { id: 1, nom: 'Smith', prenom: 'Alice' },
-      { id: 2, nom: 'Jones', prenom: 'Bob' },
-      { id: 3, nom: 'Taylor', prenom: 'Carol' },
-      { id: 4, nom: 'Brown', prenom: 'Dan' },
-      { id: 5, nom: 'Wilson', prenom: 'Emma' },
-      { id: 6, nom: 'Johnson', prenom: 'Frank' },
-      { id: 7, nom: 'White', prenom: 'Grace' },
-      { id: 8, nom: 'Martin', prenom: 'Henry' },
-      { id: 9, nom: 'King', prenom: 'Isabel' },
-      { id: 10, nom: 'Moore', prenom: 'Jack' },
-      { id: 11, nom: 'Hall', prenom: 'Kate' },
-      { id: 12, nom: 'Allen', prenom: 'Leo' },
-      { id: 13, nom: 'Young', prenom: 'Mia' },
-      { id: 14, nom: 'Scott', prenom: 'Nick' },
-      { id: 15, nom: 'Green', prenom: 'Olivia' },
-      { id: 16, nom: 'Adams', prenom: 'Peter' },
-      { id: 17, nom: 'Nelson', prenom: 'Quinn' },
-      { id: 18, nom: 'Baker', prenom: 'Rachel' },
-      { id: 19, nom: 'Lopez', prenom: 'Steve' },
-      { id: 20, nom: 'Gonzalez', prenom: 'Tina' }
-    ];
+    // Obtenir le token et extraire l'ID utilisateur
+    const token = this.storageService.getToken();
     
-    // Construire les options pour le menu déroulant
-    const userOptions = availableUsers.map(user => `${user.id}: ${user.prenom} ${user.nom}`);
+    if (!token) {
+      this.snackBar.open('Vous devez être connecté pour rejoindre un club', 'Fermer', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['error-toast']
+      });
+      return;
+    }
     
-    // Afficher une boîte de dialogue avec les options
-    const userChoice = prompt(
-      'Choisissez un utilisateur pour rejoindre ce club:\n\n' + 
-      userOptions.join('\n') + 
-      '\n\nEntrez l\'ID de l\'utilisateur:'
-    );
-    
-    if (userChoice && !isNaN(Number(userChoice))) {
-      const userId = Number(userChoice);
+    // Extraire l'ID utilisateur du token JWT
+    // Le token est divisé en 3 parties séparées par des points
+    // La deuxième partie contient les informations du payload
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userId = payload.idUser;
       
-      // Vérifier si l'ID entré correspond à un utilisateur disponible
-      if (availableUsers.some(user => user.id === userId)) {
-        this.clubService.addMemberToClub(clubId, userId).subscribe(
-          response => {
-            console.log('Club rejoint avec succès:', response);
-            this.fetchClubs(); // Rafraîchir la liste des clubs pour mettre à jour le nombre de membres
-            alert(`Club rejoint avec succès par l'utilisateur ${availableUsers.find(u => u.id === userId)?.prenom} ${availableUsers.find(u => u.id === userId)?.nom}!`);
-          },
-          error => {
-            console.error('Erreur lors de la tentative de rejoindre le club:', error);
-            alert('Erreur lors de la tentative de rejoindre le club');
-          }
-        );
-      } else {
-        alert('ID utilisateur invalide. Veuillez choisir un ID dans la liste.');
+      if (!userId) {
+        this.snackBar.open('Impossible de déterminer votre identifiant utilisateur', 'Fermer', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['error-toast']
+        });
+        return;
       }
+      
+      // Continuer avec l'ID utilisateur
+      this.clubService.addMemberToClub(clubId, userId).subscribe(
+        response => {
+          console.log('Club rejoint avec succès:', response);
+          this.fetchClubs();
+          this.snackBar.open(`Successfuly joined!`, 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['success-toast']
+          });
+        },
+        error => {
+          console.error('Erreur lors de la tentative de rejoindre le club:', error);
+          this.snackBar.open('You are already member of this club', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['error-toast']
+          });
+        }
+      );
+    } catch (error) {
+      console.error('Erreur lors du décodage du token:', error);
+      this.snackBar.open('Erreur lors de l\'identification de l\'utilisateur', 'Fermer', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['error-toast']
+      });
     }
   }
 
@@ -321,5 +388,191 @@ export class ClubsComponent implements OnInit {
   changeJokeLanguage(language: string): void {
     this.selectedLanguage = language;
     this.fetchJoke();
+  }
+
+  // Rafraîchir les recommandations
+refreshRecommendations(): void {
+  this.loadRecommendations();
+  this.snackBar.open('Recommandations mises à jour', 'Fermer', {
+    duration: 2000,
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom'
+  });
+}
+
+// Ignorer une recommandation (masquer de l'UI)
+ignoreRecommendation(event: Event, clubId: number): void {
+  event.stopPropagation();
+  this.recommendedClubs = this.recommendedClubs.filter(club => club.id_club !== clubId);
+  
+  if (this.recommendedClubs.length === 0) {
+    this.showRecommendations = false;
+  }
+  
+  this.snackBar.open('Recommandation ignorée', 'Annuler', {
+    duration: 3000,
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom'
+  }).onAction().subscribe(() => {
+    // Si l'utilisateur clique sur Annuler, on recharge les recommandations
+    this.loadRecommendations();
+  });
+}
+
+// Méthode pour obtenir l'ID utilisateur
+private getCurrentUserId(): number {
+  const token = this.storageService.getToken();
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+  
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.idUser;
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    throw new Error('Invalid token format');
+  }
+}
+
+// Méthode améliorée pour charger les clubs
+loadUserClubs(): void {
+  this.isLoadingClubs = true;
+  this.errorLoadingClubs = false;
+  this.userClubs = []; // Reset la liste avant le rechargement
+
+  try {
+    const userId = this.getCurrentUserId();
+    
+    this.clubService.getClubsByUser(userId).subscribe({
+      next: (clubs) => {
+        this.userClubs = clubs;
+        this.isLoadingClubs = false;
+      },
+      error: (error) => {
+        console.error('Error loading clubs:', error);
+        this.isLoadingClubs = false;
+        this.errorLoadingClubs = true;
+      }
+    });
+  } catch (error) {
+    this.isLoadingClubs = false;
+    this.errorLoadingClubs = true;
+  }
+}
+
+// Méthode améliorée pour basculer le dropdown
+toggleMyClubsDropdown(event: Event): void {
+  event.stopPropagation();
+  
+  this.isMyClubsDropdownOpen = !this.isMyClubsDropdownOpen;
+  
+  if (this.isMyClubsDropdownOpen) {
+    if (this.userClubs.length === 0) {
+      this.loadUserClubs();
+    }
+    // Ajouter un écouteur manuel pour la fermeture au scroll
+    window.addEventListener('scroll', this.closeOnScroll.bind(this), true);
+  } else {
+    window.removeEventListener('scroll', this.closeOnScroll.bind(this), true);
+  }
+}
+
+// Méthode pour fermer au scroll
+private closeOnScroll(): void {
+  if (this.isMyClubsDropdownOpen) {
+    this.closeMyClubsDropdown();
+  }
+}
+
+// Méthode pour fermer le dropdown
+closeMyClubsDropdown(): void {
+  this.isMyClubsDropdownOpen = false;
+  window.removeEventListener('scroll', this.closeOnScroll.bind(this), true);
+}
+// Add this method to your ClubsComponent class
+navigateToUserClub(clubId: number): void {
+  this.closeMyClubsDropdown();
+  this.router.navigate(['/front/club-home', clubId]); // Ajouter le segment 'front'
+}
+
+  // Close dropdown when clicking outside
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const dropdown = document.querySelector('.user-dropdown-container');
+    
+    if (dropdown && !dropdown.contains(target) && this.showDropdown) {
+      this.showDropdown = false;
+    }
+  }
+
+  checkLoginStatus() {
+    // Use the storage service to check login status
+    this.isLoggedIn = this.storageService.isLoggedIn();
+    
+    if (this.isLoggedIn) {
+      const user = this.userService.user || this.storageService.getUser();
+      if (user) {
+        this.userEmail = user.email;
+      } else {
+        // If user data is not available, fetch it from the API
+        this.userService.getUserInfo().subscribe({
+          next: (userResponse) => {
+            this.userEmail = userResponse.email;
+          },
+          error: (err) => {
+            console.error('Error fetching user info:', err);
+          }
+        });
+      }
+    }
+  }
+
+  navigateToLogin() {
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  toggleDropdown(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation(); // Prevent document click from immediately closing dropdown
+    }
+    this.showDropdown = !this.showDropdown;
+  }
+
+  closeDropdown() {
+    this.showDropdown = false;
+  }
+
+  logout() {
+    this.userService.logout().subscribe({
+      next: () => {
+        this.storageService.clean(); // Make sure to clear storage
+        this.isLoggedIn = false;
+        this.userEmail = '';
+        this.closeDropdown();
+        this.router.navigate(['/front']);
+      },
+      error: (err) => {
+        console.error('Error during logout:', err);
+        // Even if there's an error, we clean up local state
+        this.storageService.clean();
+        this.isLoggedIn = false;
+        this.userEmail = '';
+        this.closeDropdown();
+        this.router.navigate(['/front']);
+      }
+    });
+  }
+
+  navigateToSettings() {
+    this.closeDropdown();
+    this.router.navigate(['/settings']);
+  }
+  navigateToRec() {
+    this.closeDropdown();
+    this.router.navigate(['/reclamationf']);
   }
 }

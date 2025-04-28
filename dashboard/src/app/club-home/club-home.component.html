@@ -1,0 +1,151 @@
+<!-- Club Home Template -->
+<div class="club-home-container">
+    <!-- Loading Spinner -->
+    <div class="loading-state" *ngIf="isLoading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading club details...</p>
+    </div>
+  
+    <!-- Error State -->
+    <div class="error-state" *ngIf="error && !isLoading">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <h3>Failed to load club details</h3>
+      <p>Something went wrong while trying to load the club information.</p>
+      <div class="error-actions">
+        <button mat-raised-button color="primary" (click)="loadClubDetails()">Try Again</button>
+        <button mat-button (click)="navigateBack()">Go Back to Clubs</button>
+      </div>
+    </div>
+  
+    <!-- Club Content -->
+    <div class="club-content" *ngIf="!isLoading && !error && club" @fadeIn>
+      <!-- Club Header -->
+      <div class="club-header" [style.background-color]="getCategoryColor(club.categorie)">
+        <button mat-icon-button class="back-button" (click)="navigateBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        
+        <div class="header-content">
+          <div class="club-identity">
+            <div class="club-logo" *ngIf="club.logo">
+              <img [src]="club.logo" alt="{{club.name}} logo">
+            </div>
+            <div class="club-info">
+              <h1 class="club-name">{{club.name}}</h1>
+              <p class="club-category">{{club.categorie}}</p>
+              <p class="club-members">{{getMemberCountText(club.members?.length || 0)}}</p>
+            </div>
+          </div>
+          
+          <div class="club-actions">
+            <button mat-raised-button color="accent" *ngIf="!isMember" (click)="joinClub()">
+              <mat-icon>person_add</mat-icon> Join Club
+            </button>
+            <button mat-stroked-button color="warn" *ngIf="isMember && !isCreator" (click)="leaveClub()">
+              <mat-icon>exit_to_app</mat-icon> Leave Club
+            </button>
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Club options" *ngIf="isMember">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item *ngIf="isCreator">
+                <mat-icon>edit</mat-icon>
+                <span>Edit Club</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>notifications</mat-icon>
+                <span>Notifications</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>share</mat-icon>
+                <span>Share</span>
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+        
+        <!-- Club Slogan -->
+        <div class="club-slogan" *ngIf="club.slogan">
+          <q>{{club.slogan}}</q>
+        </div>
+      </div>
+  
+    <!-- Modern Navigation Tabs -->
+  <nav mat-tab-nav-bar [backgroundColor]="'primary'" class="club-nav">
+    <a mat-tab-link
+       (click)="setActiveTab('home')"
+       [active]="activeTab === 'home'">
+      <mat-icon>dashboard</mat-icon> Home
+    </a>
+    <a mat-tab-link
+       (click)="setActiveTab('members')"
+       [active]="activeTab === 'members'">
+      <mat-icon>people</mat-icon> Members
+      <span class="badge" *ngIf="hasNewMembers">{{newMembersCount}}</span>
+    </a>
+  </nav>
+  
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Home Tab -->
+        <div class="tab-panel" *ngIf="activeTab === 'home'">
+          <div class="club-dashboard">
+            <mat-card class="club-description-card">
+              <mat-card-header>
+                <mat-card-title>About This Club</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{club.description}}</p>
+              </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="announcements-card">
+              <mat-card-header>
+                <mat-card-title>Announcements</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div *ngIf="club.announcements?.length">
+                  <div class="announcement" *ngFor="let announcement of club.announcements">
+                    <!-- Remplacez announcement.date par announcement.createdAt -->
+                    <p class="announcement-date">{{announcement.createdAt | date:'medium'}}</p>
+                    <h3>{{announcement.title}}</h3>
+                    <p>{{announcement.content}}</p>
+                  </div>
+                </div>
+                <div class="empty-state" *ngIf="!club.announcements?.length">
+                  <mat-icon>announcement</mat-icon>
+                  <p>No announcements yet.</p>
+                  <button mat-button color="primary" *ngIf="isCreator">Create Announcement</button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        
+        <!-- Members Tab -->
+        <div class="tab-panel" *ngIf="activeTab === 'members'">
+          <div class="members-list">
+            <h2>Club Members</h2>
+            
+            <div class="member-grid" *ngIf="club.members?.length">
+              <mat-card class="member-card" *ngFor="let member of club.members">
+                <div class="member-avatar">
+                  <mat-icon *ngIf="!member.profileImage">person</mat-icon>
+                  <img *ngIf="member.profileImage" [src]="member.profileImage" [alt]="member.username">
+                </div>
+                <div class="member-info">
+                  <h3>{{member.username}}</h3>
+                  <p *ngIf="member.idUser === club.creator?.idUser" class="creator-badge">Creator</p>
+                </div>
+              </mat-card>
+            </div>
+            
+            <div class="empty-state" *ngIf="!club.members?.length">
+              <mat-icon>people</mat-icon>
+              <p>No members yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

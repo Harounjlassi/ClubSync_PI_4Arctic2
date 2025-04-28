@@ -112,13 +112,17 @@ public class ClubController  {
 
         return ResponseEntity.ok(recommendations);
     }
+    @Operation(description = "Récupérer les clubs d'un utilisateur")
+    @GetMapping("/retrieveClubsByUser/{userId}")
+    public ResponseEntity<List<Club>> getClubsByUser(@PathVariable Long userId) {
+        try {
+            List<Club> userClubs = iClubservice.getClubsByUserId(userId);
+            return ResponseEntity.ok(userClubs);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
 
 
-
-
-
-
-
-}
+    }}
 
 

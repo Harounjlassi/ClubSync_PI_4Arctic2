@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tn.esprit.clubsync.Repo.UserRepository;
 import tn.esprit.clubsync.dtos.UserRequest;
@@ -12,11 +13,14 @@ import tn.esprit.clubsync.dtos.UserStatsResponse;
 import tn.esprit.clubsync.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class iUsersServiceImpl implements IUserService {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -90,6 +94,25 @@ public class iUsersServiceImpl implements IUserService {
                 .photoProfil(user.getPhotoProfil())
                 .role(roles)
                 .build();
+    }
+
+    @Override
+    public void updatePassword(User user, String newPassword) {
+
+
+        // Encode the new password
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        // Update the user's password
+        user.setPassword(encodedPassword);
+
+        // Save the updated user to the database
+        userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
 

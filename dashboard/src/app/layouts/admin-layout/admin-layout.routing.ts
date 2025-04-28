@@ -13,6 +13,7 @@ import { ClubMembersComponent } from 'app/club-members/club-members.component';
 import { AnnouncementListComponent } from 'app/announcement-list/announcement-list.component';
 import { UserListComponent } from 'app/user-list/user-list.component';
 import { UserRegisterDialogComponent } from 'app/user-register-dialog/user-register-dialog.component';  
+import { ReclamationListComponent } from 'app/reclamation/reclamation-list/reclamation-list.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -70,7 +71,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'announcment-list', component: AnnouncementListComponent },
     { path: 'user-list', component: UserListComponent },
     {path: 'user-register', component: UserRegisterDialogComponent},// Nouvelle route pour UserRegisterDialogComponent
-      
+    {path: 'reclamation-list', component: ReclamationListComponent},
       
     // Nouvelle route pour ClubListComponent
 

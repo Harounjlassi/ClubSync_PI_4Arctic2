@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { Club } from '../models/club.model';
 import { User } from 'app/models/user.model';
 
@@ -11,6 +11,10 @@ export class ClubService {
   private baseUrl = 'http://localhost:8080/clubsync/club'; // Ajout de /clubsync
 
   constructor(private http: HttpClient) {}
+
+  private clubUpdateSubject = new BehaviorSubject<void>(null);
+
+
 
   getAllClubs(): Observable<Club[]> {
     return this.http.get<Club[]>(`${this.baseUrl}/retrieveAllClub`).pipe(
@@ -93,6 +97,27 @@ export class ClubService {
   removeMemberFromClub(clubId: number, userId: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/${clubId}/removeMember/${userId}`);
   }
+
+  // Ajoutez cette méthode pour récupérer les clubs d'un utilisateur
+getClubsByUser(userId: number): Observable<Club[]> {
+  return this.http.get<Club[]>(`${this.baseUrl}/retrieveClubsByUser/${userId}`).pipe(
+    catchError(error => {
+      console.error('Error fetching user clubs:', error);
+      return of([]);
+    })
+  );
+}
+
+
+// Méthode pour notifier les changements
+notifyClubUpdate() {
+  this.clubUpdateSubject.next();
+}
+
+// Observable pour écouter les mises à jour
+get clubUpdates$() {
+  return this.clubUpdateSubject.asObservable();
+}
 
 
 }

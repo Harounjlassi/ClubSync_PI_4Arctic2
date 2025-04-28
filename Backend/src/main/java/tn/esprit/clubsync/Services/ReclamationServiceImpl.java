@@ -29,16 +29,17 @@ public class ReclamationServiceImpl implements IReclamationService {
         }
         System.out.println("📌 User ID passed: " + nuser.getIdUser());
 
-
         User managedUser = userRepository.findById(nuser.getIdUser())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         System.out.println("✅ Managed User: " + managedUser.getEmail());
+
         Reclamation reclamation = new Reclamation();
         reclamation.setNuser(managedUser);
-        reclamation.setDateReclamation(new Date());
+        reclamation.setDateReclamation(dto.getDateReclamation()); // ✔ Utiliser la date du DTO
         reclamation.setTypeReclamation(dto.getTypeReclamation());
         reclamation.setDescription(dto.getDescription());
-        reclamation.setStatut(Reclamation.StatutReclamation.IN_PROGRESS);
+        reclamation.setStatut(dto.getStatut()); // ✔ utiliser le statut du DTO (pas toujours IN_PROGRESS sinon bug logique)
+        reclamation.setDateResolution(dto.getDateResolution()); // ✔ ajouter dateResolution
         reclamation.setArchived(false);
 
         return reclamationRepository.save(reclamation);

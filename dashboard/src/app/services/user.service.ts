@@ -256,11 +256,11 @@ export class UserService {
         catchError(this.handleError)
       );
     }
-    verifyCode(verifyRequest: { email: string, code: string }): Observable<any> {
+   /* verifyCode(verifyRequest: { email: string, code: string }): Observable<any> {
       return this.http.post<any>(`${this.authUrl}/verify-code`, verifyRequest).pipe(
         catchError(this.handleError)
       );
-    }
+    }*/
   
     getUserInfo(): Observable<any> {
       return this.http.get<any>(`${this.authUrl}/me`, {
@@ -277,6 +277,21 @@ export class UserService {
       return new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
+      });
+    }
+    forgotPassword(email: string): Observable<any> {
+      return this.http.post(`${this.authUrl}/forgot-password`, { email });
+    }
+  
+    verifyCode(email: string, code: string): Observable<any> {
+      return this.http.post(`${this.authUrl}/verify-code`, { email, code });
+    }
+  
+    resetPassword(email: string, token: string, newPassword: string): Observable<any> {
+      return this.http.post(`${this.authUrl}/reset-password`, { 
+        email, 
+        token, 
+        newPassword 
       });
     }
     getUserId(): number | null {

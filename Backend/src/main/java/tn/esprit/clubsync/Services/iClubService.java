@@ -20,7 +20,7 @@ public interface iClubService {
 
     public  List<User> getAllMembersByClubId(Long clubId);
 
-
+    List<Club> getClubsByUserId(Long userId); // Ajoutez cette ligne
 }
 
 

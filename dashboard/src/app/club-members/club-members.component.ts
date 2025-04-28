@@ -25,6 +25,10 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
   membersDataSource = new MatTableDataSource<User>([]);
   usersDataSource = new MatTableDataSource<User>([]);
 
+  isAdding = false;
+  isRemoving = false;
+  currentProcessingUserId: number | null = null;
+
   @ViewChild('membersPaginator') membersPaginator!: MatPaginator;
   @ViewChild('usersPaginator') usersPaginator!: MatPaginator;
 
@@ -105,7 +109,7 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
       () => {
         this.loadMembers();
         this.loadAvailableUsers();
-        this.snackBar.open('Membre ajouté avec succès', 'Fermer', {
+        this.snackBar.open('New member added successfully', 'Close', {
           duration: 3000
         });
       },
@@ -123,7 +127,7 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
       () => {
         this.loadMembers();
         this.loadAvailableUsers();
-        this.snackBar.open('Membre supprimé avec succès', 'Fermer', {
+        this.snackBar.open('Member removed successfully', 'Close', {
           duration: 3000
         });
       },

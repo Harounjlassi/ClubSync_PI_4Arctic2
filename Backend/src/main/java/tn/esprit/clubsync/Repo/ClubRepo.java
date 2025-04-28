@@ -13,5 +13,6 @@ public interface ClubRepo extends JpaRepository<Club, Long> {
     Optional<Club> findByNameContainingIgnoreCase(@Param("name") String name);
 
     List<Club> findByCategorieIgnoreCase(String categorie);
-
+    @Query("SELECT c FROM Club c JOIN c.members m WHERE m.idUser = :userId")
+    List<Club> findClubsByUserId(@Param("userId") Long userId);
 }

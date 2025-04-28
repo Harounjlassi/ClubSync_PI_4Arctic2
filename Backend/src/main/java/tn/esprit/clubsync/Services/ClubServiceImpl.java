@@ -101,10 +101,10 @@ public class ClubServiceImpl implements iClubService {
         return club.getMembers(); // Retourne la liste des membres
     }
 
-
-
-
-
+    @Override
+    public List<Club> getClubsByUserId(Long userId) {
+        return ClubRepo.findClubsByUserId(userId);
+    }
 
 
 }

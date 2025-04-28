@@ -56,6 +56,15 @@ import { CommonModule } from '@angular/common';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserRegisterDialogComponent } from './user-register-dialog/user-register-dialog.component';
 import { UserEditDialogComponent } from './user-edit-dialog/user-edit-dialog.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { VerifyCodeComponent } from './verify-code/verify-code.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { ReclamationListComponent } from './reclamation/reclamation-list/reclamation-list.component';
+import { ReclamationEditComponent } from './reclamation/reclamation-edit/reclamation-edit.component';
+import { ReclamationDetailComponent } from './reclamation/reclamation-detail/reclamation-detail.component';
+import { ReclamationFormComponent } from './reclamationf/reclamation-form/reclamation-form.component';
+import { ClubHomeComponent } from './club-home/club-home.component';
 
 @NgModule({
   imports: [
@@ -122,7 +131,16 @@ import { UserEditDialogComponent } from './user-edit-dialog/user-edit-dialog.com
     RegisterComponent,
     UserListComponent,
     UserRegisterDialogComponent,
-    UserEditDialogComponent
+    UserEditDialogComponent,
+    ForgotPasswordComponent,
+    VerifyCodeComponent,
+    ResetPasswordComponent,
+    UserSettingsComponent,
+    ReclamationListComponent,
+    ReclamationEditComponent,
+    ReclamationDetailComponent,
+    ReclamationFormComponent,
+    ClubHomeComponent
   ],
   providers: [
     {

@@ -110,6 +110,6 @@ export class HomeComponent implements OnInit {
   }
   navigateToRec() {
     this.closeDropdown();
-    this.router.navigate(['/reclamationform']);
+    this.router.navigate(['/reclamationf']);
   }
 }
