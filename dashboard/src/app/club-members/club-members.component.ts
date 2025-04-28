@@ -25,6 +25,10 @@ export class ClubMembersComponent implements OnInit, AfterViewInit {
   membersDataSource = new MatTableDataSource<User>([]);
   usersDataSource = new MatTableDataSource<User>([]);
 
+  isAdding = false;
+  isRemoving = false;
+  currentProcessingUserId: number | null = null;
+
   @ViewChild('membersPaginator') membersPaginator!: MatPaginator;
   @ViewChild('usersPaginator') usersPaginator!: MatPaginator;
 

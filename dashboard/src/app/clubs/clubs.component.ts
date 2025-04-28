@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ClubService } from '../services/club.service';
 import { Club } from '../models/club.model';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { JokeService } from '../services/joke.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from 'app/services/storage.service';
 import { RecommendationService } from '../services/recommendation.service';
+import { UserService } from 'app/services/user.service';
 
 @Component({
   selector: 'app-clubs',
@@ -48,6 +49,11 @@ export class ClubsComponent implements OnInit {
   isMyClubsDropdownOpen = false;
   isLoadingClubs = false;
   errorLoadingClubs = false;
+
+  isLoggedIn = false;
+  userEmail: string = '';
+  showDropdown = false;
+
   
 
 
@@ -57,12 +63,18 @@ export class ClubsComponent implements OnInit {
     private jokeService: JokeService, 
     private snackBar: MatSnackBar,
     private storageService: StorageService ,// Ajoutez cette ligne
-    private recommendationService: RecommendationService // Ajoutez cette ligne
+    private recommendationService: RecommendationService ,// Ajoutez cette ligne
+    private userService: UserService,
+    
 
 
   ) {}
 
   ngOnInit(): void {
+    // Ajouter cette subscription
+  this.clubService.clubUpdates$.subscribe(() => {
+    this.loadUserClubs();
+  });
     setTimeout(() => {
       const preloader = document.getElementById('preloader-active');
       if (preloader) {
@@ -426,6 +438,7 @@ private getCurrentUserId(): number {
 loadUserClubs(): void {
   this.isLoadingClubs = true;
   this.errorLoadingClubs = false;
+  this.userClubs = []; // Reset la liste avant le rechargement
 
   try {
     const userId = this.getCurrentUserId();
@@ -439,16 +452,11 @@ loadUserClubs(): void {
         console.error('Error loading clubs:', error);
         this.isLoadingClubs = false;
         this.errorLoadingClubs = true;
-        this.snackBar.open('Error loading your clubs', 'Close', {
-          duration: 3000,
-          panelClass: ['error-toast']
-        });
       }
     });
   } catch (error) {
     this.isLoadingClubs = false;
     this.errorLoadingClubs = true;
-    console.error('Authentication error:', error);
   }
 }
 
@@ -481,4 +489,89 @@ closeMyClubsDropdown(): void {
   this.isMyClubsDropdownOpen = false;
   window.removeEventListener('scroll', this.closeOnScroll.bind(this), true);
 }
+// Add this method to your ClubsComponent class
+navigateToUserClub(clubId: number): void {
+  this.closeMyClubsDropdown();
+  this.router.navigate(['/front/club-home', clubId]); // Ajouter le segment 'front'
+}
+
+  // Close dropdown when clicking outside
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const dropdown = document.querySelector('.user-dropdown-container');
+    
+    if (dropdown && !dropdown.contains(target) && this.showDropdown) {
+      this.showDropdown = false;
+    }
+  }
+
+  checkLoginStatus() {
+    // Use the storage service to check login status
+    this.isLoggedIn = this.storageService.isLoggedIn();
+    
+    if (this.isLoggedIn) {
+      const user = this.userService.user || this.storageService.getUser();
+      if (user) {
+        this.userEmail = user.email;
+      } else {
+        // If user data is not available, fetch it from the API
+        this.userService.getUserInfo().subscribe({
+          next: (userResponse) => {
+            this.userEmail = userResponse.email;
+          },
+          error: (err) => {
+            console.error('Error fetching user info:', err);
+          }
+        });
+      }
+    }
+  }
+
+  navigateToLogin() {
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  toggleDropdown(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation(); // Prevent document click from immediately closing dropdown
+    }
+    this.showDropdown = !this.showDropdown;
+  }
+
+  closeDropdown() {
+    this.showDropdown = false;
+  }
+
+  logout() {
+    this.userService.logout().subscribe({
+      next: () => {
+        this.storageService.clean(); // Make sure to clear storage
+        this.isLoggedIn = false;
+        this.userEmail = '';
+        this.closeDropdown();
+        this.router.navigate(['/front']);
+      },
+      error: (err) => {
+        console.error('Error during logout:', err);
+        // Even if there's an error, we clean up local state
+        this.storageService.clean();
+        this.isLoggedIn = false;
+        this.userEmail = '';
+        this.closeDropdown();
+        this.router.navigate(['/front']);
+      }
+    });
+  }
+
+  navigateToSettings() {
+    this.closeDropdown();
+    this.router.navigate(['/settings']);
+  }
+  navigateToRec() {
+    this.closeDropdown();
+    this.router.navigate(['/reclamationform']);
+  }
 }

@@ -324,22 +324,19 @@ public class ChatServiceImpl implements ChatService {
         String bestMatch = null;
         int minDistance = Integer.MAX_VALUE;
 
-        for (String category : categories) {
-            if (lowerPrompt.contains(category)) {
-                return category; // Exact match
-            }
-            // Check for approximate match using Levenshtein distance
-            int distance = levenshtein.apply(lowerPrompt, category);
-            if (distance < minDistance) {
-                minDistance = distance;
-                bestMatch = category;
+        // Split prompt into words and check each
+        String[] words = lowerPrompt.split("\\s+");
+        for (String word : words) {
+            for (String category : categories) {
+                int distance = levenshtein.apply(word, category);
+                if (distance < minDistance && distance <= 2) { // Allow minor typos
+                    minDistance = distance;
+                    bestMatch = category;
+                }
             }
         }
-
-        // Threshold for typo tolerance (adjust as needed)
-        return (minDistance <= 2) ? bestMatch : null;
+        return bestMatch;
     }
-
     private String truncateDescription(String description, int maxLength) {
         if (description == null) return "Description not available";
         if (description.length() <= maxLength) return description;

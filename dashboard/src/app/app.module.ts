@@ -55,6 +55,7 @@ import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserRegisterDialogComponent } from './user-register-dialog/user-register-dialog.component';
+import { ClubHomeComponent } from './club-home/club-home.component';
 
 @NgModule({
   imports: [
@@ -121,6 +122,7 @@ import { UserRegisterDialogComponent } from './user-register-dialog/user-registe
     RegisterComponent,
     UserListComponent,
     UserRegisterDialogComponent,
+    ClubHomeComponent,
     
   ],
   providers: [

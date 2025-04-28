@@ -16,6 +16,7 @@ import { ChatComponent } from './chat/chat.component';
 import { JokeComponent } from './joke/joke.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
+import { ClubHomeComponent } from './club-home/club-home.component';
 
 const routes: Routes =[
   {
@@ -53,6 +54,8 @@ const routes: Routes =[
       { path: 'schedule', component: ScheduleComponent },  
       { path: 'clubs', component: ClubsComponent },
       { path: 'jokes', component: JokeComponent },
+      { path: 'club-home/:id', component: ClubHomeComponent },
+
 
 
       
