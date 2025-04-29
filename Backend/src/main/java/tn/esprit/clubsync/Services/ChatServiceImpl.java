@@ -27,12 +27,12 @@ public class ChatServiceImpl implements ChatService {
     @Autowired
     private ClubRepo clubRepo;
 
-    // Patterns for common question types
-    private static final Pattern INFORMATION_PATTERN = Pattern.compile("(?:qu[e'](?:st-ce que|s-ce|l est)|c'est quoi|info|parle[rz]?\\s+(?:de|du|des)|dis[\\s-]moi|explique[rz]?|information|présente[rz]?|raconte[rz]?).*");
-    private static final Pattern LISTING_PATTERN = Pattern.compile("(?:liste[rz]?|énumère[rz]?|montre[rz]?|affiche[rz]?|donner?\\s+la\\s+liste|quels?\\s+sont|y\\s+a[\\s-]t[\\s-]il|existe[\\s-]t[\\s-]il).*");
-    private static final Pattern RECOMMENDATION_PATTERN = Pattern.compile("(?:recommend|suggère[rz]?|conseil[ls]e[rz]?|propose[rz]?|meilleur).*");
-    private static final Pattern COMPARISON_PATTERN = Pattern.compile("(?:compare[rz]?|différence|versus|vs|ou).*");
-    private static final Pattern GREETING_PATTERN = Pattern.compile("(?:bonjour|salut|hello|coucou|hey|hi|bonsoir|comment\\s+ça\\s+va).*");
+    // Patterns for common question types in English
+    private static final Pattern INFORMATION_PATTERN = Pattern.compile("(?:what(?:'s| is)|tell(?:\\s+me)?\\s+about|explain|describe|information|about|who|introduce).*");
+    private static final Pattern LISTING_PATTERN = Pattern.compile("(?:list|show|display|give(?:\\s+me)?\\s+(?:a\\s+)?list|what\\s+(?:are|is)\\s+the|are\\s+there).*");
+    private static final Pattern RECOMMENDATION_PATTERN = Pattern.compile("(?:recommend|suggest|advise|propose|best).*");
+    private static final Pattern COMPARISON_PATTERN = Pattern.compile("(?:compare|difference|versus|vs|or).*");
+    private static final Pattern GREETING_PATTERN = Pattern.compile("(?:hello|hi|hey|good\\s+(?:morning|afternoon|evening)|how\\s+are\\s+you).*");
 
     public ChatServiceImpl(ChatClient.Builder builder) {
         this.chatClient = builder.build();
@@ -41,7 +41,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public String ask(String prompt) {
         if (prompt == null || prompt.trim().isEmpty()) {
-            return "Bonjour ! Je suis le chatbot de ClubSync. Comment puis-je vous aider concernant nos clubs ?";
+            return "Hello! I'm the ClubSync chatbot. How can I help you with information about our clubs?";
         }
 
         String cleanPrompt = prompt.trim();
@@ -60,7 +60,7 @@ public class ChatServiceImpl implements ChatService {
             }
 
             // Handle listing requests (all clubs or by category)
-            if (LISTING_PATTERN.matcher(lowerPrompt).matches() || lowerPrompt.contains("liste")) {
+            if (LISTING_PATTERN.matcher(lowerPrompt).matches() || lowerPrompt.contains("list")) {
                 // Check if requesting all clubs
                 if (isAskingForAllClubs(lowerPrompt)) {
                     return listAllClubs();
@@ -71,7 +71,7 @@ public class ChatServiceImpl implements ChatService {
                 if (category != null) {
                     List<Club> clubsInCategory = clubRepo.findByCategorieIgnoreCase(category);
                     if (clubsInCategory.isEmpty()) {
-                        return "Aucun club trouvé dans la catégorie " + category + ". Voulez-vous voir la liste de tous nos clubs ?";
+                        return "No clubs found in the " + category + " category. Would you like to see a list of all our clubs?";
                     } else {
                         return formatClubsInCategory(clubsInCategory, category);
                     }
@@ -95,59 +95,59 @@ public class ChatServiceImpl implements ChatService {
             }
 
             // If we reached here, it's a club-related question but we couldn't determine specifics
-            return "Je comprends que vous vous intéressez à nos clubs, mais je n'ai pas saisi précisément votre demande. Voulez-vous des informations sur un club spécifique, voir la liste des clubs par catégorie, ou avoir des recommandations ?";
+            return "I understand you're interested in our clubs, but I'm not sure exactly what you're asking. Would you like information about a specific club, see a list of clubs by category, or get recommendations?";
         } else {
             // For non-club related questions, return a polite message with guidance
-            return "Je suis désolé, je suis spécialisé dans les informations concernant les clubs de ClubSync. Pour toute autre question, merci de contacter notre équipe support. Puis-je vous aider à découvrir nos clubs ou à trouver des informations sur un club spécifique ?";
+            return "I'm sorry, I specialize in providing information about ClubSync clubs. For any other questions, please contact our support team. Can I help you discover our clubs or find information about a specific club?";
         }
     }
 
     private String handleGreeting(String lowerPrompt) {
-        if (lowerPrompt.contains("va") || lowerPrompt.contains("ça va")) {
-            return "Bonjour ! Je vais très bien, merci de demander. Je suis le chatbot de ClubSync, prêt à vous aider avec toutes vos questions concernant nos clubs. Que souhaitez-vous savoir ?";
+        if (lowerPrompt.contains("how are you")) {
+            return "Hello! I'm doing great, thanks for asking. I'm the ClubSync chatbot, ready to help you with any questions about our clubs. What would you like to know?";
         }
-        return "Bonjour ! Je suis le chatbot de ClubSync. Je peux vous renseigner sur nos différents clubs, leurs activités, ou vous aider à trouver un club qui correspond à vos centres d'intérêt. Comment puis-je vous aider aujourd'hui ?";
+        return "Hello! I'm the ClubSync chatbot. I can provide information about our various clubs, their activities, or help you find a club that matches your interests. How can I assist you today?";
     }
 
     private boolean isAboutClubSyncPlatform(String lowerPrompt) {
         List<String> platformTerms = Arrays.asList(
-                "clubsync", "plateforme", "application", "site", "service", "fonctionnement", "fonctionne",
-                "comment utiliser", "comment ça marche", "comment s'inscrire", "inscription", "adhésion"
+                "clubsync", "platform", "application", "site", "service", "how does it work", "works",
+                "how to use", "how to sign up", "registration", "membership", "join"
         );
         return platformTerms.stream().anyMatch(lowerPrompt::contains);
     }
 
     private String handleClubSyncPlatformQuestion(String lowerPrompt) {
-        if (lowerPrompt.contains("inscription") || lowerPrompt.contains("adhésion") || lowerPrompt.contains("s'inscrire") || lowerPrompt.contains("rejoindre")) {
-            return "Pour vous inscrire à un club sur ClubSync, c'est très simple :\n\n" +
-                    "1. Créez un compte sur notre plateforme ou connectez-vous\n" +
-                    "2. Parcourez notre catalogue de clubs\n" +
-                    "3. Visitez la page du club qui vous intéresse\n" +
-                    "4. Cliquez sur le bouton \"Rejoindre le club\"\n" +
-                    "5. Suivez les instructions pour compléter votre adhésion\n\n" +
-                    "Certains clubs peuvent avoir des critères d'admission spécifiques ou des frais d'adhésion. Ces informations sont détaillées sur la page de chaque club.";
-        } else if (lowerPrompt.contains("fonctionnement") || lowerPrompt.contains("fonctionne") || lowerPrompt.contains("comment ça marche")) {
-            return "ClubSync est une plateforme qui centralise tous les clubs de l'établissement. Voici comment ça fonctionne :\n\n" +
-                    "• Parcourez les clubs par catégorie ou recherchez un club spécifique\n" +
-                    "• Consultez les détails de chaque club (description, activités, membres, événements)\n" +
-                    "• Rejoignez les clubs qui vous intéressent\n" +
-                    "• Participez aux événements et activités\n" +
-                    "• Communiquez avec les autres membres\n\n" +
-                    "ClubSync facilite la gestion des clubs et rend l'information accessible à tous les étudiants.";
+        if (lowerPrompt.contains("registration") || lowerPrompt.contains("membership") || lowerPrompt.contains("sign up") || lowerPrompt.contains("join")) {
+            return "To join a club on ClubSync, it's very simple:\n\n" +
+                    "1. Create an account on our platform or log in\n" +
+                    "2. Browse our catalog of clubs\n" +
+                    "3. Visit the page of the club that interests you\n" +
+                    "4. Click on the \"Join club\" button\n" +
+                    "5. Follow the instructions to complete your membership\n\n" +
+                    "Some clubs may have specific admission criteria or membership fees. This information is detailed on each club's page.";
+        } else if (lowerPrompt.contains("how does it work") || lowerPrompt.contains("works")) {
+            return "ClubSync is a platform that centralizes all the clubs in the establishment. Here's how it works:\n\n" +
+                    "• Browse clubs by category or search for a specific club\n" +
+                    "• View details of each club (description, activities, members, events)\n" +
+                    "• Join clubs that interest you\n" +
+                    "• Participate in events and activities\n" +
+                    "• Communicate with other members\n\n" +
+                    "ClubSync facilitates club management and makes information accessible to all students.";
         } else {
-            return "ClubSync est la plateforme officielle de gestion des clubs de notre établissement. Elle permet de :\n\n" +
-                    "• Découvrir tous les clubs disponibles\n" +
-                    "• Consulter leurs activités et événements\n" +
-                    "• Rejoindre facilement un club\n" +
-                    "• Rester informé des actualités\n\n" +
-                    "Que souhaitez-vous savoir de plus sur ClubSync ou nos clubs ?";
+            return "ClubSync is the official club management platform of our establishment. It allows you to:\n\n" +
+                    "• Discover all available clubs\n" +
+                    "• Check their activities and events\n" +
+                    "• Easily join a club\n" +
+                    "• Stay informed about news\n\n" +
+                    "What else would you like to know about ClubSync or our clubs?";
         }
     }
 
     private boolean isAskingForAllClubs(String lowerPrompt) {
         List<String> allClubsTerms = Arrays.asList(
-                "tous les clubs", "toutes les associations", "liste complète", "liste des clubs",
-                "ensemble des clubs", "tous les", "toutes les", "tous vos clubs", "toutes vos associations"
+                "all clubs", "all associations", "complete list", "list of clubs",
+                "all the clubs", "all of the", "all your clubs", "all your associations"
         );
         return allClubsTerms.stream().anyMatch(lowerPrompt::contains);
     }
@@ -155,18 +155,18 @@ public class ChatServiceImpl implements ChatService {
     private String listAllClubs() {
         List<Club> allClubs = clubRepo.findAll();
         if (allClubs.isEmpty()) {
-            return "Aucun club n'est actuellement enregistré dans notre système.";
+            return "No clubs are currently registered in our system.";
         }
 
         // Group clubs by category
         Map<String, List<Club>> clubsByCategory = new HashMap<>();
         for (Club club : allClubs) {
-            String category = club.getCategorie() != null ? club.getCategorie() : "Autre";
+            String category = club.getCategorie() != null ? club.getCategorie() : "Other";
             clubsByCategory.computeIfAbsent(category, k -> new ArrayList<>()).add(club);
         }
 
         StringBuilder response = new StringBuilder();
-        response.append("📋 **Liste complète de nos clubs** 📋\n\n");
+        response.append("📋 **Complete List of Our Clubs** 📋\n\n");
 
         clubsByCategory.forEach((category, clubs) -> {
             response.append(getCategoryIcon(category)).append(" **").append(category.toUpperCase()).append("** (").append(clubs.size()).append(")\n");
@@ -176,14 +176,14 @@ public class ChatServiceImpl implements ChatService {
             response.append("\n");
         });
 
-        response.append("Pour plus de détails sur un club spécifique, demandez-moi des informations sur le club qui vous intéresse.");
+        response.append("For more details about a specific club, ask me for information about the club you're interested in.");
         return response.toString();
     }
 
     private String recommendClubsInCategory(String category) {
         List<Club> clubsInCategory = clubRepo.findByCategorieIgnoreCase(category);
         if (clubsInCategory.isEmpty()) {
-            return "Je n'ai pas de clubs à recommander dans la catégorie " + category + " car aucun n'est enregistré. Voulez-vous explorer une autre catégorie ?";
+            return "I don't have any clubs to recommend in the " + category + " category as none are registered. Would you like to explore another category?";
         }
 
         // Sort by some criteria (e.g., number of members as a proxy for popularity)
@@ -193,24 +193,24 @@ public class ChatServiceImpl implements ChatService {
         List<Club> recommendedClubs = clubsInCategory.subList(0, Math.min(3, clubsInCategory.size()));
 
         StringBuilder response = new StringBuilder();
-        response.append("🌟 **Clubs recommandés en ").append(category.toUpperCase()).append("** 🌟\n\n");
+        response.append("🌟 **Recommended ").append(category.toUpperCase()).append(" Clubs** 🌟\n\n");
 
         for (int i = 0; i < recommendedClubs.size(); i++) {
             Club club = recommendedClubs.get(i);
             response.append((i + 1)).append(". **").append(club.getName()).append("**\n")
                     .append("   _\"").append(club.getSlogan()).append("\"_\n")
-                    .append("   👥 ").append(club.getMembers().size()).append(" membres\n")
+                    .append("   👥 ").append(club.getMembers().size()).append(" members\n")
                     .append("   📝 ").append(truncateDescription(club.getDescription(), 100)).append("\n\n");
         }
 
-        response.append("Ces clubs sont particulièrement actifs et populaires. Pour rejoindre l'un d'entre eux ou en savoir plus, demandez-moi des détails sur celui qui vous intéresse !");
+        response.append("These clubs are particularly active and popular. To join one or learn more, ask me for details about the one that interests you!");
         return response.toString();
     }
 
     private String recommendPopularClubs() {
         List<Club> allClubs = clubRepo.findAll();
         if (allClubs.isEmpty()) {
-            return "Aucun club n'est actuellement enregistré dans notre système pour vous faire des recommandations.";
+            return "No clubs are currently registered in our system to make recommendations.";
         }
 
         // Sort by number of members (popularity)
@@ -220,17 +220,17 @@ public class ChatServiceImpl implements ChatService {
         List<Club> popularClubs = allClubs.subList(0, Math.min(3, allClubs.size()));
 
         StringBuilder response = new StringBuilder();
-        response.append("🏆 **Clubs les plus populaires** 🏆\n\n");
+        response.append("🏆 **Most Popular Clubs** 🏆\n\n");
 
         for (int i = 0; i < popularClubs.size(); i++) {
             Club club = popularClubs.get(i);
             response.append((i + 1)).append(". **").append(club.getName()).append("** (").append(club.getCategorie()).append(")\n")
                     .append("   _\"").append(club.getSlogan()).append("\"_\n")
-                    .append("   👥 ").append(club.getMembers().size()).append(" membres\n")
+                    .append("   👥 ").append(club.getMembers().size()).append(" members\n")
                     .append("   📝 ").append(truncateDescription(club.getDescription(), 100)).append("\n\n");
         }
 
-        response.append("Ces clubs sont nos plus populaires en ce moment. Vous pouvez me demander plus de détails sur celui qui vous intéresse !");
+        response.append("These are our most popular clubs right now. You can ask me for more details about the one that interests you!");
         return response.toString();
     }
 
@@ -240,42 +240,42 @@ public class ChatServiceImpl implements ChatService {
             Club club = optionalClub.get();
 
             // Extract information type from query
-            if (lowerPrompt.contains("description") || lowerPrompt.contains("objectif") || lowerPrompt.contains("présentation") ||
-                    lowerPrompt.contains("c'est quoi") || lowerPrompt.contains("parle") || INFORMATION_PATTERN.matcher(lowerPrompt).matches()) {
-                return "📚 **Description du club " + club.getName() + "**\n\n"
+            if (lowerPrompt.contains("description") || lowerPrompt.contains("objective") || lowerPrompt.contains("presentation") ||
+                    lowerPrompt.contains("what is") || lowerPrompt.contains("about") || INFORMATION_PATTERN.matcher(lowerPrompt).matches()) {
+                return "📚 **Description of " + club.getName() + " club**\n\n"
                         + club.getDescription() + "\n\n💡 *Slogan* : \"" + club.getSlogan() + "\"";
             }
-            if (lowerPrompt.contains("slogan") || lowerPrompt.contains("devise") || lowerPrompt.contains("phrase")) {
-                return "💫 **Slogan du club " + club.getName() + "**\n\n« "
+            if (lowerPrompt.contains("slogan") || lowerPrompt.contains("motto") || lowerPrompt.contains("phrase")) {
+                return "💫 **Slogan of " + club.getName() + " club**\n\n« "
                         + club.getSlogan() + " »\n\n_" + club.getDescription() + "_";
             }
-            if (lowerPrompt.contains("catégorie") || lowerPrompt.contains("type") || lowerPrompt.contains("domaine")) {
-                return "🏷️ **Catégorie du club " + club.getName() + "**\n\n"
+            if (lowerPrompt.contains("category") || lowerPrompt.contains("type") || lowerPrompt.contains("field")) {
+                return "🏷️ **Category of " + club.getName() + " club**\n\n"
                         + club.getCategorie() + "\n\n💡 *Description* : " + club.getDescription();
             }
-            if (lowerPrompt.contains("membres") || lowerPrompt.contains("combien") || lowerPrompt.contains("nombre") ||
-                    lowerPrompt.contains("participant") || lowerPrompt.contains("adhérent")) {
-                return "👥 **Membres du club " + club.getName() + "**\n\n"
-                        + club.getMembers().size() + " membres actifs\n\n✨ *Slogan* : \"" + club.getSlogan() + "\"";
+            if (lowerPrompt.contains("members") || lowerPrompt.contains("how many") || lowerPrompt.contains("number") ||
+                    lowerPrompt.contains("participant") || lowerPrompt.contains("people")) {
+                return "👥 **Members of " + club.getName() + " club**\n\n"
+                        + club.getMembers().size() + " active members\n\n✨ *Slogan* : \"" + club.getSlogan() + "\"";
             }
-            if (lowerPrompt.contains("créateur") || lowerPrompt.contains("fondateur") || lowerPrompt.contains("président") ||
-                    lowerPrompt.contains("responsable") || lowerPrompt.contains("qui a créé")) {
+            if (lowerPrompt.contains("creator") || lowerPrompt.contains("founder") || lowerPrompt.contains("president") ||
+                    lowerPrompt.contains("leader") || lowerPrompt.contains("who created")) {
                 return club.getCreator() != null ?
-                        "👤 **Créateur du club " + club.getName() + "**\n\n"
+                        "👤 **Creator of " + club.getName() + " club**\n\n"
                                 + club.getCreator().getFirstname() + " " + club.getCreator().getLastname()
-                                + "\n\n🏆 *Catégorie* : " + club.getCategorie() :
-                        "❌ **Créateur non renseigné**\n\nLe club " + club.getName() + " n'a pas de créateur enregistré.";
+                                + "\n\n🏆 *Category* : " + club.getCategorie() :
+                        "❌ **Creator not specified**\n\nThe " + club.getName() + " club doesn't have a registered creator.";
             }
-            if (lowerPrompt.contains("rejoindre") || lowerPrompt.contains("inscription") || lowerPrompt.contains("adhésion") ||
-                    lowerPrompt.contains("adhérer") || lowerPrompt.contains("comment s'inscrire")) {
-                return "📝 **Comment rejoindre le club " + club.getName() + "**\n\n"
-                        + "Pour rejoindre ce club, suivez ces étapes :\n\n"
-                        + "1. Connectez-vous à votre compte ClubSync\n"
-                        + "2. Visitez la page du club " + club.getName() + "\n"
-                        + "3. Cliquez sur le bouton \"Rejoindre\"\n"
-                        + "4. Suivez les instructions complémentaires\n\n"
-                        + "👥 Le club compte actuellement " + club.getMembers().size() + " membres\n\n"
-                        + "Pour toute question spécifique, vous pouvez contacter directement les responsables du club.";
+            if (lowerPrompt.contains("join") || lowerPrompt.contains("registration") || lowerPrompt.contains("membership") ||
+                    lowerPrompt.contains("sign up") || lowerPrompt.contains("how to join")) {
+                return "📝 **How to join the " + club.getName() + " club**\n\n"
+                        + "To join this club, follow these steps:\n\n"
+                        + "1. Log in to your ClubSync account\n"
+                        + "2. Visit the " + club.getName() + " club page\n"
+                        + "3. Click on the \"Join\" button\n"
+                        + "4. Follow the additional instructions\n\n"
+                        + "👥 The club currently has " + club.getMembers().size() + " members\n\n"
+                        + "For any specific questions, you can contact the club leaders directly.";
             }
 
             // Default: Return full club details
@@ -296,9 +296,9 @@ public class ChatServiceImpl implements ChatService {
             }
 
             if (suggestedName != null && bestDistance <= 3) {
-                return "Je n'ai pas trouvé de club nommé \"" + clubName + "\". Vouliez-vous dire : **" + suggestedName + "** ?";
+                return "I couldn't find a club named \"" + clubName + "\". Did you mean: **" + suggestedName + "** ?";
             } else {
-                return "Je n'ai pas trouvé de club nommé \"" + clubName + "\". Vous pouvez consulter la liste de tous nos clubs en me demandant \"liste des clubs\".";
+                return "I couldn't find a club named \"" + clubName + "\". You can see a list of all our clubs by asking me \"list of clubs\".";
             }
         }
     }
@@ -306,12 +306,12 @@ public class ChatServiceImpl implements ChatService {
     // Helper method to check if the prompt contains club-related terms
     private boolean containsClubRelatedTerms(String lowerPrompt) {
         List<String> clubTerms = Arrays.asList(
-                "club", "association", "groupe", "organisation", "équipe",
-                "adhérent", "membre", "inscription", "rejoindre", "adhésion",
-                "activité", "événement", "réunion", "rencontre", "session",
-                "sport", "art", "culture", "musique", "technologie", "science", "littérature",
-                "président", "secrétaire", "trésorier", "responsable", "animateur", "créateur", "fondateur",
-                "clubsync", "participer", "s'inscrire", "adhérer"
+                "club", "association", "group", "organization", "team",
+                "member", "membership", "registration", "join", "signup",
+                "activity", "event", "meeting", "gathering", "session",
+                "sport", "art", "culture", "music", "technology", "science", "literature",
+                "president", "secretary", "treasurer", "leader", "organizer", "creator", "founder",
+                "clubsync", "participate", "register", "enroll"
         );
 
         return clubTerms.stream().anyMatch(lowerPrompt::contains);
@@ -319,7 +319,7 @@ public class ChatServiceImpl implements ChatService {
 
     // Helper method to extract category from the prompt
     private String extractCategory(String lowerPrompt) {
-        List<String> categories = Arrays.asList("sport", "art", "culture", "musique", "technologie", "science", "littérature", "autre");
+        List<String> categories = Arrays.asList("sport", "art", "culture", "music", "technology", "science", "literature", "other");
         LevenshteinDistance levenshtein = new LevenshteinDistance();
         String bestMatch = null;
         int minDistance = Integer.MAX_VALUE;
@@ -341,7 +341,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     private String truncateDescription(String description, int maxLength) {
-        if (description == null) return "Description non disponible";
+        if (description == null) return "Description not available";
         if (description.length() <= maxLength) return description;
 
         return description.substring(0, maxLength - 3)
@@ -352,18 +352,18 @@ public class ChatServiceImpl implements ChatService {
     private String getCategoryIcon(String category) {
         return switch (category.toLowerCase()) {
             case "sport" -> "⚽";
-            case "musique" -> "🎵";
-            case "technologie" -> "💻";
+            case "music" -> "🎵";
+            case "technology" -> "💻";
             case "science" -> "🔬";
             case "art" -> "🎨";
-            case "littérature" -> "📚";
+            case "literature" -> "📚";
             case "culture" -> "🎭";
             default -> "🔍";
         };
     }
 
     private String extractClubName(String prompt) {
-        String promptLower = prompt.toLowerCase().replaceAll("[^a-z0-9éèàùâêîôûäëïöüç]", " ");
+        String promptLower = prompt.toLowerCase().replaceAll("[^a-z0-9]", " ");
         List<Club> allClubs = clubRepo.findAll();
 
         // Enhanced search logic
@@ -372,7 +372,7 @@ public class ChatServiceImpl implements ChatService {
         for (Club club : allClubs) {
             String cleanClubName = club.getName()
                     .toLowerCase()
-                    .replaceAll("[^a-z0-9éèàùâêîôûäëïöüç]", " ")
+                    .replaceAll("[^a-z0-9]", " ")
                     .trim();
 
             // Multi-criteria verification
@@ -417,19 +417,19 @@ public class ChatServiceImpl implements ChatService {
 
     private String formatClubsInCategory(List<Club> clubs, String category) {
         if (clubs.isEmpty()) {
-            return "Aucun club trouvé dans la catégorie " + category + " 🧐\n\nEssayez une autre catégorie !";
+            return "No clubs found in the " + category + " category 🧐\n\nTry another category!";
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(getCategoryIcon(category)).append(" **Clubs de ").append(category.toUpperCase()).append("** ").append(getCategoryIcon(category)).append("\n\n");
+        sb.append(getCategoryIcon(category)).append(" **").append(category.toUpperCase()).append(" Clubs** ").append(getCategoryIcon(category)).append("\n\n");
 
         clubs.forEach(club -> {
-            sb.append("🔹 **").append(club.getName()).append("** (").append(club.getMembers().size()).append(" membres)\n")
+            sb.append("🔹 **").append(club.getName()).append("** (").append(club.getMembers().size()).append(" members)\n")
                     .append("   _\"").append(club.getSlogan()).append("\"_\n")
                     .append("   📌 ").append(truncateDescription(club.getDescription(), 100)).append("\n\n");
         });
 
-        sb.append("👉 Pour plus de détails sur un club spécifique, demandez-moi des informations sur le club qui vous intéresse !");
+        sb.append("👉 For more details about a specific club, ask me for information about the club that interests you!");
         return sb.toString();
     }
 
@@ -437,87 +437,85 @@ public class ChatServiceImpl implements ChatService {
         StringBuilder sb = new StringBuilder();
         sb.append("🎯 **").append(club.getName()).append("**\n\n");
         sb.append("📝 *Description* :\n").append(club.getDescription()).append("\n\n");
-        sb.append("🏷️ *Catégorie* : ").append(getCategoryIcon(club.getCategorie())).append(" ").append(club.getCategorie()).append("\n");
+        sb.append("🏷️ *Category* : ").append(getCategoryIcon(club.getCategorie())).append(" ").append(club.getCategorie()).append("\n");
         sb.append("💬 *Slogan* : \"").append(club.getSlogan()).append("\"\n");
-        sb.append("👥 *Membres* : ").append(club.getMembers().size()).append(" participants\n");
+        sb.append("👥 *Members* : ").append(club.getMembers().size()).append(" participants\n");
         if (club.getCreator() != null) {
-            sb.append("👤 *Créateur* : ").append(club.getCreator().getFirstname()).append(" ")
+            sb.append("👤 *Creator* : ").append(club.getCreator().getFirstname()).append(" ")
                     .append(club.getCreator().getLastname()).append("\n");
         }
-        sb.append("\nℹ️ Pour rejoindre ce club ou obtenir plus d'informations, connectez-vous à l'application ClubSync ou contactez directement les responsables du club.");
+        sb.append("\nℹ️ To join this club or get more information, log in to the ClubSync application or contact the club leaders directly.");
         return sb.toString();
     }
 
     @Override
     public String processFileUpload(MultipartFile file) {
         try {
-            // Vérifier si le fichier est vide
+            // Check if file is empty
             if (file.isEmpty()) {
-                return "Fichier vide";
+                return "Empty file";
             }
 
-            // Créer le répertoire d'upload s'il n'existe pas
+            // Create upload directory if it doesn't exist
             String uploadDir = "uploads";
             File directory = new File(uploadDir);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
-            // Sauvegarder le fichier
+            // Save the file
             String fileName = file.getOriginalFilename();
             String contentType = file.getContentType();
             Path path = Paths.get(uploadDir + File.separator + fileName);
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-            // Traitement selon le type de fichier
+            // Process according to file type
             if (fileName != null) {
                 String lowerFileName = fileName.toLowerCase();
 
-                // Traitement des PDFs
+                // Process PDFs
                 if (lowerFileName.endsWith(".pdf")) {
                     if (lowerFileName.contains("club") || lowerFileName.contains("association")) {
-                        return "📄 Fichier PDF \"" + fileName + "\" uploadé avec succès! Si ce document contient des informations sur les clubs, je pourrai l'analyser pour vous aider.";
+                        return "📄 PDF file \"" + fileName + "\" uploaded successfully! If this document contains information about clubs, I can analyze it to help you.";
                     } else {
-                        return "📄 Fichier PDF \"" + fileName + "\" uploadé avec succès! Notez que je suis spécialisé dans les informations sur les clubs. Si vous avez des questions à ce sujet, n'hésitez pas à me demander.";
+                        return "📄 PDF file \"" + fileName + "\" uploaded successfully! Note that I specialize in information about clubs. If you have questions about this, feel free to ask me.";
                     }
                 }
 
-                // Traitement des images
+                // Process images
                 else if (contentType != null && contentType.startsWith("image/")) {
-                    // Déterminer le type d'image
-                    String imageType = contentType.substring(6); // après "image/"
-                    if (lowerFileName.contains("club") || lowerFileName.contains("event") || lowerFileName.contains("activité")) {
-                        return "🖼️ Image \"" + fileName + "\" (" + imageType + ") uploadée avec succès! Si elle contient des informations sur les clubs ou leurs événements, je ferai de mon mieux pour vous aider.";
+                    // Determine image type
+                    String imageType = contentType.substring(6); // after "image/"
+                    if (lowerFileName.contains("club") || lowerFileName.contains("event") || lowerFileName.contains("activity")) {
+                        return "🖼️ Image \"" + fileName + "\" (" + imageType + ") uploaded successfully! If it contains information about clubs or their events, I'll do my best to help you.";
                     } else {
-                        return "🖼️ Image \"" + fileName + "\" (" + imageType + ") uploadée avec succès! Pour des questions relatives aux clubs, n'hésitez pas à me demander.";
+                        return "🖼️ Image \"" + fileName + "\" (" + imageType + ") uploaded successfully! For questions related to clubs, don't hesitate to ask me.";
                     }
                 }
 
-                // Documents Word ou autres
+                // Word documents or others
                 else if (lowerFileName.endsWith(".doc") || lowerFileName.endsWith(".docx")) {
-                    return "📝 Document \"" + fileName + "\" uploadé avec succès! S'il contient des informations sur les clubs, n'hésitez pas à me poser des questions spécifiques.";
+                    return "📝 Document \"" + fileName + "\" uploaded successfully! If it contains information about clubs, feel free to ask me specific questions.";
                 }
             }
 
-            // Œufs de Pâques et autres logiques spéciales
+            // Easter eggs and other special logic
             if (fileName != null &&
-                    (fileName.toLowerCase().contains("easter") ||
-                            fileName.toLowerCase().contains("paques") ||
-                            fileName.toLowerCase().contains("pâques"))) {
-                return "🐰 Fichier secret découvert! 🥚 Joyeuses Pâques! Le fichier \"" + fileName + "\" a été uploadé avec succès.";
+                    (fileName.toLowerCase().contains("easter"))) {
+                return "🐰 Secret file discovered! 🥚 Happy Easter! The file \"" + fileName + "\" has been uploaded successfully.";
             }
 
             LocalDate today = LocalDate.now();
             if (today.getMonth() == Month.APRIL && today.getDayOfMonth() == 1) {
-                return "Fichier \"" + fileName + "\" uploadé avec succès! 🎭 C'est un jour spécial aujourd'hui, non ? 😉";
+                return "File \"" + fileName + "\" uploaded successfully! 🎭 It's a special day today, isn't it? 😉";
             } else if (today.getMonth() == Month.APRIL) {
-                return "Fichier \"" + fileName + "\" uploadé avec succès! 🥚";
+                return "File \"" + fileName + "\" uploaded successfully! 🥚";
             }
 
-            // Réponse par défaut
-            return "✅ Fichier \"" + fileName + "\" uploadé avec succès! Si vous avez des questions concernant les clubs, je suis à votre disposition.";
+            // Default response
+            return "✅ File \"" + fileName + "\" uploaded successfully! If you have any questions about clubs, I'm at your service.";
         } catch (Exception e) {
-            return "❌ Erreur lors du traitement du fichier: " + e.getMessage();
+            return "❌ Error processing file: " + e.getMessage();
         }
     }
 }

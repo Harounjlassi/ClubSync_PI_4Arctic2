@@ -1,6 +1,7 @@
 package tn.esprit.clubsync.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;import jakarta.persistence.*;
 
 import lombok.*;
@@ -31,6 +32,8 @@ public class Club {
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
+    @JsonIgnore // Ignore la sérialisation du créateur pour éviter les cycles
+
     private User creator;
 
     @Lob
@@ -123,11 +126,14 @@ public class Club {
 
 
     @ManyToMany
+    @JsonIgnore // Add this to break the cycle
+
     @JoinTable(
             name = "club_members",                  // Name of the join table
             joinColumns = @JoinColumn(name = "club_id"),   // Column in the join table that references the Club entity
             inverseJoinColumns = @JoinColumn(name = "id")  // Column in the join table that references the Users entity (using id instead of user_id)
     )
+
     private List<User> members = new ArrayList<>();
 
 

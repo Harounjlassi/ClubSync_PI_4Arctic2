@@ -156,7 +156,7 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "id_role", nullable = false)
     private Role role;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> tokens = new ArrayList<>();
     // Implémentation des méthodes de UserDetails
