@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -10,6 +10,7 @@ import { FaceRecognitionService } from "app/services/face-recognition.service";
 import { MessageService } from "app/services/message.service";
 import { ProjetService } from "app/services/projet.service";
 import { UserService } from "app/services/user.service";
+import { Subject, takeUntil } from "rxjs";
 // import { AppProjetMessageComponent } from '../projet-message/projet-message.component'; // Import the component
 
 
@@ -18,9 +19,8 @@ import { UserService } from "app/services/user.service";
   templateUrl: "./projet-list.component.html",
   styleUrls: ["./projet-list.component.scss"],
 })
-export class ProjetListComponent implements OnInit {
+export class ProjetListComponent implements OnInit, OnDestroy {
   projectsWithColors: any[] = [];
-
   projets: Projet[] = [];
   color: string = "";
   showAddProjectModal: boolean = false;
@@ -42,6 +42,7 @@ export class ProjetListComponent implements OnInit {
   //   {text: 'Message 3', date: new Date()}
   // ];
   projectMessages: Message[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -53,8 +54,6 @@ export class ProjetListComponent implements OnInit {
     private faceService: FaceRecognitionService,
     private router: Router,
     private calendarService: CalenderApiService,
-
-
   ) {
     this.createAddProjectForm();
     this.createEditProjectForm();
@@ -63,120 +62,143 @@ export class ProjetListComponent implements OnInit {
   ngOnInit() {
     this.listProjets();
   }
-  listMessages(id: number) {
-    this.messageService.getMessageByIdProjet(id).subscribe(
-      (data) => {
-        console.log("Received projects:", data);
-        this.projectMessages = data || [];
 
-        console.log(" projectMessages:", this.projectMessages);
-      },
-      (error) => {
-        console.error("Error fetching projects:", error);
-      }
-    );
-  }
-  listProjets() {
-    this.projetService.getProjets().subscribe(
-      (data) => {
-        console.log("Received projects:", data);
-        this.projets = data || [];
-
-        // Assign colors AFTER data is loaded
-        this.projectsWithColors = this.projets.map((project) => ({
-          ...project,
-          cardColor: this.getRandomColor(),
-          progressColor: this.generateProgressColor(project), // Modified to be deterministic
-        }));
-        console.log("Projects with colors:", this.projectsWithColors);
-      },
-      (error) => {
-        console.error("Error fetching projects:", error);
-      }
-    );
-  }
-
-// Generate unique IDs (simple implementation)
-private generateMessageId(): number {
-  return this.projectMessages.length > 0 
-    ? Math.max(...this.projectMessages.map(m => m.id)) + 1 
-    : 1;
-}
-navigateToMessages(projectId: number) {
-  // Navigate to the route
-  this.router.navigate(['/message', projectId]);
-  
-  // Also open the modal if you want both
-  //this.openMessagesModal(this.tempProjet);
-}
-deleteMessage(messageId: number) {
-  if (confirm('Are you sure you want to delete this message?')) {
-    this.projectMessages = this.projectMessages.filter(m => m.id !== messageId);
+  ngOnDestroy(): void {
+    // Properly cancel all subscriptions when component is destroyed
+    this.destroy$.next();
+    this.destroy$.complete();
     
-     this.messageService.deleteMessage(messageId).subscribe(
+    // Stop camera if it's still running when component is destroyed
+    if (this.cameraStatus === 'running') {
+      this.stopCamera();
+    }
+  }
+
+  listMessages(id: number) {
+    this.messageService.getMessageByIdProjet(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
         (data) => {
-          console.log("Deleted message:", data);
+          console.log("Received projects:", data);
+          this.projectMessages = data || [];
+          console.log(" projectMessages:", this.projectMessages);
         },
         (error) => {
-          console.error("Error deleting message:", error);
+          console.error("Error fetching projects:", error);
         }
       );
-     
   }
-}
 
-startEditingMessage(message: Message) {
-  message.isEditing = true;
-  message.editedText = message.contenu;
-}
+  listProjets() {
+    this.projetService.getProjets()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (data) => {
+          console.log("Received projects:", data);
+          this.projets = data || [];
 
-cancelEditing(message: Message) {
-  message.isEditing = false;
-  message.editedText = '';
-}
+          // Assign colors AFTER data is loaded
+          this.projectsWithColors = this.projets.map((project) => ({
+            ...project,
+            cardColor: this.getRandomColor(),
+            progressColor: this.generateProgressColor(project), // Modified to be deterministic
+          }));
+          console.log("Projects with colors:", this.projectsWithColors);
+        },
+        (error) => {
+          console.error("Error fetching projects:", error);
+        }
+      );
+  }
 
-saveEditedMessage(message: Message) {
-  if (message.editedText?.trim()) {
-    message.contenu = message.editedText;
-    message.lastUpdated = new Date(); 
+  // Generate unique IDs (simple implementation)
+  private generateMessageId(): number {
+    return this.projectMessages.length > 0 
+      ? Math.max(...this.projectMessages.map(m => m.id)) + 1 
+      : 1;
+  }
+
+  navigateToMessages(projectId: number) {
+    // Navigate to the route
+    this.router.navigate(['/message', projectId]);
+    
+    // Also open the modal if you want both
+    //this.openMessagesModal(this.tempProjet);
+  }
+
+  deleteMessage(messageId: number) {
+    if (confirm('Are you sure you want to delete this message?')) {
+      this.projectMessages = this.projectMessages.filter(m => m.id !== messageId);
+      
+      this.messageService.deleteMessage(messageId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(
+          (data) => {
+            console.log("Deleted message:", data);
+          },
+          (error) => {
+            console.error("Error deleting message:", error);
+          }
+        );
+    }
+  }
+
+  startEditingMessage(message: Message) {
+    message.isEditing = true;
+    message.editedText = message.contenu;
+  }
+
+  cancelEditing(message: Message) {
     message.isEditing = false;
-    
-    this.messageService.updateMessage(message).subscribe(
-      (data) => {
-        console.log("Updated message:", data);
-      },
-      (error) => {
-        console.error("Error updating message:", error);
-      }
-    )
+    message.editedText = '';
   }
-}
 
-addMessage() {
-  if (this.newMessage.trim()) {
-    const newMsg = {
-      contenu: this.newMessage,
-      dateCreated: new Date()
-      ,
-      lastUpdated: new Date(),
-      ProjetId: this.selectedProjectForMessages.id,
-      isEditing: false,
-      editedText: '' // Reset editedText for new message
-    };
+  saveEditedMessage(message: Message) {
+    if (message.editedText?.trim()) {
+      message.contenu = message.editedText;
+      message.lastUpdated = new Date(); 
+      message.isEditing = false;
+      
+      this.messageService.updateMessage(message)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(
+          (data) => {
+            console.log("Updated message:", data);
+          },
+          (error) => {
+            console.error("Error updating message:", error);
+          }
+        );
+    }
+  }
 
-    
-    // In a real app:
-    this.messageService.createMessage( newMsg).subscribe(
-      (message) => {
-        console.log("Message created:", message);
-        this.projectMessages.push(message);
-      },
-      (error) => {
-        console.error("Error creating message:", error);
-      }
-    );
-  //}
-}}
+  addMessage() {
+    if (this.newMessage.trim()) {
+      const newMsg = {
+        contenu: this.newMessage,
+        dateCreated: new Date(),
+        lastUpdated: new Date(),
+        ProjetId: this.selectedProjectForMessages.id,
+        isEditing: false,
+        editedText: '' // Reset editedText for new message
+      };
+
+      // In a real app:
+      this.messageService.createMessage(newMsg)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(
+          (message) => {
+            console.log("Message created:", message);
+            this.projectMessages.push(message);
+            this.newMessage = ""; // Clear the input field after success
+          },
+          (error) => {
+            console.error("Error creating message:", error);
+          }
+        );
+    }
+  }
+
   openMessagesModal(project: Projet) {
     this.selectedProjectForMessages = project;
     // Load existing messages (in a real app, you'd fetch from API)
@@ -194,7 +216,6 @@ addMessage() {
     this.newMessage = "";
   }
 
- 
   projectColors = [
     {
       name: "Emerald",
@@ -221,6 +242,7 @@ addMessage() {
       gradient: "linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)",
     },
   ];
+
   projectStatuses = [
     {
       name: "Not_Started",
@@ -334,11 +356,13 @@ addMessage() {
     `;
     return this.sanitizer.bypassSecurityTrustHtml(svg);
   }
+
   getRandomColor() {
     return this.projectColors[
       Math.floor(Math.random() * this.projectColors.length)
     ].gradient;
   }
+
   generateProgressColor(project: any) {
     if (!project.cardColor) return "";
     return project.cardColor.replace("135deg", "90deg");
@@ -350,15 +374,17 @@ addMessage() {
   }
 
   openDeleteProjectModal(project: Projet) {
-    this.projetService.deletePropjet(project.id).subscribe((response) => {
-      this.listProjets(); // Refresh the list
-    });
+    this.projetService.deletePropjet(project.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        this.listProjets(); // Refresh the list
+      });
   }
-  // In your component
-get nom() {
-  return this.addProjectForm.get('nom');
-}
 
+  // In your component
+  get nom() {
+    return this.addProjectForm.get('nom');
+  }
 
   createAddProjectForm() {
     this.addProjectForm = this.fb.group({
@@ -373,32 +399,24 @@ get nom() {
       nom: ['', [
         Validators.required,
         Validators.minLength(3),
- 
       ]],
-      description: ["",[
+      description: ["", [
         Validators.required,
- 
       ]],
-      imageUrl: ["",[
+      imageUrl: ["", [
         Validators.required,
-
- 
       ]],
-      status: ["Not_Started",[
+      status: ["Not_Started", [
         Validators.required,
- 
       ]],
-      progress: [0,[
+      progress: [0, [
         Validators.required,
- 
       ]],
-      createur: ["",[
+      createur: ["", [
         Validators.required,
- 
       ]],
       dateCreated: [new Date()],
       lastUpdated: [new Date()],
- 
     });
   }
 
@@ -416,6 +434,7 @@ get nom() {
       image: [null],
     });
   }
+
   onImagePicked(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
@@ -447,6 +466,7 @@ get nom() {
     };
     reader.readAsDataURL(file);
   }
+
   removeImage() {
     this.imagePreview = null;
     this.selectedFile = null;
@@ -456,70 +476,80 @@ get nom() {
   openAddProjectModal() {
     this.showAddProjectModal = true;
   }
+
   startCamera(): void {
-    this.faceService.startCamera().subscribe({
-      next: (response) => {
-        this.cameraStatus = 'running';
-        console.log('Camera started', response);
-        // this.addProjectForm.patchValue({
-        //   createur: response.faces[0].name
-        // });
-        //this.detectFaces();
-      },
-      error: (err) => console.error('Error starting camera', err)
-    });
+    this.faceService.startCamera()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.cameraStatus = 'running';
+          console.log('Camera started', response);
+          // this.addProjectForm.patchValue({
+          //   createur: response.faces[0].name
+          // });
+          //this.detectFaces();
+        },
+        error: (err) => console.error('Error starting camera', err)
+      });
   }
+
   detectFaces(): void {
     if (this.cameraStatus !== 'running') {
       return; // Don't detect if camera isn't running
     }
   
-    this.faceService.detectFaces().subscribe({
-      next: (response) => {
-        if (response?.faces?.length > 0) {
-          this.detectedFaces = response.faces;
-          console.log('Detected faces:', response);
-          
-          // Update creator field with first detected face
-          this.addProjectForm.patchValue({
-            createur: response.faces[0].name
-          });
-  
-          // Auto-refresh every 2 seconds if camera is still running
-          if (this.cameraStatus === 'running') {
-            setTimeout(() => this.detectFaces(), 2000);
+    this.faceService.detectFaces()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response?.faces?.length > 0) {
+            this.detectedFaces = response.faces;
+            console.log('Detected faces:', response);
+            
+            // Update creator field with first detected face
+            this.addProjectForm.patchValue({
+              createur: response.faces[0].name
+            });
+    
+            // Auto-refresh every 2 seconds if camera is still running
+            if (this.cameraStatus === 'running') {
+              setTimeout(() => this.detectFaces(), 2000);
+            }
+          } else {
+            console.log('No faces detected');
+            // Still refresh if camera is running but no faces detected
+            if (this.cameraStatus === 'running') {
+              setTimeout(() => this.detectFaces(), 2000);
+            }
           }
-        } else {
-          console.log('No faces detected');
-          // Still refresh if camera is running but no faces detected
+        },
+        error: (err) => {
+          console.error('Face detection error:', err);
+          // Retry after 2 seconds even if error occurs
           if (this.cameraStatus === 'running') {
             setTimeout(() => this.detectFaces(), 2000);
           }
         }
-      },
-      error: (err) => {
-        console.error('Face detection error:', err);
-        // Retry after 2 seconds even if error occurs
-        if (this.cameraStatus === 'running') {
-          setTimeout(() => this.detectFaces(), 2000);
-        }
-      }
-    });
+      });
   }
+
   stopCamera(): void {
-    this.faceService.stopCamera().subscribe({
-      next: (response) => {
-        this.cameraStatus = 'stopped';
-        console.log('Camera stopped', response);
-      },
-      error: (err) => console.error('Error stopping camera', err)
-    });
+    this.faceService.stopCamera()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.cameraStatus = 'stopped';
+          console.log('Camera stopped', response);
+        },
+        error: (err) => console.error('Error stopping camera', err)
+      });
   }
 
   closeAddProjectModal() {
     this.showAddProjectModal = false;
     this.addProjectForm.reset();
   }
+
   onEditImagePicked(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
@@ -540,7 +570,6 @@ get nom() {
     }
 
     const reader = new FileReader();
-    this.imagePreview = reader.result as string;
     reader.onload = () => {
       this.imagePreview = reader.result as string;
       this.editProjectForm.patchValue({
@@ -553,28 +582,30 @@ get nom() {
   openEditProjectModal(project: Projet) {
     this.selectedProject = project;
 
-    this.userService.findUserId(project.createurId).subscribe(
-      (data) => {
-        console.log("Received user:", data);
-        this.user = data;
-        console.log("Received user:", this.user.lastname);
+    this.userService.findUserId(project.createurId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (data) => {
+          console.log("Received user:", data);
+          this.user = data;
+          console.log("Received user:", this.user.lastname);
 
-        this.editProjectForm.patchValue({
-          id: project.id || null,
-          nom: project.nom || "",
-          description: project.description || "",
-          imageUrl: project.imageUrl || "",
-          status: project.status || "Not_Started",
-          progress: project.progress || 0,
-          createur: this.user.lastname || "",
-          dateCreated: project.dateCreated || new Date(),
-          lastUpdated: new Date(),
-        });
-      },
-      (error) => {
-        console.error("Error getting user:", error);
-      }
-    );
+          this.editProjectForm.patchValue({
+            id: project.id || null,
+            nom: project.nom || "",
+            description: project.description || "",
+            imageUrl: project.imageUrl || "",
+            status: project.status || "Not_Started",
+            progress: project.progress || 0,
+            createur: this.user.lastname || "",
+            dateCreated: project.dateCreated || new Date(),
+            lastUpdated: new Date(),
+          });
+        },
+        (error) => {
+          console.error("Error getting user:", error);
+        }
+      );
     console.log(project);
 
     this.showEditProjectModal = true;
@@ -601,15 +632,17 @@ get nom() {
       };
       console.log("imma");
       console.log(newProject);
-      this.projetService.addProjet(newProject).subscribe(
-        (response) => {
-          this.listProjets(); // Refresh the list
-          this.closeAddProjectModal();
-        },
-        (error) => {
-          console.error("Error adding project:", error);
-        }
-      );
+      this.projetService.addProjet(newProject)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(
+          (response) => {
+            this.listProjets(); // Refresh the list
+            this.closeAddProjectModal();
+          },
+          (error) => {
+            console.error("Error adding project:", error);
+          }
+        );
     }
   }
 
@@ -619,122 +652,120 @@ get nom() {
     if (this.editProjectForm.valid) {
       const newProject: Projet = {
         ...this.editProjectForm.value,
-
         imageUrl: this.imagePreview, // Or null if no image
         lastUpdated: new Date().toISOString(), // Will be assigned by the backend
       };
       console.log("imma");
       console.log(newProject);
-      this.projetService.updateProjet(newProject).subscribe(
-        (response) => {
-          this.listProjets(); // Refresh the list
-          this.closeAddProjectModal();
-        },
-        (error) => {
-          console.error("Error update project:", error);
-        }
-      );
+      this.projetService.updateProjet(newProject)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(
+          (response) => {
+            this.listProjets(); // Refresh the list
+            this.closeAddProjectModal();
+          },
+          (error) => {
+            console.error("Error update project:", error);
+          }
+        );
     }
   }
 
-/* Component Logic */
-currentPriority = 1; // 1-4 scale (low-critical)
+  /* Component Logic */
+  currentPriority = 1; // 1-4 scale (low-critical)
 
-getPriorityText(level) {
-  const priorities = {
-    1: 'Low Priority',
-    2: 'Medium Priority',
-    3: 'High Priority',
-    4: 'Critical!'
-  };
-  return priorities[level] || 'Analyzing...';
-}
+  getPriorityText(level) {
+    const priorities = {
+      1: 'Low Priority',
+      2: 'Medium Priority',
+      3: 'High Priority',
+      4: 'Critical!'
+    };
+    return priorities[level] || 'Analyzing...';
+  }
 
-testcam:number = 1;
-detectFaceAndGenerateTasks() {
-  if (this.testcam == 1) {
-
-  this.projetService.startFaceDetTask()
-   .subscribe(
-       (response) => {
-          console.log('Face detection task started:', response);
-          this.testcam = 2; 
-         
-        }
-      );
-    }else {
+  testcam: number = 1;
+  detectFaceAndGenerateTasks() {
+    if (this.testcam == 1) {
+      this.projetService.startFaceDetTask()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(
+          (response) => {
+            console.log('Face detection task started:', response);
+            this.testcam = 2; 
+          }
+        );
+    } else {
       this.projetService.stopFaceDetTask()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(
+          (response) => {
+            console.log('Face detection task stopped:', response);
+            this.testcam = 1; 
+          }
+        );
+    }
+    
+    this.currentPriority = Math.min(4, this.currentPriority + 1); // Demo cycling
+  }
+
+  generateAITasks(projet: Projet): void {
+    this.projetService.genAiTasks(projet)
+      .pipe(takeUntil(this.destroy$))
       .subscribe(
         (response) => {
-          console.log('Face detection task stopped:', response);
-          this.testcam = 1; 
-        }
-      );
-    }
-
-  
-  this.currentPriority = Math.min(4, this.currentPriority + 1); // Demo cycling
-}
-
-generateAITasks( projet:Projet): void {
-
-  this.projetService.genAiTasks(projet)
-   .subscribe(
-       (response) => {
           console.log('AI tasks gen:', response);
-         
         }
       );
-  
+  }
 
+  addToGoogleCalendar(project: any): void {
+    console.log(project);
+    const originalDate = project.lastUpdated + "T00:00:00";
+    const dateObj = new Date(originalDate);
 
-}
+    // Add 3 days
+    dateObj.setDate(dateObj.getDate() + 3);
 
-addToGoogleCalendar(project: any): void {
-  console.log(project);
-  const originalDate = project.lastUpdated + "T00:00:00";
-const dateObj = new Date(originalDate);
-
-// Add 3 days
-dateObj.setDate(dateObj.getDate() + 3);
-
-// Format back to ISO string and split to get date part
-const newDate = dateObj.toISOString().split('T')[0];
-const dateTimeWithDays = newDate + "T00:00:00";
-   const eventData = {
-    summary: project.nom,
-    description: project.description+" is "+project.progress+"% complete ,"+
-    " and currently in  "+project.status+ " Status"
-    ,
-    start: {
-      dateTime: project.dateCreated+"T00:00:00" ,
-      //dateTime: "2025-04-21T12:00:00" ,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-    },
-    end: {
-      //dateTime:  "2025-04-21T13:00:00",
-      dateTime: dateTimeWithDays,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-    }
-  };
-  this.calendarService.initiateGoogleAuth(eventData).subscribe(
-    (response: any) => {
-      console.log('Full response:', response); // This will show the complete response structure
-      
-      // Access the authorization_url from response.body
-      if (response.body && response.body.authorization_url) {
-        console.log('Authorization URL:', response.body.authorization_url);
-        
-        // Open the authorization URL in a new browser tab
-        this.calendarService.openAuthUrlInBrowser(response.body.authorization_url);
-      } else {
-        console.error('No authorization URL received in response body');
+    // Format back to ISO string and split to get date part
+    const newDate = dateObj.toISOString().split('T')[0];
+    const dateTimeWithDays = newDate + "T00:00:00";
+    
+    const eventData = {
+      summary: project.nom,
+      description: project.description + " is " + project.progress + "% complete ," +
+        " and currently in  " + project.status + " Status",
+      start: {
+        dateTime: project.dateCreated + "T00:00:00",
+        //dateTime: "2025-04-21T12:00:00",
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      },
+      end: {
+        //dateTime:  "2025-04-21T13:00:00",
+        dateTime: dateTimeWithDays,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
       }
-    },
-    (error) => {
-      console.error('Error initiating auth:', error);
-    }
-  );
-}
-
+    };
+    
+    this.calendarService.initiateGoogleAuth(eventData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (response: any) => {
+          console.log('Full response:', response); // This will show the complete response structure
+          
+          // Access the authorization_url from response.body
+          if (response.body && response.body.authorization_url) {
+            console.log('Authorization URL:', response.body.authorization_url);
+            
+            // Open the authorization URL in a new browser tab
+            this.calendarService.openAuthUrlInBrowser(response.body.authorization_url);
+          } else {
+            console.error('No authorization URL received in response body');
+          }
+        },
+        (error) => {
+          console.error('Error initiating auth:', error);
+        }
+      );
+  }
 }

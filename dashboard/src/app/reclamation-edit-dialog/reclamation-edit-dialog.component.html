@@ -1,0 +1,81 @@
+<div class="reclamation-edit-dialog">
+  <h2 mat-dialog-title>Edit Reclamation Status</h2>
+  
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <mat-error>{{ errorMessage }}</mat-error>
+  </div>
+
+  <div *ngIf="successMessage" class="success-message">
+    <span>{{ successMessage }}</span>
+  </div>
+
+  <form [formGroup]="reclamationForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+      <!-- Display read-only type -->
+      <div class="form-field">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Reclamation Type (Read-only)</mat-label>
+          <input matInput formControlName="typeReclamation" readonly>
+        </mat-form-field>
+      </div>
+
+      <!-- Display read-only description -->
+      <div class="form-field">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description (Read-only)</mat-label>
+          <textarea matInput formControlName="description" rows="5" readonly></textarea>
+        </mat-form-field>
+      </div>
+      
+      <!-- Status field - only enabled for admin -->
+      <div class="form-field" *ngIf="isAdmin">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="statut">
+            <mat-option *ngFor="let status of reclamationStatuses" [value]="status">
+              {{ status.replace('_', ' ') }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>As an administrator, you can change the status</mat-hint>
+        </mat-form-field>
+      </div>
+      
+      <!-- Show status but disabled for regular users -->
+      <div class="form-field" *ngIf="!isAdmin && originalReclamation">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status (Read-only)</mat-label>
+          <input matInput [value]="originalReclamation.statut?.replace('_', ' ')" disabled>
+          <mat-hint>Only administrators can change the status</mat-hint>
+        </mat-form-field>
+      </div>
+      
+      <!-- Display date information -->
+      <div class="info-section" *ngIf="originalReclamation">
+        <div class="date-info">
+          <p><strong>Created:</strong> {{originalReclamation.dateReclamation | date:'medium'}}</p>
+          <p *ngIf="originalReclamation.dateResolution">
+            <strong>Resolved:</strong> {{originalReclamation.dateResolution | date:'medium'}}
+          </p>
+        </div>
+        
+        <!-- Display user info if available (only when reclamation is a ReclamationResponseDTO) -->
+        <div class="user-info" *ngIf="hasUserInfo()">
+          <p><strong>Submitted by:</strong> {{getUserName()}}</p>
+          <p><strong>Email:</strong> {{getUserEmail()}}</p>
+        </div>
+      </div>
+      
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button type="button" [disabled]="loading" (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!isAdmin || loading">
+        Update Status
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

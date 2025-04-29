@@ -1,1 +1,92 @@
-<p>reclamation-edit works!</p>
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <h4 class="card-title">Edit Reclamation</h4>
+              <p class="card-category">Update reclamation details</p>
+            </div>
+            
+            <div class="card-body">
+              <div *ngIf="isLoadingData" class="d-flex justify-content-center my-4">
+                <mat-spinner diameter="40"></mat-spinner>
+              </div>
+              
+              <form *ngIf="!isLoadingData" [formGroup]="reclamationForm" (ngSubmit)="onSubmit()">
+                <!-- Reclamation Type -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="typeReclamation">Type of Reclamation</label>
+                      <select id="typeReclamation" 
+                              formControlName="typeReclamation" 
+                              class="form-control"
+                              [ngClass]="{'is-invalid': submitted && f['typeReclamation'].errors}">
+                        <option value="" disabled>Select Issue Type</option>
+                        <option *ngFor="let type of reclamationTypes" [value]="type">{{type}}</option>
+                      </select>
+                      <div *ngIf="submitted && f['typeReclamation'].errors" class="invalid-feedback">
+                        <div *ngIf="f['typeReclamation'].errors['required']">Type is required</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="description">Description</label>
+                      <textarea id="description" 
+                                formControlName="description" 
+                                class="form-control" 
+                                rows="5"
+                                [ngClass]="{'is-invalid': submitted && f['description'].errors}">
+                      </textarea>
+                      <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
+                        <div *ngIf="f['description'].errors['required']">Description is required</div>
+                        <div *ngIf="f['description'].errors['minlength']">Description must be at least 20 characters</div>
+                        <div *ngIf="f['description'].errors['maxlength']">Description cannot exceed 500 characters</div>
+                      </div>
+                      <small class="form-text text-muted">
+                        {{ 500 - (f['description'].value?.length || 0) }} characters remaining
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Status -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="statut">Status</label>
+                      <select id="statut" 
+                              formControlName="statut" 
+                              class="form-control"
+                              [ngClass]="{'is-invalid': submitted && f['statut'].errors}">
+                        <option value="" disabled>Select Status</option>
+                        <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
+                      </select>
+                      <div *ngIf="submitted && f['statut'].errors" class="invalid-feedback">
+                        <div *ngIf="f['statut'].errors['required']">Status is required</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="d-flex justify-content-end mt-4">
+                  <button type="button" class="btn btn-secondary mr-2" (click)="cancel()">Cancel</button>
+                  <button type="submit" class="btn btn-primary" [disabled]="loading">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    {{ loading ? 'Saving...' : 'Save Changes' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

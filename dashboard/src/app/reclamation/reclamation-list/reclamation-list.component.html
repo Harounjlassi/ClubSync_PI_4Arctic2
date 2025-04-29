@@ -1,93 +1,98 @@
 <div class="main-content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header card-header-danger">
-              <h4 class="card-title">RECLAMATION LIST</h4>
-              <p class="card-category">Here is a list of all reclamations</p>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">RECLAMATION LIST</h4>
+            <p class="card-category">Here is a list of all reclamations</p>
+          </div>
+
+          <div class="card-body">
+            <!-- Success or Error Messages -->
+            <div *ngIf="errorMessage" class="alert" [ngClass]="{'alert-danger': errorMessage.includes('Failed'), 'alert-success': !errorMessage.includes('Failed')}">
+              {{ errorMessage }}
             </div>
-  
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <button class="btn btn-outline-primary" (click)="toggleArchived()">
-                  {{ showArchived ? 'Show Active' : 'Show Archived' }}
-                </button>
-              </div>
-  
-              <div *ngIf="loading" class="d-flex justify-content-center my-4">
-                <mat-spinner diameter="40"></mat-spinner>
-              </div>
-  
-              <div *ngIf="!loading && reclamations.length === 0" class="alert alert-info py-1 mb-1">
-                No reclamations found.
-              </div>
-  
-              <div class="table-responsive" *ngIf="reclamations.length > 0 && !loading">
-                <table class="table table-striped table-bordered table-sm">
-                  <thead class="text-primary">
-                    <tr>
-                      <th>ID</th>
-                      <th>Type</th>
-                      <th>User</th>
-                      <th>Description</th>
-                      <th>Status</th>
-                      <th>Date Submitted</th>
-                      <th>Date Resolved</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let reclamation of reclamations; trackBy: trackById">
-                      <td>{{ reclamation.idReclamation }}</td>
-                      <td>{{ reclamation.typeReclamation }}</td>
-                      <td>{{ reclamation.userName }} ({{ reclamation.userEmail }})</td>
-                      <td>{{ reclamation.description | slice:0:30 }}{{ reclamation.description.length > 30 ? '...' : '' }}</td>
-                      <td>
-                        <span
-                          class="badge"
-                          [ngClass]="{
-                            'badge-warning': reclamation.statut === 'PENDING',
-                            'badge-info': reclamation.statut === 'IN_PROGRESS',
-                            'badge-success': reclamation.statut === 'RESOLVED',
-                            'badge-danger': reclamation.statut === 'REJECTED'
-                          }">
-                          {{ reclamation.statut }}
-                        </span>
-                      </td>
-                      <td>{{ reclamation.dateReclamation | date:'medium' }}</td>
-                      <td>{{ reclamation.dateResolution | date:'medium' }}</td>
-                      <td>
-                        <button
-                          class="btn btn-sm btn-warning mr-1"
-                          (click)="onEdit(reclamation.idReclamation)">
-                          Edit
-                        </button>
-                        <button
-                          *ngIf="!showArchived"
-                          class="btn btn-sm btn-danger mr-1"
-                          (click)="archiveReclamation(reclamation.idReclamation)">
-                          Archive
-                        </button>
-                        <button
-                          *ngIf="showArchived"
-                          class="btn btn-sm btn-success mr-1"
-                          (click)="restoreReclamation(reclamation.idReclamation)">
-                          Restore
-                        </button>
-                        <button
-                          class="btn btn-sm btn-danger"
-                          (click)="deleteReclamation(reclamation.idReclamation)">
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <button class="btn btn-outline-primary" (click)="toggleArchived()">
+                {{ showArchived ? 'Show Active' : 'Show Archived' }}
+              </button>
+            </div>
+
+            <div *ngIf="loading" class="d-flex justify-content-center my-4">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+
+            <div *ngIf="!loading && reclamations.length === 0" class="alert alert-info py-1 mb-1">
+              No reclamations found.
+            </div>
+
+            <div class="table-responsive" *ngIf="reclamations.length > 0 && !loading">
+              <table class="table table-striped table-bordered table-sm">
+                <thead class="text-primary">
+                  <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>User</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Date Submitted</th>
+                    <th>Date Resolved</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let reclamation of reclamations; trackBy: trackById">
+                    <td>{{ reclamation.idReclamation }}</td>
+                    <td>{{ reclamation.typeReclamation }}</td>
+                    <td>{{ reclamation.userName }} ({{ reclamation.userEmail }})</td>
+                    <td>{{ reclamation.description | slice:0:30 }}{{ reclamation.description.length > 30 ? '...' : '' }}</td>
+                    <td>
+                      <span
+                        class="badge"
+                        [ngClass]="{
+                          'badge-warning': reclamation.statut === 'PENDING',
+                          'badge-info': reclamation.statut === 'IN_PROGRESS',
+                          'badge-success': reclamation.statut === 'RESOLVED',
+                          'badge-danger': reclamation.statut === 'REJECTED'
+                        }">
+                        {{ reclamation.statut }}
+                      </span>
+                    </td>
+                    <td>{{ reclamation.dateReclamation | date:'medium' }}</td>
+                    <td>{{ reclamation.dateResolution | date:'medium' }}</td>
+                    <td>
+                      <button
+                        class="btn btn-sm btn-warning mr-1"
+                        (click)="onEdit(reclamation.idReclamation)">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button
+                        *ngIf="!showArchived"
+                        class="btn btn-sm btn-danger mr-1"
+                        (click)="archiveReclamation(reclamation.idReclamation)">
+                        <i class="material-icons">archive</i>
+                      </button>
+                      <button
+                        *ngIf="showArchived"
+                        class="btn btn-sm btn-success mr-1"
+                        (click)="restoreReclamation(reclamation.idReclamation)">
+                        <i class="material-icons">unarchive</i>
+                      </button>
+                      <button
+                        class="btn btn-sm btn-danger"
+                        (click)="deleteReclamation(reclamation.idReclamation)">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

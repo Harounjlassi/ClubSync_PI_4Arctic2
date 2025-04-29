@@ -70,6 +70,7 @@ import { ProjetListComponent } from './projet-list/projet-list.component';
 import { ProjectTaskListComponent } from './project-task-list/project-task-list.component';
 import { ProjectReportListComponent } from './project-report-list/project-report-list.component';
 import { ProjetsComponent } from './projets/projets.component';
+import { ReclamationEditDialogComponent } from './reclamation-edit-dialog/reclamation-edit-dialog.component';
 
 @NgModule({
   imports: [
@@ -142,7 +143,7 @@ import { ProjetsComponent } from './projets/projets.component';
     ResetPasswordComponent,
     UserSettingsComponent,
     ReclamationListComponent,
-    ReclamationEditComponent,
+  ReclamationEditComponent,
     ReclamationDetailComponent,
     ReclamationFormComponent,
     ClubHomeComponent,
@@ -150,7 +151,8 @@ import { ProjetsComponent } from './projets/projets.component';
     ProjetsComponent,
     ProjectTaskListComponent,
     ProjectReportListComponent,
-    ProjetListComponent
+    ProjetListComponent,
+    ReclamationEditDialogComponent
    
   ],
   providers: [

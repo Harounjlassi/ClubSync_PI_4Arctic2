@@ -190,10 +190,10 @@ export class UserService {
     }
   
      getUserById(id: number): Observable<UserResponse> {
-      // return this.http.get<UserResponse>(`${this.apiUrl}/get/${id}`).pipe(
+      return this.http.get<UserResponse>(`${this.apiUrl}/get/${id}`).pipe(
          catchError(this.handleError)
-      // );
-      return null;
+       );
+      
      }
   
     updateUser(id: number, formData: FormData): Observable<any> {

@@ -1,1 +1,70 @@
-<p>reclamation-detail works!</p>
+<div class="reclamation-detail-container">
+    <div class="back-button">
+      <button (click)="goBack()" class="btn btn-outline-secondary">
+        <i class="fa fa-arrow-left"></i> Back to List
+      </button>
+    </div>
+  
+    <div *ngIf="loading" class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  
+    <div *ngIf="error" class="error-message">
+      <div class="alert alert-danger">
+        Failed to load reclamation details. Please try again later.
+      </div>
+    </div>
+  
+    <div *ngIf="!loading && !error && reclamation" class="reclamation-card">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4>Reclamation #{{ reclamation.idReclamation }}</h4>
+          <span class="badge" [ngClass]="getStatusClass(reclamation.statut)">
+            {{ reclamation.statut }}
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Type:</strong> {{ reclamation.typeReclamation }}
+            </div>
+            <div class="col-md-6">
+              <strong>Date Submitted:</strong> {{ reclamation.dateReclamation | date:'medium' }}
+            </div>
+          </div>
+          
+          <div class="row mb-3" *ngIf="reclamation.dateResolution">
+            <div class="col-md-12">
+              <strong>Date Resolved:</strong> {{ reclamation.dateResolution | date:'medium' }}
+            </div>
+          </div>
+          
+          <div class="description-section">
+            <h5>Description</h5>
+            <p>{{ reclamation.description }}</p>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <div class="d-flex justify-content-between">
+            <div>
+              <button (click)="editReclamation()" class="btn btn-primary me-2">
+                <i class="fa fa-edit"></i> Edit
+              </button>
+              <button (click)="archiveReclamation()" class="btn btn-warning me-2" *ngIf="reclamation.statut !== 'ARCHIVED'">
+                <i class="fa fa-archive"></i> Archive
+              </button>
+              <button (click)="restoreReclamation()" class="btn btn-success me-2" *ngIf="reclamation.statut === 'ARCHIVED'">
+                <i class="fa fa-undo"></i> Restore
+              </button>
+            </div>
+            <button (click)="deleteReclamation()" class="btn btn-danger">
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
