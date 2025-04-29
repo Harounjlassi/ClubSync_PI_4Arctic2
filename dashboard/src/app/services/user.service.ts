@@ -9,6 +9,7 @@ import { UserStatsResponse } from '../models/user-stats-response.model';
 import { StorageService } from './storage.service';
 import { jwtDecode } from 'jwt-decode';
 import { Role, RoleType } from '../models/role.model';
+import { mapUserResponseToUser } from '../mappers/user-mapper.service';
 
 interface DecodedToken {
   role?: string;
@@ -48,12 +49,35 @@ export class UserService {
       this.user = user ? this.mapToUser(user) : null;
     }
   }
-    // Authentication methods
-    register(userRequest: UserRequest): Observable<any> {
-      return this.http.post<any>(`${this.authUrl}/registration`, userRequest).pipe(
-        catchError(this.handleError)
-      );
+  register(userRequest: any): Observable<any> {
+    // Create a FormData object to send multipart/form-data
+    const formData = new FormData();
+    
+    // Convert user object to JSON string and add as "userRequest" part
+    const userRequestJson = JSON.stringify({
+      firstname: userRequest.firstname,
+      lastname: userRequest.lastname,
+      email: userRequest.email,
+      password: userRequest.password,
+      dateNaissance: userRequest.dateNaissance,
+      sexe: userRequest.sexe,
+      numeroDeTelephone: userRequest.numeroDeTelephone,
+      id_role: userRequest.id_role
+    });
+    
+    // Add the JSON string as a part named "userRequest"
+    formData.append('userRequest', userRequestJson);
+    
+    // Add the photo file if it exists
+    if (userRequest.photoProfil && typeof userRequest.photoProfil === 'object') {
+      formData.append('photo', userRequest.photoProfil);
     }
+    
+    return this.http.post<any>(`${this.authUrl}/registration`, formData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 
   private mapToUser(data: any): User {
     return {
@@ -144,38 +168,37 @@ export class UserService {
 
   // ... (keep all other existing methods unchanged) ...
     // CRUD Operations
-    getAllUsers(): Observable<UserResponse[]> {
-      console.log('Making API call to:', `${this.apiUrl}/get/all`);
-      
-      return this.http.get<UserResponse[]>(`${this.apiUrl}/get/all`)
-        .pipe(
-          tap(response => {
-            console.log('Raw API response:', response);
-            console.log('Response type:', typeof response);
-            if (Array.isArray(response)) {
-              console.log('Is array with length:', response.length);
-              if (response.length > 0) {
-                console.log('First item sample:', response[0]);
-              }
-            }
-          }),
-          catchError(error => {
-            console.error('API error details:', error);
-            return this.handleError(error);
-          })
-        );
-    }
-  
-    getUserById(id: number): Observable<UserResponse> {
-      return this.http.get<UserResponse>(`${this.apiUrl}/get/${id}`).pipe(
-        catchError(this.handleError)
+    getAllUsers(): Observable<User[]> {
+      return this.http.get<any>(`${this.apiUrl}/get/all`).pipe(
+        tap(rawResponse => console.log('Raw API response:', rawResponse)),
+        map(response => {
+          // Vérifiez si la réponse est un tableau ou un objet contenant un tableau
+          if (Array.isArray(response)) {
+            return response;
+          } else if (response && typeof response === 'object') {
+            // Peut-être que votre API renvoie { data: [...] } ou un format similaire
+            const users = response.data || response.users || response.content;
+            if (users) return users;
+          }
+          return [];
+        }),
+        catchError(error => {
+          console.error('Error fetching users:', error);
+          return [];
+        })
       );
     }
   
-    updateUser(id: number, userRequest: UserRequest): Observable<UserResponse> {
-      return this.http.put<UserResponse>(`${this.apiUrl}/update/${id}`, userRequest).pipe(
-        catchError(this.handleError)
-      );
+     getUserById(id: number): Observable<UserResponse> {
+      // return this.http.get<UserResponse>(`${this.apiUrl}/get/${id}`).pipe(
+         catchError(this.handleError)
+      // );
+      return null;
+     }
+  
+    updateUser(id: number, formData: FormData): Observable<any> {
+      // Don't set Content-Type manually, let the browser set it with the boundary
+      return this.http.put(`${this.apiUrl}/update/${id}`, formData);
     }
   
     deleteUser(id: number): Observable<void> {
@@ -234,27 +257,43 @@ export class UserService {
         catchError(this.handleError)
       );
     }
-    verifyCode(verifyRequest: { email: string, code: string }): Observable<any> {
+   /* verifyCode(verifyRequest: { email: string, code: string }): Observable<any> {
       return this.http.post<any>(`${this.authUrl}/verify-code`, verifyRequest).pipe(
         catchError(this.handleError)
       );
+    }*/
+  
+    getUserInfo(): Observable<any> {
+      return this.http.get<any>(`${this.authUrl}/me`, {
+        headers: this.getAuthHeaders()
+      }).pipe(
+        catchError(error => {
+          console.error('An error occurred:', error);
+          return throwError(() => error);
+        })
+      );
+    }
+    private getAuthHeaders(): HttpHeaders {
+      const token = this.storageService.getToken();
+      return new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      });
+    }
+    forgotPassword(email: string): Observable<any> {
+      return this.http.post(`${this.authUrl}/forgot-password`, { email });
     }
   
-    getUserInfo(): Observable<UserResponse> {
-      // Ensure the Authorization header is included
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${this.storageService.getToken()}`);
-      
-      return this.http.get<UserResponse>(`${this.authUrl}/me`, { headers }).pipe(
-        map(userData => new UserResponse(userData)), // Use the constructor to normalize the data
-        tap(user => {
-          // Store the user data for future use
-          this.storageService.saveAuthData({
-            token: this.storageService.getToken() || '',
-            user: user
-          });
-        }),
-        catchError(this.handleError)
-      );
+    verifyCode(email: string, code: string): Observable<any> {
+      return this.http.post(`${this.authUrl}/verify-code`, { email, code });
+    }
+  
+    resetPassword(email: string, token: string, newPassword: string): Observable<any> {
+      return this.http.post(`${this.authUrl}/reset-password`, { 
+        email, 
+        token, 
+        newPassword 
+      });
     }
     getUserId(): number | null {
       const token = this.storageService.getToken();
@@ -268,16 +307,26 @@ export class UserService {
     }
   
     logout(): Observable<any> {
-      return this.http.post<any>(`${this.authUrl}/logout`, {}).pipe(
+      const token = this.storageService.getToken();
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      });
+    
+      // Specify responseType as 'text' instead of the default 'json'
+      return this.http.post(`${this.authUrl}/logout`, {}, { 
+        headers, 
+        responseType: 'text' 
+      }).pipe(
         tap(() => {
-          this.clearAuthState();
+          this._isLoggedIn$.next(false);
+          this.storageService.clean();
         }),
         catchError(error => {
-          this.clearAuthState();
-          return throwError(error);
+          console.error('Logout error:', error);
+          return throwError(() => error);
         })
       );
-    }
+    }   
   
     getUserBoard(): Observable<any> {
       return this.http.get(`${this.authUrl}/User`, { 
@@ -359,17 +408,31 @@ export class UserService {
       catchError(this.handleError)
     );
   }
+    /// gestion projet 
 
+    getUserByUsername(username: string): Observable<User[]> {
+      //http://localhost:8080/api/reports/search/findByProjetId?id=1&page=0&size=10
+      const repUrl = `${this.apiUrl}/searchUserByUsername/${username}`;
+  
+      return this.http.get<User[]>(repUrl).pipe(
+        map((response) => {
+          console.log("API Response:", response);
+          return response;
+        }),
+        catchError((error) => {
+          console.error("API Error:", error);
+          return throwError(() => new Error(error.message || "API Error"));
+        })
+      );
+    }
+      findUserId(id: number): Observable<User> {
 
-  /// gestion projet 
-
-  getUserByUsername(username: string): Observable<User[]> {
     //http://localhost:8080/api/reports/search/findByProjetId?id=1&page=0&size=10
-    const repUrl = `${this.apiUrl}/searchUserByUsername/${username}`;
+    const repUrl = `${this.apiUrl}/getUserById/${id}`;
 
-    return this.http.get<User[]>(repUrl).pipe(
+    return this.http.get<User>(repUrl).pipe(
       map((response) => {
-        console.log("API Response:", response);
+        console.log("API Response getUserById:", response);
         return response;
       }),
       catchError((error) => {
@@ -378,21 +441,5 @@ export class UserService {
       })
     );
   }
-
-  // getUserById(id: number): Observable<User> {
-
-  //   //http://localhost:8080/api/reports/search/findByProjetId?id=1&page=0&size=10
-  //   const repUrl = `${this.baseUrl}/getUserById/${id}`;
-
-  //   return this.httpClient.get<User>(repUrl).pipe(
-  //     map((response) => {
-  //       console.log("API Response getUserById:", response);
-  //       return response;
-  //     }),
-  //     catchError((error) => {
-  //       console.error("API Error:", error);
-  //       return throwError(() => new Error(error.message || "API Error"));
-  //     })
-  //   );
-  // }
+  
 }

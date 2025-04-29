@@ -52,7 +52,7 @@ public class JwtService {
 
         // Ensure role is always uppercase in the token
         claims.put("role", user.getRole().getRoleType().name().toUpperCase());  // <-- Key change
-
+        claims.put("idUser",user.getIdUser());
         claims.put("firstName", user.getLastname());
         claims.put("lastName", user.getFirstname());
         claims.put("email", user.getEmail());

@@ -5,5 +5,7 @@ export interface Announcement {
   title: string;
   content: string;
   createdAt?: Date;
-  club?: Club;
+  club?: Club | number;  // Peut être un objet Club ou un simple ID
+  clubId?: number;  // Ajouter cette ligne
+
 }

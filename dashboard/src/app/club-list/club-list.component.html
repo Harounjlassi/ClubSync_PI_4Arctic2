@@ -90,7 +90,7 @@
                     </td>
                     <td class="slogan-cell" title="{{ club.slogan }}">{{ club.slogan || 'No Slogan' }}</td>
                     <td>{{ club.categorie || 'Uncategorized' }}</td>
-                    <td>{{ club.creator?.name || 'N/A' }}</td>
+                    <td>{{ club.creator?.name || 'ADMIN' }}</td>
                     <td>{{ club.members?.length || 0 }}</td>
                     <td class="actions-cell">
                       <button mat-icon-button color="primary" (click)="openEditClubDialog(club)">
@@ -147,8 +147,8 @@
           <div class="card-header card-header-info bg-gradient-info">
             <div class="d-flex justify-content-between align-items-center">
               <div>
-                <h4 class="card-title mb-0">Top Clubs par Membres</h4>
-                <p class="card-category mb-0 text-white-50">Les clubs les plus populaires</p>
+                <h4 class="card-title mb-0">Top Clubs by Members</h4>
+                <p class="card-category mb-0 text-white-50">The most popular clubs</p>
               </div>
               <div class="badge bg-light text-dark rounded-pill px-4 py-3">
                 Top 5

@@ -3,6 +3,7 @@ package tn.esprit.clubsync.Controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reclamations")
+@SecurityRequirement(name = "BearerAuth")
+@CrossOrigin(origins = "http://localhost:4200") // Pour permettre l'accès depuis Angular
 public class ReclamationRestController {
 
     @Autowired

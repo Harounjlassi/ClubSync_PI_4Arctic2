@@ -1,3 +1,4 @@
+
 export class Report {
     // Define properties and constructor for Report class here.
      id: number;

@@ -73,6 +73,7 @@ public class SecurityConfig {
                                 "/user/restore/{id}",
                                 "/user/get/{id}",
                                 "/user/get/all",
+                                "/user/**",
                                 "/user/filter",
                                 "/user/users/sorted",
                                 "/user/users/stats",

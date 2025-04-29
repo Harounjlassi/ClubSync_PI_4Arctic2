@@ -29,7 +29,6 @@ import { AnnouncementDetailsDialogComponent } from './announcement-details-dialo
 import { ClickOutsideDirective } from './click-outside.directive';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { RegisterComponent } from './register/register.component';
-import { ProjectTaskListComponent } from './project-task-list/project-task-list.component';
 
 // Angular Material Modules
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -52,9 +51,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Third-party libraries
 import { ToastrModule } from 'ngx-toastr';
-import { ProjectReportListComponent } from './project-report-list/project-report-list.component';
-import { ProjetListComponent } from './projet-list/projet-list.component';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { UserListComponent } from './user-list/user-list.component';
+import { UserRegisterDialogComponent } from './user-register-dialog/user-register-dialog.component';
+import { UserEditDialogComponent } from './user-edit-dialog/user-edit-dialog.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { VerifyCodeComponent } from './verify-code/verify-code.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { ReclamationListComponent } from './reclamation/reclamation-list/reclamation-list.component';
+import { ReclamationEditComponent } from './reclamation/reclamation-edit/reclamation-edit.component';
+import { ReclamationDetailComponent } from './reclamation/reclamation-detail/reclamation-detail.component';
+import { ReclamationFormComponent } from './reclamationf/reclamation-form/reclamation-form.component';
+import { ClubHomeComponent } from './club-home/club-home.component';
 import { ProjetMessageComponent } from './projet-message/projet-message.component';
+import { ProjetListComponent } from './projet-list/projet-list.component';
+import { ProjectTaskListComponent } from './project-task-list/project-task-list.component';
+import { ProjectReportListComponent } from './project-report-list/project-report-list.component';
+import { ProjetsComponent } from './projets/projets.component';
 
 @NgModule({
   imports: [
@@ -66,7 +81,8 @@ import { ProjetMessageComponent } from './projet-message/projet-message.componen
     RouterModule,
     AppRoutingModule,
     ComponentsModule,
-    
+    CommonModule,  
+    BrowserModule,
     // Angular Material Modules
     MatAutocompleteModule,
     MatButtonModule,
@@ -118,16 +134,30 @@ import { ProjetMessageComponent } from './projet-message/projet-message.componen
     ClickOutsideDirective,
     AuthenticationComponent,
     RegisterComponent,
+    UserListComponent,
+    UserRegisterDialogComponent,
+    UserEditDialogComponent,
+    ForgotPasswordComponent,
+    VerifyCodeComponent,
+    ResetPasswordComponent,
+    UserSettingsComponent,
+    ReclamationListComponent,
+    ReclamationEditComponent,
+    ReclamationDetailComponent,
+    ReclamationFormComponent,
+    ClubHomeComponent,
+    ProjetMessageComponent,
+    ProjetsComponent,
     ProjectTaskListComponent,
     ProjectReportListComponent,
-    ProjetListComponent,
-    ProjetMessageComponent,
+    ProjetListComponent
+   
   ],
   providers: [
-    // {
-    //   provide: DomSanitizer,
-    //   useValue: DomSanitizer
-    // }
+   /* {
+      provide: DomSanitizer,
+      useValue: DomSanitizer
+    }*/
   ],
   bootstrap: [AppComponent]
 })

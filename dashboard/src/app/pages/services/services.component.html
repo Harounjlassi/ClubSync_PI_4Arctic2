@@ -9,6 +9,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="site.webmanifest">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <style>
+        /* User dropdown styles */
+        .user-dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff1313;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-icon:hover {
+            background-color: #e60e0e;
+        }
+
+        .user-icon i {
+            font-size: 18px;
+        }
+
+        .dropdown-menu {
+    display: none;
+    position: absolute;
+    left: 0;  /* Changed from right: 0 to left: 0 */
+    top: 50px;
+    min-width: 220px;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 10px 0;
+    z-index: 999;
+    transform: translateX(-70%); /* This centers the dropdown relative to the user icon */
+}
+
+/* For mobile responsiveness, you might want to add: */
+@media (max-width: 400px) {
+    .dropdown-menu {
+        min-width: 200px;
+        transform: translateX(-70%); /* Adjust as needed for smaller screens */
+    }
+}
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-email {
+            padding: 10px 15px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+            word-break: break-all;
+            max-width: 350px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 5px 0;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 8px 15px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .dropdown-item i {
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #ff1313;
+        }
+
+        @media (max-width: 991px) {
+            .user-dropdown-container {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- ? Preloader Start -->
@@ -58,7 +153,26 @@
                                     </nav>
                                 </div>
                                 <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                    <a href="from.html" class="btn header-btn">became a member</a>
+                                    <!-- Login button for logged out users -->
+                                    <a *ngIf="!isLoggedIn" href="#" class="btn header-btn" (click)="navigateToLogin(); $event.preventDefault()">Login</a>
+                                    
+                                    <!-- User dropdown for logged in users -->
+                                    <div *ngIf="isLoggedIn" class="user-dropdown-container">
+                                        <div class="user-icon" (click)="toggleDropdown($event)">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        
+                                        <div class="dropdown-menu" [class.show]="showDropdown">
+                                            <div class="dropdown-email">{{ userEmail }}</div>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" (click)="navigateToSettings()">
+                                                <i class="fas fa-cog"></i> Settings
+                                            </a>
+                                            <a class="dropdown-item" (click)="logout()">
+                                                <i class="fas fa-sign-out-alt"></i> Logout
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>   
@@ -88,115 +202,7 @@
             </div>
         </div>
         <!-- Hero End -->
-        <!--? Services Area Start -->
-        <section class="services-area pt-100 pb-150">
-            <!--? Want To work -->
-            <section class="wantToWork-area w-padding">
-                <div class="container">
-                    <div class="row align-items-end justify-content-between">
-                        <div class="col-lg-6 col-md-10 col-sm-10">
-                            <div class="section-tittle">
-                                <span>oUR sERVICES FOR YOU</span>
-                                <h2>PUSH YOUR LIMITS FORWARD We Offer to you</h2>
-                            </div>
-                        </div>
-                        <div class="col-xl-2 col-lg-2 col-md-3">
-                            <a href="services.html" class="btn wantToWork-btn f-right">More Services</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- Want To work End -->
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-cat single-cat2 text-center mb-50">
-                            <div class="cat-icon">
-                                <i class="flaticon-fitness"></i>
-                            </div>
-                            <div class="cat-cap">
-                                <h5><a href="services.html">QUALITY EQUIPMENT</a></h5>
-                                <p>The sea freight service has grown consider ably in recent years. We spend timetting to kn.</p>
-                            </div>
-                            <div class="img-cap">
-                                <a href="services.html" class="">Discover More About Us <i class="ti-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-cat single-cat2 text-center mb-50">
-                            <div class="cat-icon">
-                                <i class="flaticon-healthcare-and-medical"></i>
-                            </div>
-                            <div class="cat-cap">
-                                <h5><a href="services.html">health caring</a></h5>
-                                <p>The sea freight service has grown consider ably in recent years. We spend timetting to kn.</p>
-                            </div>
-                            <div class="img-cap">
-                                <a href="services.html" class="">Discover More About Us <i class="ti-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-cat single-cat2 text-center mb-50">
-                            <div class="cat-icon">
-                                <i class="flaticon-clock"></i>
-                            </div>
-                            <div class="cat-cap">
-                                <h5><a href="services.html">gym strategies</a></h5>
-                                <p>The sea freight service has grown consider ably in recent years. We spend timetting to kn.</p>
-                            </div>
-                            <div class="img-cap">
-                                <a href="services.html" class="">Discover More About Us <i class="ti-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-cat single-cat2 text-center mb-50">
-                            <div class="cat-icon">
-                                <i class="flaticon-healthcare-and-medical"></i>
-                            </div>
-                            <div class="cat-cap">
-                                <h5><a href="services.html">health caring</a></h5>
-                                <p>The sea freight service has grown consider ably in recent years. We spend timetting to kn.</p>
-                            </div>
-                            <div class="img-cap">
-                                <a href="services.html" class="">Discover More About Us <i class="ti-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-cat single-cat2 text-center mb-50">
-                            <div class="cat-icon">
-                                <i class="flaticon-clock"></i>
-                            </div>
-                            <div class="cat-cap">
-                                <h5><a href="services.html">gym strategies</a></h5>
-                                <p>The sea freight service has grown consider ably in recent years. We spend timetting to kn.</p>
-                            </div>
-                            <div class="img-cap">
-                                <a href="services.html" class="">Discover More About Us <i class="ti-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-cat single-cat2 text-center mb-50">
-                            <div class="cat-icon">
-                                <i class="flaticon-fitness"></i>
-                            </div>
-                            <div class="cat-cap">
-                                <h5><a href="services.html">QUALITY EQUIPMENT</a></h5>
-                                <p>The sea freight service has grown consider ably in recent years. We spend timetting to kn.</p>
-                            </div>
-                            <div class="img-cap">
-                                <a href="services.html" class="">Discover More About Us <i class="ti-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Services Area End -->
+      
     </main>
     <footer>
         <!--? Footer Start-->

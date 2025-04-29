@@ -1,0 +1,331 @@
+/* Modern UI styles for user list component */
+
+/* Stats cards */
+.stats-card {
+  border-radius: 12px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.stats-card:hover {
+  transform: translateY(-5px);
+}
+
+.stats-card .card-header {
+  padding: 15px;
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  border-radius: 10px 10px 0 0;
+}
+
+.stats-card .card-header-info {
+  background: linear-gradient(60deg, #26c6da, #00acc1);
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 188, 212, 0.4);
+}
+
+.stats-card .card-header-primary {
+  background: linear-gradient(60deg, #7b1fa2, #9c27b0);
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
+}
+
+.stats-card .card-header-success {
+  background: linear-gradient(60deg, #66bb6a, #43a047);
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(76, 175, 80, 0.4);
+}
+
+.stats-card .card-header-danger {
+  background: linear-gradient(60deg, #ef5350, #e53935);
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
+}
+
+.stats-card .card-icon {
+  float: left;
+  padding: 15px;
+  margin-top: -30px;
+  margin-right: 15px;
+  border-radius: 3px;
+  background-color: #fff;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card .card-icon i {
+  font-size: 36px;
+  line-height: 56px;
+  width: 56px;
+  height: 56px;
+  text-align: center;
+}
+
+.stats-card .card-icon i.info {
+  color: #00bcd4;
+}
+
+.stats-card .card-icon i.primary {
+  color: #9c27b0;
+}
+
+.stats-card .card-icon i.success {
+  color: #4caf50;
+}
+
+.stats-card .card-icon i.danger {
+  color: #f44336;
+}
+
+.stats-card .card-category {
+  color: #fff;
+  margin: 0;
+  font-size: 14px;
+  margin-bottom: 0;
+  font-weight: 300;
+}
+
+.stats-card .card-title {
+  color: #fff;
+  margin-top: 0;
+  font-size: 1.8rem;
+  font-weight: 300;
+}
+
+.stats-card .card-footer {
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+  padding: 15px 20px;
+  background-color: transparent;
+}
+
+.stats-card .card-footer .stats {
+  color: #999;
+  font-size: 12px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.stats-card .card-footer .stats i {
+  font-size: 16px;
+  position: relative;
+  top: 2px;
+  margin-right: 5px;
+}
+
+/* Card styling */
+.custom-card {
+  border-radius: 12px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  margin-bottom: 30px;
+}
+
+.custom-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header-danger {
+  background: linear-gradient(60deg, #ef5350, #e53935);
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
+  border-radius: 10px 10px 0 0;
+  padding: 25px 20px;
+}
+
+.card-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.card-category {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.card-body {
+  padding: 25px;
+}
+
+/* Filter section */
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.role-filter {
+  min-width: 200px;
+  margin-right: 20px;
+}
+
+.filter-info {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  color: #666;
+}
+
+/* Table styling */
+.modern-table {
+  margin-top: 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+th {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #3C4858;
+  padding: 12px 15px;
+}
+
+td {
+  padding: 15px;
+  font-size: 1.05rem;
+  vertical-align: middle;
+  border-top: 1px solid #f2f2f2;
+}
+
+tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.025);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.02);
+}
+
+/* Specific cells styling */
+.user-id {
+  font-weight: 600;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.user-email {
+  color: #3C4858;
+}
+
+.role-badge {
+  color: white;
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+.admin-badge {
+  background-color: #3f51b5;
+}
+
+.user-badge {
+  background-color: #4caf50; /* Green color for users */
+}
+
+/* Action buttons */
+.user-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.edit-button {
+  color: #3f51b5;
+}
+
+.ban-button {
+  color: #f44336;
+}
+
+.unban-button {
+  color: #4caf50;
+}
+
+button.mat-icon-button {
+  width: 42px;
+  height: 42px;
+  line-height: 42px;
+}
+
+.mat-icon {
+  font-size: 24px;
+}
+
+/* Loading state */
+.loading-text {
+  font-size: 1.2rem;
+  color: #757575;
+  margin-left: 15px;
+  align-self: center;
+}
+
+mat-spinner {
+  margin: 30px auto;
+}
+
+/* Empty list */
+.empty-list {
+  display: flex;
+  align-items: center;
+  background-color: #fff3cd;
+  color: #856404;
+  border-color: #ffeeba;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.warning-icon {
+  font-size: 28px;
+  margin-right: 15px;
+}
+
+.empty-message {
+  font-size: 1.2rem;
+}
+
+/* Archived user */
+.archived-user {
+  background-color: rgba(244, 67, 54, 0.05);
+}
+
+.archived-user td {
+  color: #757575;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .filter-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .role-filter {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+  
+  .filter-info {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filter-info span {
+    margin-bottom: 10px;
+  }
+}

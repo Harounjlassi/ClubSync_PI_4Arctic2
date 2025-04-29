@@ -1,0 +1,77 @@
+/* In home.component.scss */
+
+.user-dropdown-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .user-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ff1313;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: darken(#ff1313, 10%);
+    }
+    
+    i {
+      font-size: 18px;
+    }
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    min-width: 200px;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px 0;
+    z-index: 1000;
+    
+    &.show {
+      display: block;
+    }
+  }
+  
+  .dropdown-email {
+    padding: 10px 20px;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+    word-break: break-all;
+  }
+  
+  .dropdown-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 5px 0;
+  }
+  
+  .dropdown-item {
+    display: block;
+    padding: 8px 20px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    i {
+      margin-right: 10px;
+      width: 16px;
+      text-align: center;
+    }
+    
+    &:hover {
+      background-color: #f8f9fa;
+      color: #ff1313;
+    }
+  }

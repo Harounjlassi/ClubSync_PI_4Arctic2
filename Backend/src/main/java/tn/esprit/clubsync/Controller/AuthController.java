@@ -35,13 +35,16 @@ import tn.esprit.clubsync.dtos.VerifyRequest;
 import tn.esprit.clubsync.entities.Role;
 import tn.esprit.clubsync.entities.Sexe;
 import tn.esprit.clubsync.entities.User;
+import tn.esprit.clubsync.dtos.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/auth")
@@ -167,19 +170,178 @@ public class AuthController {
         user.setRole(role);
         return user;
     }
+    private final Map<String, VerificationData> verificationData = new ConcurrentHashMap<>();
+
+    // For storing reset tokens - should be in a database for production
+    private final Map<String, ResetTokenData> resetTokens = new ConcurrentHashMap<>();
+
+    // Data class to store verification info
+    private static class VerificationData {
+        private final String code;
+        private final LocalDateTime expiryTime;
+
+        public VerificationData(String code) {
+            this.code = code;
+            // Set expiry to 10 minutes from now
+            this.expiryTime = LocalDateTime.now().plusMinutes(10);
+        }
+
+        public boolean isValid(String code) {
+            return this.code.equals(code) && LocalDateTime.now().isBefore(expiryTime);
+        }
+    }
+
+    // Data class to store reset token info
+    private static class ResetTokenData {
+        private final String token;
+        private final LocalDateTime expiryTime;
+
+        public ResetTokenData(String token) {
+            this.token = token;
+            // Set token expiry to 1 hour
+            this.expiryTime = LocalDateTime.now().plusHours(1);
+        }
+
+        public boolean isValid(String token) {
+            return this.token.equals(token) && LocalDateTime.now().isBefore(expiryTime);
+        }
+    }
+
+    // Step 1: User requests password reset
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Object> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        try {
+            // Check if email exists in your user database
+            if (!userService.findByEmail(request.getEmail()).isPresent()) {
+                // Don't reveal if email exists or not for security
+                return ResponseEntity.ok(Map.of("message", "If your email exists, you will receive a verification code"));
+            }
+
+            sendVerificationCode(request.getEmail());
+            return ResponseEntity.ok(Map.of("message", "Verification code sent to your email"));
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to send verification email"));
+        }
+    }
+
+    // Step 2: User verifies code
+    @PostMapping("/verify-code")
+    public ResponseEntity<Object> verifyCode(@RequestBody VerifyCodeRequest request) {
+        String email = request.getEmail();
+        String code = request.getCode();
+
+        VerificationData data = verificationData.get(email);
+        if (data == null || !data.isValid(code)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Invalid or expired verification code"));
+        }
+
+        // Generate a token to use for resetting password
+        String resetToken = generateResetToken();
+        // Store token with email
+        resetTokens.put(email, new ResetTokenData(resetToken));
+
+        return ResponseEntity.ok(Map.of("token", resetToken));
+    }
+
+    // Step 3: User resets password with token
+    @PostMapping("/reset-password")
+    public ResponseEntity<Object> resetPassword(@RequestBody ResetPasswordRequest request) {
+        String email = request.getEmail();
+        String token = request.getToken();
+        String newPassword = request.getNewPassword();
+
+        // Validate token
+        ResetTokenData tokenData = resetTokens.get(email);
+        if (tokenData == null || !tokenData.isValid(token)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Invalid or expired reset token"));
+        }
+
+        // Get user and update password
+        Optional<User> userOpt = userService.findByEmail(email);
+        if (!userOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+
+        // Update password - your service should handle password encryption
+        userService.updatePassword(userOpt.get(), newPassword);
+
+        // Clean up - remove verification data and token
+        verificationData.remove(email);
+        resetTokens.remove(email);
+
+        return ResponseEntity.ok(Map.of("message", "Password reset successful"));
+    }
 
     private void sendVerificationCode(String email) throws MessagingException {
-        String verificationCode = String.format("%06d", new Random().nextInt(999999));
+        // Generate a 6-digit code
+        String verificationCode = String.format("%06d", new Random().nextInt(1000000));
         sendEmail(email, verificationCode);
-        verificationCodes.put(email, verificationCode);
+        // Store code with expiry
+        verificationData.put(email, new VerificationData(verificationCode));
+    }
+
+    private void sendEmail(String to, String code) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(to);
+        helper.setSubject("Your ClubSync Password Reset Code");
+
+        // Create a professional HTML email template
+        String htmlContent =
+                "<!DOCTYPE html>" +
+                        "<html lang='en'>" +
+                        "<head>" +
+                        "    <meta charset='UTF-8'>" +
+                        "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                        "    <title>Password Reset</title>" +
+                        "    <style>" +
+                        "        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }" +
+                        "        .container { max-width: 600px; margin: 0 auto; padding: 20px; }" +
+                        "        .header { background-color: #3498db; padding: 20px; text-align: center; }" +
+                        "        .header h1 { color: white; margin: 0; }" +
+                        "        .content { padding: 20px; background-color: #f9f9f9; border: 1px solid #ddd; }" +
+                        "        .code-box { background-color: #fff; border: 1px solid #ddd; padding: 15px; margin: 20px 0; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; }" +
+                        "        .footer { padding: 20px; text-align: center; font-size: 12px; color: #777; }" +
+                        "        .button { display: inline-block; padding: 10px 20px; background-color: #3498db; color: white; text-decoration: none; border-radius: 4px; }" +
+                        "    </style>" +
+                        "</head>" +
+                        "<body>" +
+                        "    <div class='container'>" +
+                        "        <div class='header'>" +
+                        "            <h1>ClubSync</h1>" +
+                        "        </div>" +
+                        "        <div class='content'>" +
+                        "            <h2>Password Reset Request</h2>" +
+                        "            <p>Hello,</p>" +
+                        "            <p>We received a request to reset your ClubSync account password. Please use the verification code below to complete your password reset:</p>" +
+                        "            <div class='code-box'>" + code + "</div>" +
+                        "            <p>This code will expire in <strong>10 minutes</strong>.</p>" +
+                        "            <p>If you didn't request a password reset, please ignore this email or contact our support team if you have concerns.</p>" +
+                        "            <p>Thank you,<br>The ClubSync Team</p>" +
+                        "        </div>" +
+                        "        <div class='footer'>" +
+                        "            <p>This is an automated email. Please do not reply to this message.</p>" +
+                        "            <p>&copy; " + java.time.Year.now().getValue() + " ClubSync. All rights reserved.</p>" +
+                        "        </div>" +
+                        "    </div>" +
+                        "</body>" +
+                        "</html>";
+
+        helper.setText(htmlContent, true); // Set as HTML content
+        mailSender.send(message);
+    }
+
+    private String generateResetToken() {
+        // Generate a secure random token
+        return UUID.randomUUID().toString();
     }
 
 
 
-    @PostMapping("/verify-code")
-    public ResponseEntity<Object> verifyCode(@RequestBody VerifyRequest request) {
-        return ResponseEntity.status(200).body(verificationCodes.get(request.getCode()));
-    }
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
@@ -309,14 +471,16 @@ public class AuthController {
 
             User user = userOptional.get();
             Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("idUser", user.getIdUser());
             userInfo.put("email", user.getEmail());
-            userInfo.put("nom", user.getFirstname());
-            userInfo.put("prenom", user.getLastname());
+            userInfo.put("firstname", user.getFirstname());
+            userInfo.put("lastname", user.getLastname());
             userInfo.put("dateNaissance", user.getDateNaissance());
             userInfo.put("sexe", user.getSexe().name());
             userInfo.put("numeroDeTelephone", user.getNumeroDeTelephone());
             userInfo.put("photoProfil", user.getPhotoProfil());
             userInfo.put("role", user.getRole().getRoleType());
+
 
             return ResponseEntity.ok(userInfo);
         } catch (Exception e) {
@@ -333,7 +497,10 @@ public class AuthController {
         String token = authHeader.substring(7);
         jwtService.revokeToken(token);
 
-        return ResponseEntity.ok("User successfully logged out and token invalidated.");
+        // Return a JSON object instead of plain text
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User successfully logged out and token invalidated.");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/all")
@@ -353,14 +520,14 @@ public class AuthController {
         return ResponseEntity.ok("Admin content");
     }
 
-    private void sendEmail(String to, String code) throws MessagingException {
+    /*private void sendEmail(String to, String code) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(to);
         helper.setSubject("Your Verification Code");
         helper.setText("Your verification code is: " + code);
         mailSender.send(message);
-    }
+    }*/
     @PutMapping("/ban/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> banUser(@PathVariable Long userId) {
@@ -477,8 +644,9 @@ public class AuthController {
         Files.createDirectories(filePath.getParent());
         Files.write(filePath, file.getBytes());
 
-        String imageUrl = "http://localhost:8080/" + uploadDir + filename;
-        return ResponseEntity.ok(imageUrl);
+        // Return relative path instead of full URL
+        String imagePath = "/" + uploadDir + filename;
+        return ResponseEntity.ok(imagePath);
     }
     // Add this endpoint to check if a user has enrolled their face
     @GetMapping("/check-face-enrollment/{email}")
@@ -640,6 +808,6 @@ public class AuthController {
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
     }
-    }
+}
 
 

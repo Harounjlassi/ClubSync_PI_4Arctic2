@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, of, tap } from 'rxjs';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 import { Announcement } from '../models/announcement';
 @Injectable({
   providedIn: 'root'
@@ -12,25 +12,27 @@ export class AnnouncementService {
   constructor(private http: HttpClient) { }
 
 // Dans announcement.service.ts
+
+
 getAll(): Observable<Announcement[]> {
-  console.log('Appel API getAll() en cours...');
-  return this.http.get<Announcement[]>(`${this.API_URL}/all`).pipe(
-    tap(data => {
-      console.log('Réponse API getAll():', data);
-      console.log(`Nombre d'annonces reçues: ${data.length}`);
-      // Vérifier chaque annonce pour des données manquantes
-      data.forEach((announcement, index) => {
-        console.log(`Annonce ${index + 1}:`, announcement);
-        if (!announcement.title || !announcement.content) {
-          console.warn(`⚠️ Annonce ${index + 1} (ID: ${announcement.id}) a des données manquantes!`);
-        }
-        if (!announcement.club) {
-          console.warn(`⚠️ Annonce ${index + 1} (ID: ${announcement.id}) n'a pas de club associé!`);
-        }
-      });
-    }),
+  return this.http.get<any[]>(`${this.API_URL}/all`).pipe(
+
+    // 1. on transforme chaque raw en notre Announcement TS
+    map(rawArr => rawArr.map(raw => ({
+      id:        raw.id,
+      title:     raw.title,
+      content:   raw.content,
+      createdAt: raw.createdAt,
+      club:      raw.club,
+      clubId:    raw.club?.id_club ?? 0        // ← on crée toujours ce champ
+    }))),
+
+    // 2. on loggue le résultat normalisé
+    tap(normalized => console.log('✅ normalized announcements:', normalized)),
+
+    // 3. en cas d’erreur on retourne un tableau vide
     catchError(error => {
-      console.error('❌ Erreur lors de la récupération des annonces:', error);
+      console.error('❌ Erreur getAll():', error);
       return of([]);
     })
   );
@@ -43,9 +45,35 @@ getAll(): Observable<Announcement[]> {
   }
 
   addAnnouncement(clubId: number, announcement: Announcement): Observable<Announcement> {
-    return this.http.post<Announcement>(`${this.API_URL}/add/${clubId}`, announcement).pipe(
+    return this.http.post<any>(`${this.API_URL}/add/${clubId}`, announcement).pipe(
+      map(response => {
+        // Normaliser la réponse
+        const normalizedResponse = { ...response };
+        
+        // Traiter le format du club
+        if (typeof normalizedResponse.club === 'number') {
+          // Si club est un ID numérique, le transformer en objet
+          normalizedResponse.clubId = normalizedResponse.club;
+          normalizedResponse.club = { 
+            id_club: normalizedResponse.club,
+            name: this.getClubNameById(clubId)
+          };
+        } else if (normalizedResponse.club && normalizedResponse.club.id_club) {
+          // Si club est un objet, extraire l'ID
+          normalizedResponse.clubId = normalizedResponse.club.id_club;
+        }
+        
+        return normalizedResponse;
+      }),
       catchError(this.handleError<Announcement>('addAnnouncement'))
     );
+  }
+  
+  // Méthode auxiliaire pour obtenir le nom du club par ID
+  private getClubNameById(clubId: number): string {
+    // Vous pourriez avoir une liste de clubs en cache ou faire une requête séparée
+    // Pour l'instant, nous retournons un nom générique
+    return `Club #${clubId}`;
   }
 
   deleteAnnouncement(id: number): Observable<any> {

@@ -5,7 +5,7 @@
         <!-- Search field with autocomplete -->
         <div class="mb-3 d-flex">
           <mat-form-field appearance="outline" class="search-field">
-            <mat-label for="searchInput">Search</mat-label>
+            <mat-label for="searchInput"></mat-label>
             <div class="search-input-container">
               <mat-icon class="search-icon">search</mat-icon>
               <input 
@@ -69,35 +69,17 @@
             </div>
             <div class="mb-3 d-flex justify-content-between flex-wrap">
               <div>
-                <mat-form-field appearance="outline" class="club-filter" style="width: 300px; margin-right: 15px;">
-                  <mat-label for="clubFilterSelect">Filter by Club</mat-label>
-                  <mat-select 
-                    id="clubFilterSelect" 
-                    name="clubFilterSelect" 
-                    [(value)]="selectedClub" 
-                    (selectionChange)="applyFilter()"
-                    aria-label="Filter announcements by club">
-                    <mat-option [value]="null" id="allClubsOption">All Clubs</mat-option>
-                    <mat-option *ngFor="let announcement of announcements || []; let i = index" 
-                              [value]="announcement.club?.id_club" 
-                              [disabled]="!announcement.club?.id_club"
-                              [id]="'clubOption_' + i"
-                              [attr.name]="'clubOption_' + i">
-                      {{ announcement.club?.name || 'Unknown' }}
+                <mat-form-field appearance="outline" class="club-filter" style="width:300px">
+                  <mat-label>Filter by Club</mat-label>
+                  <mat-select [(value)]="selectedClub" (selectionChange)="applyFilter()">
+                    <mat-option [value]="null">All Clubs</mat-option>
+                    <mat-option *ngFor="let c of clubs" [value]="c.id">
+                      {{ c.name | uppercase }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="view-options mb-2 ms-2">
-                <mat-button-toggle-group [(ngModel)]="currentView" aria-label="View options">
-                  <mat-button-toggle value="cards" aria-label="Card view">
-                    <mat-icon>view_module</mat-icon>
-                  </mat-button-toggle>
-                  <mat-button-toggle value="table" aria-label="Table view">
-                    <mat-icon>view_list</mat-icon>
-                  </mat-button-toggle>
-                </mat-button-toggle-group>
-              </div>
+
               <div class="export-buttons-container">
                 <button 
                   class="btn export-btn export-btn-pdf" 
@@ -122,59 +104,7 @@
               </div>
             </div>
             
-            <!-- Card View -->
-            <div *ngIf="currentView === 'cards'" class="announcement-cards">
-              <div class="row">
-                <div *ngFor="let announcement of filteredAnnouncements || []; let i = index" class="col-md-4 mb-4">
-                  <mat-card class="announcement-card h-100" [id]="'announcementCard_' + announcement.id">
-                    <mat-card-header [style.background-color]="getCardColor(announcement.club?.id_club)">
-                      <mat-card-title [id]="'cardTitle_' + announcement.id">{{ announcement.title || '' }}</mat-card-title>
-                      <mat-card-subtitle [id]="'cardClub_' + announcement.id">
-                        <mat-icon class="club-icon">group</mat-icon>{{ getClubName(announcement.club) }}
-                      </mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                      <p class="announcement-content" [id]="'cardContent_' + announcement.id">
-                        {{ (announcement.content || '') | slice:0:150 }}{{ (announcement.content || '').length > 150 ? '...' : '' }}
-                      </p>
-                      <div class="announcement-date" [id]="'cardDate_' + announcement.id">
-                        <mat-icon class="date-icon">calendar_today</mat-icon>
-                        <span>{{ announcement.createdAt | date:'medium' }}</span>
-                      </div>
-                    </mat-card-content>
-                    <mat-card-actions align="end">
-                      <button 
-                        mat-icon-button 
-                        color="primary" 
-                        (click)="openEditAnnouncementDialog(announcement)" 
-                        aria-label="Edit announcement"
-                        [id]="'editCardBtn_' + announcement.id"
-                        matTooltip="Edit">
-                        <mat-icon>edit</mat-icon>
-                      </button>
-                      <button 
-                        mat-icon-button 
-                        color="warn" 
-                        (click)="deleteAnnouncement(announcement.id)" 
-                        aria-label="Delete announcement"
-                        [id]="'deleteCardBtn_' + announcement.id"
-                        matTooltip="Delete">
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                      <button 
-                        mat-icon-button 
-                        color="accent" 
-                        (click)="viewAnnouncementDetails(announcement.id)" 
-                        aria-label="View announcement details"
-                        [id]="'viewCardBtn_' + announcement.id"
-                        matTooltip="View details">
-                        <mat-icon>visibility</mat-icon>
-                      </button>
-                    </mat-card-actions>
-                  </mat-card>
-                </div>
-              </div>
-            </div>
+           
               
             <!-- Table View (Original) -->
             <div class="table-responsive" *ngIf="currentView === 'table' && (filteredAnnouncements || []).length > 0" id="announcementTableContainer">
@@ -190,17 +120,20 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let announcement of filteredAnnouncements || []; let i = index"
-                     [id]="'announcementRow_' + announcement.id">
-                    <td [id]="'announcementTitle_' + announcement.id">{{ announcement.title || '' }}</td>
-                    <td class="content-cell" 
-                       [title]="announcement.content || ''"
-                       [id]="'announcementContent_' + announcement.id">
-                      {{ (announcement.content || '') | slice:0:100 }}{{ (announcement.content || '').length > 100 ? '...' : '' }}
-                    </td>
-                    <td [id]="'announcementClub_' + announcement.id">
-                      {{ (announcement.club?.name || 'Non attribué') | uppercase }}
-                    </td>                    <td [id]="'announcementDate_' + announcement.id">{{ announcement.createdAt | date:'medium' }}</td>
-                    <td class="actions-cell">
+   [id]="'announcementRow_' + announcement.id">
+  <td [id]="'announcementTitle_' + announcement.id">{{ announcement.title || 'Sans titre' }}</td>
+  <td class="content-cell" 
+     [title]="announcement.content || ''"
+     [id]="'announcementContent_' + announcement.id">
+    {{ announcement.content ? (announcement.content | slice:0:100) + (announcement.content.length > 100 ? '...' : '') : 'Pas de contenu' }}
+  </td>
+  <td [id]="'announcementClub_' + announcement.id">
+    {{ (announcement.club?.name || 'Non attribué') | uppercase }}
+  </td>
+  <td [id]="'announcementDate_' + announcement.id">
+    {{ announcement.createdAt ? (announcement.createdAt | date:'medium') : 'Date inconnue' }}
+  </td>
+  <td class="actions-cell">
                       <button 
                         mat-icon-button 
                         color="primary" 

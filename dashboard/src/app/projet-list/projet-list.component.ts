@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Message } from "app/models/message";
-import { Projet } from "app/models/projet";
+import { Projet } from "app/models/projet";	
 import { User } from "app/models/user.model";
 import { CalenderApiService } from "app/services/calender-api.service";
 import { FaceRecognitionService } from "app/services/face-recognition.service";
@@ -553,7 +553,7 @@ get nom() {
   openEditProjectModal(project: Projet) {
     this.selectedProject = project;
 
-    this.userService.getUserById(project.createurId).subscribe(
+    this.userService.findUserId(project.createurId).subscribe(
       (data) => {
         console.log("Received user:", data);
         this.user = data;
@@ -738,5 +738,3 @@ const dateTimeWithDays = newDate + "T00:00:00";
 }
 
 }
-
-

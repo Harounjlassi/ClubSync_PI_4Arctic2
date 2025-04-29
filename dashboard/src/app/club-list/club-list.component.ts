@@ -18,6 +18,7 @@ declare module 'jspdf' {
 import Chart from 'chart.js/auto';
 import * as XLSX from 'xlsx';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-club-list',
@@ -57,6 +58,7 @@ export class ClubListComponent implements OnInit, AfterViewInit {
       'rgba(234, 179, 8, 1)'
     ]
   };
+loading: any;
 
 
   constructor(
@@ -79,9 +81,12 @@ export class ClubListComponent implements OnInit, AfterViewInit {
       }
     }, 500);
   }
+  private destroy$ = new Subject<void>();
 
   fetchClubs(): void {
-    this.clubService.getAllClubs().subscribe(
+    this.clubService.getAllClubs().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(
       (data: Club[]) => {
         this.clubs = data;
         this.filteredClubs = data;
@@ -98,7 +103,20 @@ export class ClubListComponent implements OnInit, AfterViewInit {
       }
     );
   }
+// In both components
 
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+  
+  // Clean up charts
+  if (this.chart) {
+    this.chart.destroy();
+  }
+  if (this.chartTopMembers) {
+    this.chartTopMembers.destroy();
+  }
+}
   generateChart(): void {
     if (this.chart) {
       this.chart.destroy();

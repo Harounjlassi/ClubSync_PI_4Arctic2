@@ -1,0 +1,50 @@
+<!-- verify-code.component.html -->
+<div class="verify-code-container">
+    <div class="card">
+      <h2>Verify Code</h2>
+      <p>Enter the 6-digit verification code sent to your email.</p>
+      
+      <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="code">Verification Code</label>
+          <input 
+            type="text" 
+            id="code" 
+            formControlName="code" 
+            class="form-control"
+            placeholder="Enter 6-digit code"
+            maxlength="6"
+          >
+          <div *ngIf="verifyForm.get('code')?.invalid && verifyForm.get('code')?.touched" class="error-message">
+            <span *ngIf="verifyForm.get('code')?.errors?.['required']">Verification code is required</span>
+            <span *ngIf="verifyForm.get('code')?.errors?.['minlength'] || verifyForm.get('code')?.errors?.['maxlength']">
+              Code must be 6 digits
+            </span>
+          </div>
+        </div>
+        
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+        
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="verifyForm.invalid || isLoading"
+        >
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Verify Code
+        </button>
+        
+        <div class="resend-code">
+          <button type="button" class="btn btn-link" (click)="resendCode()" [disabled]="isLoading">
+            Resend Code
+          </button>
+        </div>
+        
+        <div class="back-link">
+          <a routerLink="/forgot-password">Back</a>
+        </div>
+      </form>
+    </div>
+  </div>

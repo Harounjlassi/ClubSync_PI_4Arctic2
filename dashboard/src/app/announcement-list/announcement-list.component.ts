@@ -13,6 +13,13 @@ import { AddAnnouncementDialogComponent } from '../add-announcement-dialog/add-a
 import { EditAnnouncementDialogComponent } from '../edit-announcement-dialog/edit-announcement-dialog.component';
 import { AnnouncementDetailsDialogComponent } from '../announcement-details-dialog/announcement-details-dialog.component';
 import { finalize, tap } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+
+// Define Club interface to fix TypeScript errors
+interface Club {
+  id_club: number;
+  name: string;
+}
 
 // Extend jsPDF to include the lastAutoTable property
 declare module 'jspdf' {
@@ -34,10 +41,11 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
   error: boolean = false;
   selectedClub: number | null = null;
   chart: any;
-  currentView: 'cards' | 'table' = 'cards'; // Default to card view
-  
+  currentView: string = 'table';  // Properly initialize with a value  
   // Club color mapping
   private clubColors = new Map<number, string>();
+  clubs: { id: number; name: string }[] = [];
+
   
   // Modern color palette
   chartColors = {
@@ -56,13 +64,13 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
       'rgba(139, 92, 246, 1)',
     ]
   };
-  cdRef: any;
 
   constructor(
     private announcementService: AnnouncementService,
     private dialog: MatDialog,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +81,7 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
       console.error('Error in ngOnInit:', error);
     }
   }
+  
   
   ngAfterViewInit(): void {
     try {
@@ -100,24 +109,46 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
   }
 
   loadAnnouncements(): void {
-    this.announcementService.getAll().pipe(
-      tap((data: Announcement[]) => {
-        // Filtrage strict côté frontend
-        this.announcements = data.filter(a => 
-          a?.title?.trim() && 
-          a?.content?.trim() &&
-          a?.club?.id_club > 0
-        );
+    this.announcementService.getAll().subscribe({
+      next: (data) => {
+        // Vérifier et nettoyer les données reçues
+        this.announcements = data.map(announcement => {
+          // S'assurer que toutes les propriétés existent
+          return {
+            id: announcement.id || 0,
+            title: announcement.title || '',
+            content: announcement.content || '',
+            clubId: announcement.clubId || null,
+            club: announcement.club || null,
+            createdAt: announcement.createdAt || new Date()
+          };
+        });
         
-        // Réinitialisation des filtres
-        this.searchText = '';
-        this.selectedClub = null;
-        
-        // Forcer la détection des changements
-        this.cdRef.detectChanges();
-      }),
-      finalize(() => this.applyFilter())
-    ).subscribe();
+        this.buildClubList();
+        this.applyFilter();
+        this.cdRef.detectChanges(); // Forcer la détection des changements
+      },
+      error: (error) => {
+        console.error('Error loading announcements:', error);
+        this.error = true;
+      }
+    });
+  }
+
+  private buildClubList() {
+    const map = new Map<number, string>();
+    for (const a of this.announcements) {
+      if (a.clubId && a.club) {
+        // Handle both cases: when club is an object or a number
+        if (typeof a.club === 'object' && a.club !== null) {
+          map.set(a.clubId, a.club.name);
+        } else if (typeof a.clubId === 'number') {
+          // If club is not an object, use clubId as identifier
+          map.set(a.clubId, `Club #${a.clubId}`);
+        }
+      }
+    }
+    this.clubs = Array.from(map.entries()).map(([id, name]) => ({ id, name }));
   }
   
   // Method to assign colors to clubs consistently
@@ -125,13 +156,25 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
     this.clubColors.clear();
     
     // Get unique club IDs
-    const uniqueClubIds = Array.from(
-      new Set(
-        this.announcements
-          .filter(a => a.club && a.club.id_club)
-          .map(a => a.club!.id_club)
-      )
-    );
+    const uniqueClubIds: number[] = [];
+    
+    this.announcements.forEach(a => {
+      if (a.club) {
+        let clubId: number | null = null;
+        
+        if (typeof a.club === 'object' && a.club !== null && 'id_club' in a.club) {
+          clubId = a.club.id_club;
+        } else if (typeof a.club === 'number') {
+          clubId = a.club;
+        } else if (a.clubId) {
+          clubId = a.clubId;
+        }
+        
+        if (clubId !== null && !uniqueClubIds.includes(clubId)) {
+          uniqueClubIds.push(clubId);
+        }
+      }
+    });
     
     // Assign colors to each club
     uniqueClubIds.forEach((clubId, index) => {
@@ -166,16 +209,33 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
     });
   }
   
-  getClubName(club: any): string {
-    if (!club) return 'N/A';
+  getClubName(a: Announcement): string {
+    if (!a.club) return 'No Club';
     
-    if (typeof club === 'object') {
-      return club?.name || 'N/A';
+    if (typeof a.club === 'object' && a.club !== null && 'name' in a.club) {
+      return a.club.name;
+    } else if (typeof a.club === 'number') {
+      // Trouver le nom du club dans la liste des clubs s'il existe
+      const foundClub = this.clubs.find(c => c.id === a.club);
+      return foundClub ? foundClub.name : `Club #${a.club}`;
     }
     
-    // If it's just an ID, you may need to look up the club name
-    // from your clubs collection
-    return 'N/A';
+    return 'Unknown Club';
+  }
+  
+  // Get club's ID safely, handling both object and number cases
+  private getClubId(a: Announcement): number | null {
+    if (!a.club) return null;
+    
+    if (typeof a.club === 'object' && a.club !== null && 'id_club' in a.club) {
+      return a.club.id_club;
+    } else if (typeof a.club === 'number') {
+      return a.club;
+    } else if (a.clubId) {
+      return a.clubId;
+    }
+    
+    return null;
   }
 
   generateChart(): void {
@@ -186,7 +246,18 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
     // Group announcements by club
     const clubData = {};
     this.announcements.forEach(announcement => {
-      const clubName = announcement.club?.name || 'Uncategorized';
+      // Get club name safely
+      let clubName = 'Uncategorized';
+      
+      if (announcement.club) {
+        if (typeof announcement.club === 'object' && announcement.club !== null && 'name' in announcement.club) {
+          clubName = announcement.club.name;
+        } else if (typeof announcement.club === 'number') {
+          // Si c'est un ID numérique
+          clubName = `Club #${announcement.club}`;
+        }
+      }
+      
       clubData[clubName] = (clubData[clubName] || 0) + 1;
     });
 
@@ -361,11 +432,24 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
   
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.id) {
-        this.announcements = [result, ...this.announcements]; // Ajout immédiat
+        // Plutôt que d'ajouter manuellement, recharger les annonces
+        this.loadAnnouncements();
+        
+        // Réappliquer le filtre
         this.applyFilter();
+        
+        // Forcer la détection des changements
+        this.cdRef.detectChanges();
+        
         this.toastr.success('Annonce ajoutée!', 'Succès', {positionClass: 'toast-bottom-right'});
       }
     });
+  }
+  
+  // Méthode auxiliaire pour obtenir le nom du club par ID
+  private getClubNameById(clubId: number): string {
+    const club = this.clubs.find(c => c.id === clubId);
+    return club ? club.name : `Club #${clubId}`;
   }
 
   deleteAnnouncement(id: number): void {
@@ -404,28 +488,43 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
   }
   
   applyFilter(): void {
-    if (!this.announcements) {
-      this.filteredAnnouncements = [];
-      return;
-    }
-    
-    this.filteredAnnouncements = this.announcements.filter(announcement => {
-      const matchesSearch = this.searchText
-        ? (announcement.title?.toLowerCase() || '').includes(this.searchText.toLowerCase()) || 
-          (announcement.content?.toLowerCase() || '').includes(this.searchText.toLowerCase())
-        : true;
-  
+    this.filteredAnnouncements = this.announcements.filter(a => {
+      const txt = this.searchText.toLowerCase();
+      const title = (a.title ?? '').toLowerCase();
+      const content = (a.content ?? '').toLowerCase();
+      
+      // Text filter
+      const matchesSearch = !txt || title.includes(txt) || content.includes(txt);
+      
+      // Déterminer l'ID du club pour cette annonce
+      let announcementClubId = null;
+      
+      if (a.clubId) {
+        // Si clubId est défini, l'utiliser directement
+        announcementClubId = a.clubId;
+      } else if (a.club) {
+        if (typeof a.club === 'object' && a.club !== null && 'id_club' in a.club) {
+          // Si club est un objet avec id_club
+          announcementClubId = a.club.id_club;
+        } else if (typeof a.club === 'number') {
+          // Si club est un ID numérique
+          announcementClubId = a.club;
+        }
+      }
+      
+      // Log pour débogage
+      console.log(`Annonce ${a.id}, Club: ${JSON.stringify(a.club)}, ClubId: ${announcementClubId}, Selected: ${this.selectedClub}`);
+      
+      // Club filter (si un club est sélectionné)
       const matchesClub = this.selectedClub
-        ? announcement.club?.id_club === this.selectedClub
+        ? announcementClubId === this.selectedClub
         : true;
-  
+      
       return matchesSearch && matchesClub;
     });
     
-    // Update chart when filter changes
-    setTimeout(() => {
-      this.generateChart();
-    }, 200);
+    // Régénérer le graphique
+    setTimeout(() => this.generateChart(), 200);
   }
   
   exportToPDF(): void {
@@ -465,7 +564,25 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
     doc.setFontSize(12);
     let filterInfo = 'All Announcements';
     if (this.selectedClub) {
-      const clubName = this.announcements.find(a => a.club?.id_club === this.selectedClub)?.club?.name || 'Unknown Club';
+      // Find club name safely
+      let clubName = 'Unknown Club';
+      const foundAnnouncement = this.announcements.find(a => {
+        if (a.club) {
+          if (typeof a.club === 'object' && a.club !== null && 'id_club' in a.club) {
+            return a.club.id_club === this.selectedClub;
+          } else if (typeof a.club === 'number') {
+            return a.club === this.selectedClub;
+          } else if (a.clubId) {
+            return a.clubId === this.selectedClub;
+          }
+        }
+        return false;
+      });
+      
+      if (foundAnnouncement) {
+        clubName = this.getClubName(foundAnnouncement);
+      }
+      
       filterInfo = `Filtered by Club: ${clubName}`;
     }
     if (this.searchText) {
@@ -482,7 +599,7 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
       announcement.id,
       announcement.title,
       this.truncateText(announcement.content, 60),
-      announcement.club?.name || 'N/A',
+      this.getClubName(announcement),
       this.formatDate(announcement.createdAt),
     ]);
     
@@ -571,7 +688,7 @@ export class AnnouncementListComponent implements OnInit, AfterViewInit {
       'ID': announcement.id,
       'Title': announcement.title,
       'Content': announcement.content,
-      'Club': announcement.club?.name || 'N/A',
+      'Club': this.getClubName(announcement),
       'Created Date': this.formatDate(announcement.createdAt)
     }));
 

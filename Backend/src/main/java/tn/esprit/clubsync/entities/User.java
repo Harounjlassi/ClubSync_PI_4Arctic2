@@ -30,22 +30,10 @@ public class User implements UserDetails {
     private List<Reclamation> reclamationsCreees;
 
     @ManyToMany(mappedBy = "members")
-    private List<Club> clubs = new ArrayList<>();
-
-
-
-
-    //gestion projet relations // Ensure this is initialized to avoid NPE
-    @OneToMany(mappedBy = "createur", cascade = CascadeType.ALL)
     @JsonIgnore
 
-    private Set<Projet> createdProjects = new HashSet<>();
-
-    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL)
+    private List<Club> clubs = new ArrayList<>();  // Ensure this is initialized to avoid NPE
     @JsonIgnore
-
-    private Set<Report> submittedReports = new HashSet<>();
-
     public List<Reclamation> getReclamationsCreees() {
         return reclamationsCreees;
     }
@@ -61,7 +49,7 @@ public class User implements UserDetails {
     public void setReclamationsTraitees(List<Reclamation> reclamationsTraitees) {
         this.reclamationsTraitees = reclamationsTraitees;
     }
-
+    @JsonIgnore
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     private List<Reclamation> reclamationsTraitees;
     public String getFirstname() {

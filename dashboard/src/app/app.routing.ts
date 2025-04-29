@@ -16,9 +16,13 @@ import { ChatComponent } from './chat/chat.component';
 import { JokeComponent } from './joke/joke.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { VerifyCodeComponent } from './verify-code/verify-code.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { ReclamationFormComponent } from './reclamationf/reclamation-form/reclamation-form.component';
+import { ClubHomeComponent } from './club-home/club-home.component';
 import { ProjetsComponent } from './projets/projets.component';
-
-
 const routes: Routes =[
   {
     path: '',
@@ -31,8 +35,33 @@ const routes: Routes =[
     component: AuthenticationComponent
   },
   {
+    path: 'settings',
+    component: UserSettingsComponent
+  },
+  {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'reclamationf',
+    component: ReclamationFormComponent
+    
+  },
+ 
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
+    
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent
+   
+  },
+  {
+    path: 'verify-code',
+    component: VerifyCodeComponent
+    
   },
 
   {
@@ -55,9 +84,8 @@ const routes: Routes =[
       { path: 'schedule', component: ScheduleComponent },  
       { path: 'clubs', component: ClubsComponent },
       { path: 'jokes', component: JokeComponent },
-      { path: 'projects', component: ProjetsComponent },    
-
-
+      { path: 'club-home/:id', component: ClubHomeComponent },
+      { path: 'projects', component: ProjetsComponent }, 
       
 
      

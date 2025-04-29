@@ -35,7 +35,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
   ngOnInit(): void {
     // Initialisation du chat avec un message de bienvenue
-    this.addBotMessage('Bonjour et bienvenue sur ClubSync ! 👋 Comment puis-je vous aider aujourd\'hui ?');
+    this.addBotMessage('Hello and welcome to ClubSync! 👋 How can I assist you today?');
 
     // Setup typing detection
     this.userInput.valueChanges.pipe(

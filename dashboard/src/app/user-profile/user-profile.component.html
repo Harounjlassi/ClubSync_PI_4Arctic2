@@ -29,12 +29,13 @@
           </div>
           <div class="card-body">
             <!-- Profile Picture -->
-            <div class="row" *ngIf="currentUser.photoProfil">
+            <div class="row">
               <div class="col-md-12 text-center mb-4">
-                <img [src]="currentUser.photoProfil || defaultAvatar" 
+                <img [src]="defaultAvatar" 
                      alt="Profile Picture" 
                      class="rounded-circle"
                      style="width: 150px; height: 150px; object-fit: cover;">
+                <p class="mt-2 text-muted">*Profile image temporarily using placeholder</p>
               </div>
             </div>
 
@@ -43,13 +44,13 @@
               <div class="col-md-6">
                 <label>First Name</label>
                 <div class="form-group">
-                  <p>{{ currentUser.lastname || 'Not provided' }}</p>
+                  <p>{{ currentUser.firstname || 'Not provided' }}</p>
                 </div>
               </div>
               <div class="col-md-6">
                 <label>Last Name</label>
                 <div class="form-group">
-                  <p>{{ currentUser.firstname || 'Not provided' }}</p>
+                  <p>{{ currentUser.lastname || 'Not provided' }}</p>
                 </div>
               </div>
             </div>
@@ -68,7 +69,7 @@
               <div class="col-md-6">
                 <label>Birth Date</label>
                 <div class="form-group">
-                  <p>{{ currentUser.dateNaissance | date:'mediumDate' || 'Not provided' }}</p>
+                  <p>{{ formatDate(currentUser.dateNaissance) }}</p>
                 </div>
               </div>
               <div class="col-md-6">
@@ -91,12 +92,6 @@
             <!-- Account Info -->
             <div class="row">
               <div class="col-md-6">
-                <label>User ID</label>
-                <div class="form-group">
-                  <p>{{ currentUser.idUser || 'Not available' }}</p>
-                </div>
-              </div>
-              <div class="col-md-6">
                 <label>Role</label>
                 <div class="form-group">
                   <p>{{ getRoleName() }}</p>
@@ -104,34 +99,22 @@
               </div>
             </div>
             
-            <!-- Status -->
+            <!-- Buttons -->
             <div class="row">
-              <div class="col-md-12">
-                <label>Account Status</label>
-                <div class="form-group">
-                  <p>{{ currentUser.archived ? 'Archived' : 'Active' }}</p>
-                </div>
+              <div class="col-md-6 mt-4">
+                <button mat-raised-button 
+                        (click)="onEdit(currentUser.idUser)" 
+                        class="btn btn-primary btn-lg px-4 py-3 d-flex align-items-center justify-content-center">
+                  <i class="material-icons mr-2" style="font-size: 24px;">edit</i>
+                  <span style="font-size: 18px; font-weight: 500;">Edit Profile</span>
+                </button>
               </div>
-            </div>
-            
-            <!-- Logout button -->
-            <div class="row">
-              <div class="col-md-12 mt-4">
+              <div class="col-md-6 mt-4">
                 <button mat-raised-button 
                         (click)="logout()" 
                         class="btn btn-danger btn-lg px-4 py-3 d-flex align-items-center justify-content-center">
                   <i class="material-icons mr-2" style="font-size: 24px;">exit_to_app</i>
                   <span style="font-size: 18px; font-weight: 500;">Logout</span>
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 mt-4">
-                <button mat-raised-button 
-                        (click)="onEdit(currentUser.idUser)" 
-                        class="btn btn-danger btn-lg px-4 py-3 d-flex align-items-center justify-content-center">
-                  <i class="material-icons mr-2" style="font-size: 24px;">exit_to_app</i>
-                  <span style="font-size: 18px; font-weight: 500;">Edit</span>
                 </button>
               </div>
             </div>

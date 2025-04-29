@@ -108,25 +108,12 @@ export class RegisterComponent implements OnInit {
       dateNaissance: new Date(formValue.dateNaissance).toISOString(),
       sexe: formValue.sexe,
       numeroDeTelephone: Number(formValue.numeroDeTelephone),
-      id_role: 2, // Automatically set role to "User" (assuming user role id is 1)
-      photoProfil: ''
+      id_role: 2, // Automatically set role to "User" (assuming user role id is 2)
+      photoProfil: this.selectedFile // Now passing the File object directly
     };
 
-    if (this.selectedFile) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        userRequest.photoProfil = reader.result as string;
-        this.registerUser(userRequest);
-      };
-      reader.readAsDataURL(this.selectedFile);
-    } else {
-      this.registerUser(userRequest);
-    }
-  }
-
-  private registerUser(user: any): void {
     this.isLoading = true;
-    this.userService.register(user).subscribe({
+    this.userService.register(userRequest).subscribe({
       next: () => {
         this.isLoading = false;
         this.snackBar.open('Inscription réussie! Vous pouvez maintenant vous connecter.', 'Fermer', {

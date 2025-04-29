@@ -42,7 +42,7 @@ public class Reclamation {
     }
 
     public void setNuser(User nuser) {
-        nuser = nuser;
+        this.nuser = nuser;
     }
 
     public enum TypeReclamation {

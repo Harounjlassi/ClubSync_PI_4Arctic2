@@ -11,6 +11,7 @@ import { Report } from 'app/models/report';
 import { ReportService } from 'app/services/report.service';
 import { MessageService } from 'app/services/message.service';
 
+
 @Component({
   selector: 'app-projets',
   templateUrl: './projets.component.html',
@@ -49,11 +50,19 @@ completedP:number;
 
   
   ngOnInit() {
-    this.listProjets();
 
+    this.listProjets();
+    document.querySelector('.fixed-plugin')?.remove();
     this.completedP=this.projets.filter(p => p.status === 'Finished').length;
     console.log("sssssss"+this.projets);
-   
+   setTimeout(() => {
+      const preloader = document.getElementById('preloader-active');
+      if (preloader) {
+        preloader.style.display = 'none';
+      }
+      
+    }, 1000); // Small timeout to ensure content has loaded
+  
   }
   
 
@@ -88,7 +97,7 @@ completedP:number;
     
     uniqueUserIds.forEach(userId => {
       if (!this.users[userId]) {  
-        this.userService.getUserById(userId).subscribe({
+        this.userService.findUserId(userId).subscribe({
           next: (user) => {  // Directly get the user object
             if (user && user.idUser) {  // Check for idUser instead of id
               this.users[userId] = user;
@@ -200,7 +209,7 @@ trackByReportId(index: number, report: Report): number {
 }
 
   loadUser(userId: number): void {
-    this.userService.getUserById(userId).subscribe({
+    this.userService.findUserId(userId).subscribe({
       next: (response) => {
         // Handle case where response is an array
         const user = Array.isArray(response) ? response[0] : response;
