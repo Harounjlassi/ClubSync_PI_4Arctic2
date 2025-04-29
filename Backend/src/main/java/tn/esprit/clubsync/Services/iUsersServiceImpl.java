@@ -29,7 +29,7 @@ public class iUsersServiceImpl implements IUserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
 
-        }
+    }
     @Override
     public User getUserById(Long id) {
         System.out.println("Searching user by ID: " + id);
@@ -115,9 +115,16 @@ public class iUsersServiceImpl implements IUserService {
         return userRepository.findByEmail(email);
     }
 
-
+    @Override
+    public List<User> searchUserByUsername(String title) {
+        return userRepository.searchUserByUsername(title);
+    }
+    @Override
+    public List<User> searchUserById(Long id) {
+        return userRepository.findUserById(id);
+    }
 }
 
 
 
-    // Vos autres implémentations de méthodes existantes...
+// Vos autres implémentations de méthodes existantes...

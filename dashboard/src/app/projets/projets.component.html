@@ -1,0 +1,1042 @@
+<html class="no-js" lang="zxx">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Health & Fitness | Template</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="assets/img/favicon.ico"
+    />
+  </head>
+  <body>
+    <!-- ? Preloader Start -->
+    <div id="preloader-active">
+      <div class="preloader d-flex align-items-center justify-content-center">
+        <div class="preloader-inner position-relative">
+          <div class="preloader-circle"></div>
+          <div class="preloader-img pere-text">
+            <img src="assets/img/logo/loder.png" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Preloader Start -->
+    <header>
+      <!--? Header Start -->
+      <div class="header-area header-transparent">
+        <div class="main-header header-sticky">
+          <div class="container-fluid">
+            <div class="row align-items-center">
+              <!-- Logo -->
+              <div class="col-xl-2 col-lg-2 col-md-1">
+                <div class="logo">
+                  <a href="index.html"
+                    ><img src="assets/img/logo/logo.png" alt=""
+                  /></a>
+                </div>
+              </div>
+              <div class="col-xl-10 col-lg-10 col-md-10">
+                <div
+                  class="menu-main d-flex align-items-center justify-content-end"
+                >
+                  <!-- Main-menu -->
+                  <div class="main-menu f-right d-none d-lg-block">
+                    <nav>
+                      <ul id="navigation">
+                        <li><a routerLink="/front">Home</a></li>
+                        <li><a routerLink="/front/about">About</a></li>
+                        <li><a routerLink="/front/services">Services</a></li>
+                        <li><a routerLink="/front/schedule">Schedule</a></li>
+                        <li><a routerLink="/front/gallery">Gallery</a></li>
+                        <li>
+                          <a routerLink="/front/blog">Blog</a>
+                          <ul class="submenu">
+                            <li><a routerLink="/front/blog">Blog</a></li>
+                            <li>
+                              <a routerLink="/front/blog-details"
+                                >Blog Details</a
+                              >
+                            </li>
+                            <li><a routerLink="/front/elements">Element</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="contact.html">Contact</a></li>
+                      </ul>
+                    </nav>
+                  </div>
+                  <!-- <div class="header-right-btn f-right d-none d-lg-block ml-30">
+                    <a href="from.html" class="btn header-btn"
+                      >became a member</a
+                    >
+                  </div> -->
+                </div>
+              </div>
+              <!-- Mobile Menu -->
+              <div class="col-12">
+                <div class="mobile_menu d-block d-lg-none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Header End -->
+    </header>
+    <main>
+      <!--? Hero Start -->
+      <div class="slider-area2">
+        <div class="slider-height2 d-flex align-items-center">
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="hero-cap hero-cap2 text-center pt-70">
+                  <h2>
+                    Effective Project Solutions That Save Time and Resources
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="about-area section-padding30">
+        <div class="container">
+          <div class="row">
+            <!-- Not Started Card -->
+            <div class="col-md-3 col-sm-6">
+              <div class="stat-card">
+                <div class="stat-icon bg-info">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path d="M384 32c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96C0 60.7 28.7 32 64 32H384zM160 144c-13.3 0-24 10.7-24 24s10.7 24 24 24H288c13.3 0 24-10.7 24-24s-10.7-24-24-24H160zM128 248c0 13.3 10.7 24 24 24H288c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24zM160 344c-13.3 0-24 10.7-24 24s10.7 24 24 24H288c13.3 0 24-10.7 24-24s-10.7-24-24-24H160z"/>
+                  </svg>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-title">Not Started Projects</h3>
+                  <p class="stat-value">{{this.notStartedP}}</p>
+                  <div class="stat-trend neutral">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                      <path d="M201.4 137.4c12.5-12.5 32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 205.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160z"/>
+                    </svg>
+                    <span>2 new this week</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Pending Card -->
+            <div class="col-md-3 col-sm-6">
+              <div class="stat-card">
+                <div class="stat-icon bg-warning">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+                  </svg>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-title">PLanning Projects</h3>
+                  <p class="stat-value">{{this.plannignP}}</p>
+                  <div class="stat-trend negative">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                      <path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/>
+                    </svg>
+                    <span>3 delayed</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Active Projects Card -->
+            <div class="col-md-3 col-sm-6">
+              <div class="stat-card">
+                <div class="stat-icon bg-warning">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/>
+                  </svg>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-title">In Progress Projects</h3>
+                  <p class="stat-value">{{this.inProgressP}}</p>
+                  <div class="stat-trend positive">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                      <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/>
+                    </svg>
+                    <span>12% from last month</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Finished Card -->
+            <div class="col-md-3 col-sm-6">
+              <div class="stat-card">
+                <div class="stat-icon bg-success">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
+                  </svg>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-title">Completed Projects</h3>
+                  <p class="stat-value">{{completedP}}</p>
+                  <div class="stat-trend positive">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                      <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/>
+                    </svg>
+                    <span>5 completed this week</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="section-padding20">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="section-tittle mb-35">
+                <span>YOUR PROJECTS</span>
+                <h2>Recent Projects</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 col-md-6" *ngFor="let tempProjet of projets">
+              <div class="project-card">
+                <!-- Project Header -->
+                <div class="project-header">
+                  <div class="project-image">
+                    <img
+                      [src]="tempProjet.imageUrl"
+                      alt="Website Redesign Project"
+                    />
+                    <div class="image-overlay"></div>
+                    <span class="project-badge {{ tempProjet.status }}">
+                      {{ tempProjet.status }}
+                    </span>
+                  </div>
+                  <div class="project-title">
+                    <h3>{{ tempProjet.nom }}</h3>
+                    <p>{{ tempProjet.description }}/p></p>
+                  </div>
+                </div>
+
+                <!-- Project Meta -->
+                <div class="project-meta">
+                  <div class="meta-item">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>Created: {{ tempProjet.dateCreated }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>Updated: {{ tempProjet.lastUpdated }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <i class="far fa-user"></i>
+                    <span
+                      >Creator: {{ getUserName(tempProjet.createurId) }}</span
+                    >
+                  </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="project-progress">
+                  <div class="progress-info">
+                    <span>Progress</span>
+                    <span>{{ tempProjet.progress }}%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div
+                      class="progress-fill"
+                      [style.width.%]="tempProjet?.progress || 0"
+                    ></div>
+                  </div>
+                </div>
+                <div class="project-tasks">
+                  <h4><i class="far fa-check-circle"></i> Recent Tasks</h4>
+
+                  <!-- Tasks List -->
+                  <ul
+                    class="task-list"
+                    *ngIf="getProjectTasks(tempProjet.id).length > 0"
+                  >
+                    <li
+                      *ngFor="
+                        let task of getProjectTasks(tempProjet.id);
+                        let i = index
+                      "
+                      class="task"
+                      [class.completed]="task.status === 'COMPLETED'"
+                      [class.in-progress]="task.status === 'IN_PROGRESS'"
+                      [class.pending]="
+                        task.status === 'PENDING' || !task.status
+                      "
+                      [class.to-do]="task.status === 'TO_DO'"
+                      [style.animation-delay]="i * 0.1 + 's'"
+                    >
+                      <!-- Status Icons -->
+                      <i
+                        class="fas fa-check-circle"
+                        *ngIf="task.status === 'COMPLETED'"
+                      ></i>
+                      <i
+                        class="fas fa-spinner fa-pulse"
+                        *ngIf="task.status === 'IN_PROGRESS'"
+                      ></i>
+                      <i
+                        class="far fa-circle"
+                        *ngIf="task.status === 'PENDING' || !task.status"
+                      ></i>
+                      <i
+                        class="fas fa-clock pulse-animation"
+                        *ngIf="task.status === 'TO_DO'"
+                      ></i>
+
+                      <!-- Task Title -->
+                      <span>{{ task.titre }}</span>
+
+                      <!-- Status Labels -->
+                      <small *ngIf="task.status === 'COMPLETED'"
+                        >Completed</small
+                      >
+                      <small *ngIf="task.status === 'IN_PROGRESS'"
+                        >Due {{ task.dueDate | date : "shortDate" }}</small
+                      >
+                      <small *ngIf="task.status === 'PENDING' || !task.status"
+                        >Not started</small
+                      >
+                      <small *ngIf="task.status === 'TO_DO'" class="pulse-text"
+                        >Coming soon</small
+                      >
+                    </li>
+                  </ul>
+
+                  <!-- No Tasks State -->
+                  <div
+                    class="no-tasks"
+                    *ngIf="getProjectTasks(tempProjet.id).length === 0"
+                  >
+                    <i class="far fa-clock"></i>
+                    <p>No tasks available</p>
+                  </div>
+                </div>
+
+                <!-- Project Footer -->
+
+                <div class="project-footer">
+                  <button
+                    class="btn-details"
+                    (click)="openModal(tempProjet.id)"
+                  >
+                    <i class="far fa-folder-open"></i>Show Messages
+                  </button>
+                  <button
+                    class="btn-reports"
+                    (click)="openModalReports(tempProjet.id)"
+                  >
+                    <i class="far fa-file"></i> Show Reports
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Message Modal -->
+
+            <div
+              class="modal-overlay"
+              [class.active]="showModal"
+              (click)="onOverlayClick($event)"
+            >
+              <div class="modal-container" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                  <h3><i class="fas fa-comments"></i> Project Messages</h3>
+                  <button class="modal-close" (click)="closeModal()">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+
+                <div class="modal-content">
+                  <!-- Message List -->
+                  <div class="messages-container">
+                    <div *ngFor="let message of messages" class="message-card">
+                      <div class="message-header">
+                        <div class="message-meta">
+                          <span class="message-id"
+                            >Message #{{ message.id }}</span
+                          >
+                          <span class="message-date">
+                            <i class="far fa-clock"></i>
+                            {{ message.dateCreated | date : "mediumDate" }}
+                            <span
+                              *ngIf="
+                                message.dateCreated !== message.lastUpdated
+                              "
+                            >
+                              (updated
+                              {{ message.lastUpdated | date : "mediumDate" }})
+                            </span>
+                          </span>
+                        </div>
+                        <div class="message-actions">
+                          <button
+                            class="btn-icon"
+                            (click)="copyMessage(message.id)"
+                          >
+                            <i class="fas fa-copy"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="message-content">
+                        <p>{{ message.contenu }}</p>
+                      </div>
+
+                      <div class="message-footer">
+                        <span class="project-badge">
+                          <i class="fas fa-project-diagram"></i> Project #{{
+                            message.ProjetId
+                          }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- No Messages Placeholder -->
+                  <div
+                    *ngIf="!messages || messages.length === 0"
+                    class="no-messages"
+                  >
+                    <i class="far fa-comment-dots"></i>
+                    <h4>No Messages Yet</h4>
+                    <p>There are no messages for this project</p>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn-secondary" (click)="closeModal()">
+                    <i class="far fa-times-circle"></i> Close
+                  </button>
+                  <!-- <button class="btn-primary" >
+                    <i class="far fa-plus-square"></i> New Message
+                  </button> -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Reports Modal -->
+            <div
+              class="modal-overlay"
+              [class.active]="showModalReport"
+              (click)="onOverlayClick($event)"
+            >
+              <div class="modal-container" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                  <h3><i class="fas fa-file-alt"></i> Project Reports</h3>
+                  <button
+                    class="modal-close"
+                    (click)="closeModal()"
+                    aria-label="Close modal"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+
+                <div class="modal-content">
+                  <!-- Reports Section -->
+                  <div class="modal-section reports-section">
+                    <h4>
+                      <i class="fas fa-clipboard-check"></i> Project Reports
+                    </h4>
+
+                    <!-- Debug Output -->
+                    <!-- <div *ngIf="reports" class="debug-info">
+                      <h5>Debug Data:</h5>
+                      <pre>{{ reports | json }}</pre>
+                      <pre *ngIf="reportsBy">{{ reportsBy | json }}</pre>
+                    </div> -->
+
+                    <!-- Reports List -->
+                    <div
+                      *ngIf="reportsBy && reportsBy.length > 0"
+                      class="reports-list"
+                    >
+                      <div *ngFor="let report of reportsBy" class="report-card">
+                        <div class="report-header">
+                          <div class="report-title">{{ report.title }}</div>
+                          <div
+                            class="report-status"
+                            [ngClass]="'status-' + report.status.toLowerCase()"
+                          >
+                            {{ report.status | titlecase }}
+                          </div>
+                        </div>
+                        <div class="report-meta">
+                          <span class="meta-item"
+                            ><i class="fas fa-tasks"></i>
+                            {{ report.TacheTitre }}</span
+                          >
+                          <span class="meta-item"
+                            ><i class="fas fa-user"></i>
+                            {{ report.ReporterFirstName }}</span
+                          >
+                          <span class="meta-item"
+                            ><i class="fas fa-clock"></i>
+                            {{ report.lastUpdated | date : "mediumDate" }}</span
+                          >
+                        </div>
+                        <div class="report-description">
+                          <p>{{ report.description }}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- No Reports Message -->
+                    <div
+                      *ngIf="!reportsBy || reportsBy.length === 0"
+                      class="no-reports"
+                    >
+                      <i class="far fa-file-alt"></i>
+                      <p>No reports available for this project</p>
+                    </div>
+                  </div>
+
+                  <!-- Team Section -->
+                  <!-- <div class="modal-section team-section">
+                    <h4><i class="fas fa-users"></i> Project Team</h4>
+                    <ul class="team-list">
+                      <li *ngFor="let report of reports" class="team-report">
+                        <span class="report-label">Report:</span> 
+                        <span class="report-title">{{ report.title }}</span>
+                        <span class="report-status" [ngClass]="'status-' + report.status.toLowerCase()">
+                          {{ report.status }}
+                        </span>
+                      </li>
+                      <li class="team-member"><i class="fas fa-crown"></i> <strong>Project Lead:</strong> Sarah J.</li>
+                      <li class="team-member"><i class="fas fa-paint-brush"></i> <strong>UI Designer:</strong> Michael T.</li>
+                      <li class="team-member"><i class="fas fa-code"></i> <strong>Frontend Dev:</strong> Alex K.</li>
+                      <li class="team-member"><i class="fas fa-server"></i> <strong>Backend Dev:</strong> Jamie L.</li>
+                    </ul>
+                  </div>
+             -->
+                  <!-- Timeline Section -->
+                  <!-- <div class="modal-section timeline-section">
+                    <h4><i class="fas fa-calendar-alt"></i> Timeline</h4>
+                    <ul class="timeline-list">
+                      <li><i class="far fa-play-circle"></i> <strong>Start Date:</strong> March 1, 2023</li>
+                      <li><i class="far fa-calendar-check"></i> <strong>Due Date:</strong> May 15, 2023</li>
+                      <li><i class="fas fa-project-diagram"></i> <strong>Current Phase:</strong> Development</li>
+                    </ul>
+                  </div>
+             -->
+                  <!-- Requirements Section -->
+                  <!-- <div class="modal-section requirements-section">
+                    <h4><i class="fas fa-clipboard-list"></i> Key Requirements</h4>
+                    <ul class="requirements-list">
+                      <li><i class="fas fa-mobile-alt"></i> Mobile-first responsive design</li>
+                      <li><i class="fas fa-universal-access"></i> WCAG 2.1 AA accessibility compliance</li>
+                      <li><i class="fas fa-cogs"></i> CMS integration</li>
+                      <li><i class="fas fa-search"></i> SEO optimization</li>
+                    </ul>
+                  </div> -->
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn-secondary" (click)="closeModal()">
+                    <i class="far fa-times-circle"></i> Close
+                  </button>
+                  <button class="btn-primary">
+                    <i class="far fa-paper-plane"></i> Contact Team
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-30">
+            <div class="col-lg-12 text-center">
+              <a href="projects.html" class="btn">View All Projects</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Hero End -->
+      <!--? About Area Start -->
+      <section class="about-area section-padding30">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+              <!-- about-img -->
+              <div class="about-img">
+                <img
+                  src="assets/img/projetImg/project9.png"
+                  alt="Project team working"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+              <div class="about-caption">
+                <!-- Section Tittle -->
+                <div class="section-tittle section-tittle3 mb-35">
+                  <span>ABOUT OUR COMPANY</span>
+                  <h2>
+                    Effective Project Solutions That Save Time and Resources
+                  </h2>
+                </div>
+                <p class="pera-top">
+                  We deliver your projects with flexible, convenient and
+                  customized approaches. You can select your preferred
+                  methodologies and tools for particular needs with unlimited
+                  customization possibilities. Pixel-perfect execution of your
+                  vision is our goal.
+                </p>
+                <p class="mb-65 pera-bottom">
+                  Our company provides project management services with
+                  flexible, convenient and client-focused solutions. We adapt to
+                  your favorite workflows and processes to ensure successful
+                  project delivery.
+                </p>
+                <a href="contact.html" class="btn">Request Consultation</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="wantToWork-area w-padding">
+        <div class="container">
+          <div class="row align-items-end justify-content-between">
+            <div class="col-lg-6 col-md-9 col-sm-9">
+              <div class="section-tittle">
+                <span>OUR PROJECT METHODOLOGIES</span>
+                <h2>Proven Approaches for Successful Delivery</h2>
+              </div>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-3">
+              <a href="services.html" class="btn wantToWork-btn f-right"
+                >View All Services</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- About-2 Area End -->
+      <!--? Project Gallery Area Start -->
+      <div class="gallery-area">
+        <div class="container-fluid p-0 fix">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="box snake mb-30">
+                <div
+                  class="gallery-img big-img"
+                  style="
+                    background-image: url(assets/img/projetImg/project8.png);
+                  "
+                ></div>
+                <div class="overlay">
+                  <div class="overlay-content">
+                    <a href="projects.html"
+                      ><i class="ti-arrow-top-right"></i
+                    ></a>
+                    <h3>Enterprise Software Implementation</h3>
+                    <p>Technology, Business</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <div class="box snake mb-30">
+                    <div
+                      class="gallery-img small-img"
+                      style="
+                        background-image: url(assets/img/projetImg/project4.png);
+                      "
+                    ></div>
+                    <div class="overlay">
+                      <div class="overlay-content">
+                        <a href="projects.html"
+                          ><i class="ti-arrow-top-right"></i
+                        ></a>
+                        <h3>Marketing Campaign</h3>
+                        <p>Marketing, Digital</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <div class="box snake mb-30">
+                    <div
+                      class="gallery-img small-img"
+                      style="
+                        background-image: url(assets/img/projetImg/project2.png);
+                      "
+                    ></div>
+                    <div class="overlay">
+                      <div class="overlay-content">
+                        <a href="projects.html"
+                          ><i class="ti-arrow-top-right"></i
+                        ></a>
+                        <h3>Construction Project</h3>
+                        <p>Construction, Engineering</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <div class="box snake mb-30">
+                    <div
+                      class="gallery-img small-img"
+                      style="
+                        background-image: url(assets/img/projetImg/project1.png);
+                      "
+                    ></div>
+                    <div class="overlay">
+                      <div class="overlay-content">
+                        <a href="projects.html"
+                          ><i class="ti-arrow-top-right"></i
+                        ></a>
+                        <h3>Product Development</h3>
+                        <p>Design, Manufacturing</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <div class="box snake mb-30">
+                    <div
+                      class="gallery-img small-img"
+                      style="
+                        background-image: url(assets/img/projetImg/project14.png);
+                      "
+                    ></div>
+                    <div class="overlay">
+                      <div class="overlay-content">
+                        <a href="projects.html"
+                          ><i class="ti-arrow-top-right"></i
+                        ></a>
+                        <h3>Event Planning</h3>
+                        <p>Logistics, Coordination</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Project Gallery Area End -->
+      <!--? About-2 Area Start -->
+      <section class="about-area2 testimonial-area section-padding30 fix">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-5 col-md-11 col-sm-11">
+              <!-- about-img -->
+              <div class="about-img2">
+                <img
+                  src="assets/img/projetImg/project11.png"
+                  alt="Client meeting"
+                />
+                <!-- Shape -->
+                <div class="shape-qutaion d-none d-sm-block">
+                  <img src="assets/img/projetImg/project16.png" alt="" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-9 col-sm-9">
+              <div class="about-caption">
+                <!-- Section Tittle -->
+                <div class="section-tittle mb-55">
+                  <span>Client Feedback</span>
+                  <h2>What Our Clients Say About Our Services</h2>
+                </div>
+                <!-- Testimonial Start -->
+                <div class="h1-testimonial-active">
+                  <!-- Single Testimonial -->
+                  <div class="single-testimonial">
+                    <div class="testimonial-caption">
+                      <p>
+                        Their project management team delivered our software
+                        implementation ahead of schedule and under budget. The
+                        flexible approach and customized solutions made all the
+                        difference. Perfect execution of our requirements was
+                        their top priority.
+                      </p>
+                      <div class="rattiong-caption">
+                        <span>Sarah Johnson<span>CTO, TechCorp</span> </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Single Testimonial -->
+                  <div class="single-testimonial">
+                    <div class="testimonial-caption">
+                      <p>
+                        We've worked with many project management firms, but
+                        none have shown the level of dedication and attention to
+                        detail as this team. They adapted to our processes while
+                        bringing best practices that improved our outcomes
+                        significantly.
+                      </p>
+                      <div class="rattiong-caption">
+                        <span
+                          >Michael Chen<span
+                            >Operations Director, Global Retail</span
+                          >
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Testimonial End -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- About-2 Area End -->
+      <!--? Want To work -->
+
+      <!-- Want To work End -->
+      <!--? Project Cards Start -->
+
+      <!-- About-2 Area End -->
+      <!--? Want To work -->
+      <section class="wantToWork-area w-padding">
+        <div class="container">
+          <div class="row align-items-end justify-content-between">
+            <div class="col-lg-6 col-md-9 col-sm-9">
+              <div class="section-tittle">
+                <span>OUR SUCCESSFUL PROJECTS</span>
+                <h2>Our Most SUCCESSFUL PROJECTS</h2>
+              </div>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-3">
+              <a href="services.html" class="btn wantToWork-btn f-right"
+                >More Services</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Want To work End -->
+      <!--? Team Ara Start -->
+      <div class="team-area pb-150">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+              <div class="single-team mb-30">
+                <div class="team-img">
+                  <img src="assets/img/projetImg/project15.png" alt="" />
+                  <div class="team-caption">
+                    <span>Creative derector</span>
+                    <h3><a href="#">Jhon Sunsaev</a></h3>
+                    <!-- Blog Social -->
+                    <div class="team-social">
+                      <ul>
+                        <li>
+                          <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="fab fa-twitter"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="fas fa-globe"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="fab fa-instagram"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+              <div class="single-team mb-30">
+                <div class="team-img">
+                  <img src="assets/img/projetImg/project13.png" alt="" />
+                  <div class="team-caption">
+                    <span>Creative derector</span>
+                    <h3><a href="#">Jhon Sunsaev</a></h3>
+                    <!-- Blog Social -->
+                    <div class="team-social">
+                      <ul>
+                        <li>
+                          <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="fab fa-twitter"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="fas fa-globe"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="fab fa-instagram"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+              <div class="single-team mb-30">
+                <div class="team-img">
+                  <img src="assets/img/projetImg/project12.png" alt="" />
+                  <div class="team-caption">
+                    <span>Creative derector</span>
+                    <h3><a href="#">Jhon Sunsaev</a></h3>
+                    <!-- Blog Social -->
+                    <div class="team-social">
+                      <ul>
+                        <li>
+                          <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="fab fa-twitter"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="fas fa-globe"></i></a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="fab fa-instagram"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Team Ara End -->
+      <!--? Want To work -->
+      <!-- <section class="wantToWork-area w-padding section-bg" data-background="assets/img/gallery/section_bg02.png">
+            <div class="container">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-xl-6 col-lg-7 col-md-8 col-sm-10">
+                        <div class="wantToWork-caption">
+                            <h2>April membership offer available Now</h2>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-3">
+                        <a href="services.html" class="btn wantToWork-btn f-right">More Services</a>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+      <!-- Want To work End -->
+    </main>
+    <footer>
+      <!--? Footer Start-->
+      <div
+        class="footer-area section-bg"
+        data-background="assets/img/gallery/section_bg03.png"
+      >
+        <div class="container">
+          <div class="footer-top footer-padding">
+            <!-- Footer Menu -->
+            <div class="row d-flex justify-content-between">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6">
+                <div class="single-footer-caption mb-50">
+                  <div class="footer-tittle">
+                    <h4>COMPANY</h4>
+                    <ul>
+                      <li><a href="#">About Us</a></li>
+                      <li><a href="#">Company</a></li>
+                      <li><a href="#"> Press & Blog</a></li>
+                      <li><a href="#"> Privacy Policy</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                <div class="single-footer-caption mb-50">
+                  <div class="footer-tittle">
+                    <h4>Open hour</h4>
+                    <ul>
+                      <li><a href="#">Monday 11am-7pm</a></li>
+                      <li><a href="#"> Tuesday-Friday 11am-8pm</a></li>
+                      <li><a href="#"> Saturday 10am-6pm</a></li>
+                      <li><a href="#"> Sunday 11am-6pm</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <div class="single-footer-caption mb-50">
+                  <div class="footer-tittle">
+                    <h4>RESOURCES</h4>
+                    <ul>
+                      <li><a href="#">Home Insurance</a></li>
+                      <li><a href="#">Travel Insurance</a></li>
+                      <li><a href="#"> Car Insurance</a></li>
+                      <li><a href="#"> Business Insurance</a></li>
+                      <li><a href="#"> Heal Insurance</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
+                <div class="single-footer-caption mb-50">
+                  <!-- logo -->
+                  <div class="footer-logo">
+                    <a href="index.html"
+                      ><img src="assets/img/logo/logo2_footer.png" alt=""
+                    /></a>
+                  </div>
+                  <div class="footer-tittle">
+                    <div class="footer-pera">
+                      <p class="info1">
+                        GThe trade war currently ensuing between te US anfd
+                        several natxions around thdhe globe, most fiercely with.
+                      </p>
+                    </div>
+                  </div>
+                  <!-- Footer Social -->
+                  <div class="footer-social">
+                    <a href="https://www.facebook.com/sai4ull"
+                      ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a href=""><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fas fa-globe"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Footer Bottom -->
+          <div class="footer-bottom">
+            <div class="row d-flex align-items-center">
+              <div class="col-lg-12">
+                <div class="footer-copy-right text-center">
+                  <p>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;
+                    <script>
+                      document.write(new Date().getFullYear());
+                    </script>
+                    All rights reserved | This template is made with
+                    <i class="fa fa-heart" aria-hidden="true"></i> by
+                    <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Footer End-->
+    </footer>
+    <!-- Scroll Up -->
+    <div id="back-top">
+      <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+    </div>
+  </body>
+</html>

@@ -1,6 +1,8 @@
 package tn.esprit.clubsync.Repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tn.esprit.clubsync.entities.Sexe;
 import tn.esprit.clubsync.entities.User;
@@ -19,4 +21,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findBySexe(Sexe sexe);
     List<User> findByArchived(Boolean archived);
     boolean existsByEmail(String email);
+    @Query("SELECT t FROM User t WHERE t.lastname LIKE %:username%")
+    List<User> searchUserByUsername(@Param("username") String username);
+
+    @Query("SELECT u FROM User u WHERE u.idUser = :id")
+    List<User> findUserById(@Param("id") Long id);
 }

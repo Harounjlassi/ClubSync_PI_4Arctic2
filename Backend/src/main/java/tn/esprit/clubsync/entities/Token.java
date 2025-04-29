@@ -1,6 +1,5 @@
 package tn.esprit.clubsync.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,8 +26,6 @@ public class Token {
     private boolean isValid; // bch na3rf el token actif wale
 
     @ManyToOne
-    @JsonIgnore          // <– NE PAS sérialiser la référence inverse
-
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 

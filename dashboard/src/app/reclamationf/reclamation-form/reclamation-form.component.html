@@ -192,58 +192,67 @@ transform: translateX(-70%); /* This centers the dropdown relative to the user i
         </div>
     </div>
     <!-- Hero End -->
-    <!-- Reclamation Form Section Start -->
-    <section class="form-container">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="mb-0">Submit a New Reclamation</h4>
-                        </div>
-                        <div class="card-body">
-                            <form id="reclamationForm">
-                                <div class="mb-4">
-                                    <label for="typeReclamation" class="form-label">What type of issue are you experiencing?</label>
-                                    <select id="typeReclamation" name="typeReclamation" class="form-select">
-                                        <option value="" disabled selected>Select Issue Type</option>
-                                        <option value="Club_Communication_Issue">Club_Communication_Issue</option>
-                                        <option value=" Membership_Request_Delay"> Membership_Request_Delay</option>
-                                        <option value=" Project_Organization_Issue"> Project_Organization_Issue</option>
-                                        <option value="OTHER">Other</option>
-                                    </select>
-                                    <div id="typeError" class="invalid-feedback" style="display: none;">
-                                        Please select an issue type
-                                    </div>
+  <!-- Reclamation Form Section Start -->
+<section class="form-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Submit a New Reclamation</h4>
+                        <button type="button" class="btn btn-outline-light view-reclamations-btn" (click)="viewMyReclamations()">
+                            <i class="fas fa-list-ul me-2"></i>View My Reclamations
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="reclamationForm" (ngSubmit)="onSubmit()">
+                            <div class="mb-4">
+                                <label for="typeReclamation" class="form-label">What type of issue are you experiencing?</label>
+                                <select id="typeReclamation" 
+                                        formControlName="typeReclamation" 
+                                        class="form-select"
+                                        [ngClass]="{'is-invalid': submitted && f['typeReclamation'].errors}">
+                                    <option value="" disabled selected>Select Issue Type</option>
+                                    <option *ngFor="let type of reclamationTypes" [value]="type">{{type}}</option>
+                                </select>
+                                <div *ngIf="submitted && f['typeReclamation'].errors" class="invalid-feedback">
+                                    Please select an issue type
                                 </div>
-                                
-                                <div class="mb-4">
-                                    <label for="description" class="form-label">Please describe your issue in detail:</label>
-                                    <textarea id="description" name="description" class="form-control" rows="6" 
-                                        placeholder="Please provide as much detail as possible about the issue you're experiencing..."></textarea>
-                                    <div id="descriptionError" class="invalid-feedback" style="display: none;">
-                                        Description is required and must be at least 20 characters
-                                    </div>
-                                    <small id="charCount" class="text-muted">
-                                        500 characters remaining
-                                    </small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Please describe your issue in detail:</label>
+                                <textarea id="description" 
+                                          formControlName="description" 
+                                          class="form-control" 
+                                          rows="6"
+                                          [ngClass]="{'is-invalid': submitted && f['description'].errors}"
+                                          placeholder="Please provide as much detail as possible about the issue you're experiencing..."></textarea>
+                                <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['description'].errors['required']">Description is required</div>
+                                    <div *ngIf="f['description'].errors['minlength']">Description must be at least 20 characters</div>
+                                    <div *ngIf="f['description'].errors['maxlength']">Description cannot exceed 500 characters</div>
                                 </div>
-                                
-                                <div class="d-flex justify-content-end mt-4">
-                                    <button type="button" class="btn btn-secondary me-2" onclick="resetForm()">Clear Form</button>
-                                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                                        Submit Reclamation
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                                <small class="text-muted">
+                                    {{ 500 - (f['description'].value?.length || 0) }} characters remaining
+                                </small>
+                            </div>
+                            
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="button" class="btn btn-secondary me-2" (click)="reset()">Clear Form</button>
+                                <button type="submit" class="btn btn-primary" [disabled]="loading">
+                                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                                    {{ loading ? 'Submitting...' : 'Submit Reclamation' }}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Reclamation Form Section End -->
-    
+    </div>
+</section>
+<!-- Reclamation Form Section End -->
     <footer>
         <!--? Footer Start-->
         <div class="footer-area section-bg" data-background="assets/img/gallery/section_bg03.png">

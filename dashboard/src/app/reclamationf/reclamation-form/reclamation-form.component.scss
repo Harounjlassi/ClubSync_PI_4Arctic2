@@ -1,291 +1,336 @@
 /* Modern User Dropdown Styles */
 .user-dropdown-container {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
+}
+
+.user-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff3a3a, #e60e0e);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(255, 19, 19, 0.2);
+}
+
+.user-icon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 19, 19, 0.3);
+}
+
+.user-icon i {
+  font-size: 18px;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 60px;
+  transform: translateX(-50%);
+  min-width: 240px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 0;
+  z-index: 999;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
   }
-  
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 2px;
+}
+
+.dropdown-email {
+  padding: 16px 20px;
+  font-weight: 500;
+  color: #333;
+  font-size: 15px;
+  word-break: break-all;
+  max-width: 100%;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #eee;
+  margin: 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dropdown-item i {
+  margin-right: 12px;
+  width: 18px;
+  text-align: center;
+  font-size: 16px;
+  color: #777;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #ff1313;
+}
+
+.dropdown-item:hover i {
+  color: #ff1313;
+  transform: translateX(2px);
+}
+
+.dropdown-item:last-child {
+  border-top: 1px solid #eee;
+}
+
+/* Reclamation Form Styles */
+.form-container {
+  padding: 60px 0;
+  background-color: #f9fafb;
+}
+
+.card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.card-header {
+  background: linear-gradient(135deg, #ff3a3a, #e60e0e);
+  padding: 20px 25px;
+  border-bottom: none;
+}
+
+.card-header h4 {
+  color: white;
+  font-weight: 600;
+  margin: 0;
+  font-size: 22px;
+}
+
+.card-body {
+  padding: 30px;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.form-control, .form-select {
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid #e1e5e9;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  box-shadow: none;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: rgba(255, 19, 19, 0.4);
+  box-shadow: 0 0 0 4px rgba(255, 19, 19, 0.1);
+}
+
+.form-control::placeholder {
+  color: #b0b7c3;
+}
+
+textarea.form-control {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.text-muted {
+  color: #8896aa !important;
+  font-size: 14px;
+  margin-top: 6px;
+  display: block;
+}
+
+.btn {
+  padding: 12px 24px;
+  font-weight: 500;
+  font-size: 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff3a3a, #e60e0e);
+  border: none;
+  box-shadow: 0 4px 10px rgba(255, 19, 19, 0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #ff1313, #cc0d0d);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 19, 19, 0.3);
+}
+
+.btn-secondary {
+  background: #f1f3f5;
+  color: #626d7d;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.invalid-feedback {
+  color: #ff3b3b;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.form-control.is-invalid, .form-select.is-invalid {
+  border-color: #ff3b3b;
+  background-image: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .user-dropdown-container {
+    display: inline-block; /* Override the display:none from original CSS to make it visible on mobile */
+    position: absolute;
+    right: 70px;
+    top: 16px;
+  }
+
   .user-icon {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ff3a3a, #e60e0e);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(255, 19, 19, 0.2);
+    width: 38px;
+    height: 38px;
   }
-  
-  .user-icon:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(255, 19, 19, 0.3);
+
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+    transform: none;
+    min-width: 220px;
   }
-  
-  .user-icon i {
+
+  .dropdown-menu::before {
+    left: auto;
+    right: 15px;
+  }
+
+  .form-container {
+    padding: 30px 0;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-header {
+    padding: 15px 20px;
+  }
+
+  .card-header h4 {
     font-size: 18px;
   }
-  
-  .dropdown-menu {
-    display: none;
-    position: absolute;
-    left: 50%;
-    top: 60px;
-    transform: translateX(-50%);
-    min-width: 240px;
-    background-color: white;
-    border-radius: 12px;
-    padding: 0;
-    z-index: 999;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
-    animation: fadeInUp 0.3s ease;
-  }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translate(-50%, 10px);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-  }
-  
-  .dropdown-menu.show {
-    display: block;
-  }
-  
-  .dropdown-menu::before {
-    content: "";
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    width: 16px;
-    height: 16px;
-    background-color: white;
-    border-radius: 2px;
-  }
-  
-  .dropdown-email {
-    padding: 16px 20px;
-    font-weight: 500;
-    color: #333;
-    font-size: 15px;
-    word-break: break-all;
-    max-width: 100%;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .dropdown-divider {
-    height: 1px;
-    background-color: #eee;
-    margin: 0;
-  }
-  
-  .dropdown-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 20px;
-    color: #555;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  .dropdown-item i {
-    margin-right: 12px;
-    width: 18px;
-    text-align: center;
-    font-size: 16px;
-    color: #777;
-    transition: all 0.2s ease;
-  }
-  
-  .dropdown-item:hover {
-    background-color: #f8f9fa;
-    color: #ff1313;
-  }
-  
-  .dropdown-item:hover i {
-    color: #ff1313;
-    transform: translateX(2px);
-  }
-  
-  .dropdown-item:last-child {
-    border-top: 1px solid #eee;
-  }
-  
-  /* Reclamation Form Styles */
-  .form-container {
-    padding: 60px 0;
-    background-color: #f9fafb;
-  }
-  
-  .card {
-    border: none;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  .card:hover {
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    transform: translateY(-5px);
-  }
-  
-  .card-header {
-    background: linear-gradient(135deg, #ff3a3a, #e60e0e);
-    padding: 20px 25px;
-    border-bottom: none;
-  }
-  
-  .card-header h4 {
-    color: white;
-    font-weight: 600;
-    margin: 0;
-    font-size: 22px;
-  }
-  
+
   .card-body {
-    padding: 30px;
+    padding: 15px;
   }
-  
-  .form-label {
-    font-weight: 500;
-    color: #444;
-    margin-bottom: 10px;
-    font-size: 16px;
-  }
-  
-  .form-control, .form-select {
-    padding: 14px 16px;
-    border-radius: 8px;
-    border: 1px solid #e1e5e9;
-    font-size: 15px;
-    transition: all 0.2s ease;
-    box-shadow: none;
-  }
-  
-  .form-control:focus, .form-select:focus {
-    border-color: rgba(255, 19, 19, 0.4);
-    box-shadow: 0 0 0 4px rgba(255, 19, 19, 0.1);
-  }
-  
-  .form-control::placeholder {
-    color: #b0b7c3;
-  }
-  
-  textarea.form-control {
-    min-height: 150px;
-    resize: vertical;
-  }
-  
-  .text-muted {
-    color: #8896aa !important;
-    font-size: 14px;
-    margin-top: 6px;
-    display: block;
-  }
-  
+
   .btn {
-    padding: 12px 24px;
-    font-weight: 500;
-    font-size: 16px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
-  
-  .btn-primary {
-    background: linear-gradient(135deg, #ff3a3a, #e60e0e);
-    border: none;
-    box-shadow: 0 4px 10px rgba(255, 19, 19, 0.2);
-  }
-  
-  .btn-primary:hover {
-    background: linear-gradient(135deg, #ff1313, #cc0d0d);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(255, 19, 19, 0.3);
-  }
-  
-  .btn-secondary {
-    background: #f1f3f5;
-    color: #626d7d;
-    border: none;
-  }
-  
-  .btn-secondary:hover {
-    background: #e9ecef;
-    color: #495057;
-  }
-  
-  .invalid-feedback {
-    color: #ff3b3b;
+    padding: 10px 16px;
     font-size: 14px;
-    margin-top: 6px;
+  }
+  /* View Reclamations Button */
+.view-reclamations-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.view-reclamations-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.view-reclamations-btn i {
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+/* Responsive adjustments for the card header */
+@media (max-width: 767px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start !important;
   }
   
-  .form-control.is-invalid, .form-select.is-invalid {
-    border-color: #ff3b3b;
-    background-image: none;
+  .view-reclamations-btn {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: center;
   }
-  
-  /* Responsive adjustments */
-  @media (max-width: 991px) {
-    .user-dropdown-container {
-      display: inline-block; /* Override the display:none from original CSS to make it visible on mobile */
-      position: absolute;
-      right: 70px;
-      top: 16px;
-    }
-  
-    .user-icon {
-      width: 38px;
-      height: 38px;
-    }
-  
-    .dropdown-menu {
-      right: 0;
-      left: auto;
-      transform: none;
-      min-width: 220px;
-    }
-  
-    .dropdown-menu::before {
-      left: auto;
-      right: 15px;
-    }
-  
-    .form-container {
-      padding: 30px 0;
-    }
-  
-    .card-body {
-      padding: 20px;
-    }
-  }
-  
-  @media (max-width: 576px) {
-    .card-header {
-      padding: 15px 20px;
-    }
-  
-    .card-header h4 {
-      font-size: 18px;
-    }
-  
-    .card-body {
-      padding: 15px;
-    }
-  
-    .btn {
-      padding: 10px 16px;
-      font-size: 14px;
-    }
-  }
+}
+
+/* Additional card header styling */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+}

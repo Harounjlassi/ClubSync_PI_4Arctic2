@@ -231,4 +231,9 @@ public class UserController {
         boolean exists = userService.isEmailTaken(email);
         return ResponseEntity.ok(Collections.singletonMap("taken", exists));
     }
+    @GetMapping("/searchUserByUsername/{username}")
+    public ResponseEntity<List<User>> searchUserByUsername(@PathVariable String username) {
+        List<User> existingTaches = userService.searchUserByUsername(username);
+        return ResponseEntity.ok(existingTaches);
+    }
 }

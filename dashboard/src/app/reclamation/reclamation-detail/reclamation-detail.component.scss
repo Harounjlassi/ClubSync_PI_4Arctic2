@@ -1,0 +1,56 @@
+.reclamation-detail-container {
+    padding: 20px;
+    
+    .back-button {
+      margin-bottom: 20px;
+    }
+    
+    .loading-spinner {
+      display: flex;
+      justify-content: center;
+      padding: 50px 0;
+    }
+    
+    .error-message {
+      margin: 30px 0;
+    }
+    
+    .reclamation-card {
+      margin-top: 20px;
+      
+      .card-header {
+        background-color: #f8f9fa;
+      }
+      
+      .description-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        
+        h5 {
+          margin-bottom: 15px;
+          font-weight: 600;
+        }
+        
+        p {
+          white-space: pre-line;
+          line-height: 1.6;
+        }
+      }
+    }
+    
+    .status-in-progress {
+      background-color: #ffc107;
+      color: #212529;
+    }
+    
+    .status-resolved {
+      background-color: #28a745;
+      color: #fff;
+    }
+    
+    .status-rejected {
+      background-color: #dc3545;
+      color: #fff;
+    }
+  }

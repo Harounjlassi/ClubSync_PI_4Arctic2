@@ -189,11 +189,12 @@ export class UserService {
       );
     }
   
-    getUserById(id: number): Observable<UserResponse> {
+     getUserById(id: number): Observable<UserResponse> {
       return this.http.get<UserResponse>(`${this.apiUrl}/get/${id}`).pipe(
-        catchError(this.handleError)
-      );
-    }
+         catchError(this.handleError)
+       );
+      
+     }
   
     updateUser(id: number, formData: FormData): Observable<any> {
       // Don't set Content-Type manually, let the browser set it with the boundary
@@ -407,4 +408,38 @@ export class UserService {
       catchError(this.handleError)
     );
   }
+    /// gestion projet 
+
+    getUserByUsername(username: string): Observable<User[]> {
+      //http://localhost:8080/api/reports/search/findByProjetId?id=1&page=0&size=10
+      const repUrl = `${this.apiUrl}/searchUserByUsername/${username}`;
+  
+      return this.http.get<User[]>(repUrl).pipe(
+        map((response) => {
+          console.log("API Response:", response);
+          return response;
+        }),
+        catchError((error) => {
+          console.error("API Error:", error);
+          return throwError(() => new Error(error.message || "API Error"));
+        })
+      );
+    }
+      findUserId(id: number): Observable<User> {
+
+    //http://localhost:8080/api/reports/search/findByProjetId?id=1&page=0&size=10
+    const repUrl = `${this.apiUrl}/getUserById/${id}`;
+
+    return this.http.get<User>(repUrl).pipe(
+      map((response) => {
+        console.log("API Response getUserById:", response);
+        return response;
+      }),
+      catchError((error) => {
+        console.error("API Error:", error);
+        return throwError(() => new Error(error.message || "API Error"));
+      })
+    );
+  }
+  
 }

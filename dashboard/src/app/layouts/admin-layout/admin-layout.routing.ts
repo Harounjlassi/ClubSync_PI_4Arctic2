@@ -14,6 +14,12 @@ import { AnnouncementListComponent } from 'app/announcement-list/announcement-li
 import { UserListComponent } from 'app/user-list/user-list.component';
 import { UserRegisterDialogComponent } from 'app/user-register-dialog/user-register-dialog.component';  
 import { ReclamationListComponent } from 'app/reclamation/reclamation-list/reclamation-list.component';
+import { ProjetListComponent } from 'app/projet-list/projet-list.component';
+import { ProjectReportListComponent } from 'app/project-report-list/project-report-list.component';
+import { ProjectTaskListComponent } from 'app/project-task-list/project-task-list.component';
+import { ProjetMessageComponent } from 'app/projet-message/projet-message.component';
+import { ReclamationEditComponent } from 'app/reclamation/reclamation-edit/reclamation-edit.component';
+import { ReclamationDetailComponent } from 'app/reclamation/reclamation-detail/reclamation-detail.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -71,7 +77,22 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'announcment-list', component: AnnouncementListComponent },
     { path: 'user-list', component: UserListComponent },
     {path: 'user-register', component: UserRegisterDialogComponent},// Nouvelle route pour UserRegisterDialogComponent
-    {path: 'reclamation-list', component: ReclamationListComponent},
+    { 
+        path: 'reclamation-list', 
+        component: ReclamationListComponent 
+      },
+      { 
+        path: 'reclamation-edit/:id', 
+        component: ReclamationEditComponent 
+      },
+      { 
+        path: 'reclamation-detail/:id', 
+        component: ReclamationDetailComponent // You should create this if needed
+      },
+    { path: 'projet',        component: ProjetListComponent },
+    { path: 'projet-reports/:id',        component: ProjectReportListComponent },
+    { path: 'projet-tasks/:id',        component: ProjectTaskListComponent },
+    { path: 'projet-messages/:id',        component: ProjetMessageComponent },
       
     // Nouvelle route pour ClubListComponent
 

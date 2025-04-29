@@ -73,9 +73,17 @@ public class SecurityConfig {
                                 "/user/restore/{id}",
                                 "/user/get/{id}",
                                 "/user/get/all",
+                                "/user/**",
                                 "/user/filter",
                                 "/user/users/sorted",
-                                "/user/users/stats"
+                                "/user/users/stats",
+                                "/projets/**",
+                                "/taches/**",
+                                "/user/searchUserByUsername/**",
+                                "/init-auth",
+                                "/oauth-callback",
+                                "/messages/**",
+                                "/reports/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -112,6 +120,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:4200",
+
                 "https://accounts.google.com"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

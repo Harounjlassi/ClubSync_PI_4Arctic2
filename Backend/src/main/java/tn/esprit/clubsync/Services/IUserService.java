@@ -40,6 +40,8 @@ public interface IUserService {
      */
     Optional<User> findByEmail(String email);
 
+    List<User> searchUserByUsername(String title) ;
 
+    List<User> searchUserById(Long id);
     // Vos autres méthodes de service existantes...
 }

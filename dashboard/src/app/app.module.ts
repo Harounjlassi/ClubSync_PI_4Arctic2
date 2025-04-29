@@ -65,6 +65,13 @@ import { ReclamationEditComponent } from './reclamation/reclamation-edit/reclama
 import { ReclamationDetailComponent } from './reclamation/reclamation-detail/reclamation-detail.component';
 import { ReclamationFormComponent } from './reclamationf/reclamation-form/reclamation-form.component';
 import { ClubHomeComponent } from './club-home/club-home.component';
+import { ProjetMessageComponent } from './projet-message/projet-message.component';
+import { ProjetListComponent } from './projet-list/projet-list.component';
+import { ProjectTaskListComponent } from './project-task-list/project-task-list.component';
+import { ProjectReportListComponent } from './project-report-list/project-report-list.component';
+import { ProjetsComponent } from './projets/projets.component';
+import { ReclamationEditDialogComponent } from './reclamation-edit-dialog/reclamation-edit-dialog.component';
+import { UserReclamationComponent } from './user-reclamation/user-reclamation.component';
 
 @NgModule({
   imports: [
@@ -137,16 +144,24 @@ import { ClubHomeComponent } from './club-home/club-home.component';
     ResetPasswordComponent,
     UserSettingsComponent,
     ReclamationListComponent,
-    ReclamationEditComponent,
+  ReclamationEditComponent,
     ReclamationDetailComponent,
     ReclamationFormComponent,
-    ClubHomeComponent
+    ClubHomeComponent,
+    ProjetMessageComponent,
+    ProjetsComponent,
+    ProjectTaskListComponent,
+    ProjectReportListComponent,
+    ProjetListComponent,
+    ReclamationEditDialogComponent,
+    UserReclamationComponent
+   
   ],
   providers: [
-    {
+   /* {
       provide: DomSanitizer,
       useValue: DomSanitizer
-    }
+    }*/
   ],
   bootstrap: [AppComponent]
 })
