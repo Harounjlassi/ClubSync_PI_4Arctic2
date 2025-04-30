@@ -19,6 +19,7 @@ export class ReclamationFormComponent implements OnInit {
   isLoggedIn = false;
   userEmail: string = '';
   showDropdown = false;
+  userId: number | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -70,11 +71,13 @@ export class ReclamationFormComponent implements OnInit {
       const user = this.userService.user || this.storageService.getUser();
       if (user) {
         this.userEmail = user.email;
+        this.userId = user.idUser;
       } else {
         // If user data is not available, fetch it from the API
         this.userService.getUserInfo().subscribe({
           next: (userResponse) => {
             this.userEmail = userResponse.email;
+            this.userId = userResponse.idUser;
           },
           error: (err) => {
             console.error('Error fetching user info:', err);
@@ -133,7 +136,11 @@ export class ReclamationFormComponent implements OnInit {
   
   navigateToRec() {
     this.closeDropdown();
-    this.router.navigate(['/user/reclamations']); // Route for viewing user's reclamations
+    this.router.navigate(['/reclamationf']); // Route for viewing user's reclamations
+  }
+
+  viewMyReclamations() {
+    this.router.navigate(['reclamationsview']);
   }
 
   // Convenience getter for easy access to form fields

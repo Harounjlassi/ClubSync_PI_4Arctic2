@@ -192,14 +192,17 @@ transform: translateX(-70%); /* This centers the dropdown relative to the user i
         </div>
     </div>
     <!-- Hero End -->
-   <!-- Reclamation Form Section Start -->
+  <!-- Reclamation Form Section Start -->
 <section class="form-container">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">Submit a New Reclamation</h4>
+                        <button type="button" class="btn btn-outline-light view-reclamations-btn" (click)="viewMyReclamations()">
+                            <i class="fas fa-list-ul me-2"></i>View My Reclamations
+                        </button>
                     </div>
                     <div class="card-body">
                         <form [formGroup]="reclamationForm" (ngSubmit)="onSubmit()">

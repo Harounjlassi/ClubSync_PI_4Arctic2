@@ -71,6 +71,7 @@ import { ProjectTaskListComponent } from './project-task-list/project-task-list.
 import { ProjectReportListComponent } from './project-report-list/project-report-list.component';
 import { ProjetsComponent } from './projets/projets.component';
 import { ReclamationEditDialogComponent } from './reclamation-edit-dialog/reclamation-edit-dialog.component';
+import { UserReclamationComponent } from './user-reclamation/user-reclamation.component';
 
 @NgModule({
   imports: [
@@ -152,7 +153,8 @@ import { ReclamationEditDialogComponent } from './reclamation-edit-dialog/reclam
     ProjectTaskListComponent,
     ProjectReportListComponent,
     ProjetListComponent,
-    ReclamationEditDialogComponent
+    ReclamationEditDialogComponent,
+    UserReclamationComponent
    
   ],
   providers: [

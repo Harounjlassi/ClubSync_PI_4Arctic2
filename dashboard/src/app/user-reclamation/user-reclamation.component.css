@@ -1,0 +1,99 @@
+.reclamations-container {
+    padding: 50px 0;
+    
+    .card {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: none;
+      border-radius: 8px;
+      overflow: hidden;
+      
+      .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #eaeaea;
+        padding: 16px 20px;
+      }
+    }
+    
+    .filter-section {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-bottom: 1px solid #eaeaea;
+    }
+    
+    .reclamations-list {
+      padding: 20px;
+    }
+    
+    .empty-state {
+      padding: 30px 20px;
+      
+      i {
+        color: #adb5bd;
+      }
+    }
+    
+    .reclamations-table {
+      margin-bottom: 0;
+      
+      th {
+        font-weight: 600;
+        color: #495057;
+      }
+      
+      .reclamation-row {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background-color: #f8f9fa;
+        }
+      }
+      
+      .description-cell {
+        max-width: 300px;
+        
+        .description-preview {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+      
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        
+        i {
+          margin-right: 5px;
+        }
+        
+        &.text-success {
+          background-color: rgba(40, 167, 69, 0.1);
+        }
+        
+        &.text-warning {
+          background-color: rgba(255, 193, 7, 0.1);
+        }
+        
+        &.text-danger {
+          background-color: rgba(220, 53, 69, 0.1);
+        }
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .reclamations-table {
+        .description-cell {
+          max-width: 150px;
+        }
+      }
+      
+      .filter-section .row > div {
+        margin-bottom: 10px;
+      }
+    }
+  }

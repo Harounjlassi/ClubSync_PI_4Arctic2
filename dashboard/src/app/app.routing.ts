@@ -23,6 +23,7 @@ import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { ReclamationFormComponent } from './reclamationf/reclamation-form/reclamation-form.component';
 import { ClubHomeComponent } from './club-home/club-home.component';
 import { ProjetsComponent } from './projets/projets.component';
+import { UserReclamationComponent } from './user-reclamation/user-reclamation.component';
 const routes: Routes =[
   {
     path: '',
@@ -45,6 +46,11 @@ const routes: Routes =[
   {
     path: 'reclamationf',
     component: ReclamationFormComponent
+    
+  },
+  {
+    path: 'reclamationsview',
+    component: UserReclamationComponent
     
   },
  
