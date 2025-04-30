@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReportService } from 'app/services/report.service';
-import { Report } from 'app/models/report';
+import { Report } from 'app/common/report';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { ProjetTask } from 'app/common/projet-task';
+import { TaskService } from 'app/services/task.service';
 
 @Component({
   selector: 'app-project-report-list',
@@ -11,6 +13,10 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./project-report-list.component.scss']
 })
 export class ProjectReportListComponent implements OnInit {
+searchQuery: any;
+filterReports() {
+throw new Error('Method not implemented.');
+}
   activeTab: string = 'performance';
   reports: Report[] = [];
   selectedReport: Report | null = null;
@@ -18,23 +24,45 @@ export class ProjectReportListComponent implements OnInit {
   editingReport = false;
   reportForm: FormGroup;
   isSaving = false;
+  tasks :ProjetTask[]= [];
+
+
 
   constructor(
     private reportService: ReportService,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private taskService: TaskService
+
   ) {
     this.reportForm = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.maxLength(500)]],
+      title: ['', Validators.required],
+      description: [''],
       status: ['Pending', Validators.required],
-      TacheTitre: ['', [Validators.maxLength(100)]],
-      ReporterFirstName: ['', [Validators.maxLength(50)]]
+      TacheTitre: [''],
+      ReporterFirstName: ['']
     });
   }
 
   ngOnInit() {
     this.loadReports();
+    this.loadTasks();
+
+  }
+  loadTasks(): void {
+    const projectId = Number(this.route.snapshot.paramMap.get('id'));
+    console.log('Project ID:', projectId); // Debug log
+  
+    this.taskService.getTasksByIdProjet(projectId).subscribe({
+      next: (tasks) => {
+        this.tasks = tasks;
+        console.log('Fetched tasks:', tasks); // Debug log
+      },
+      error: (error) => {
+        console.error('Error loading tasks:', error);
+        // Optional: show error message to user
+      }
+    });
   }
 
   loadReports(): void {
@@ -81,7 +109,6 @@ export class ProjectReportListComponent implements OnInit {
   submitReport(): void {
     console.log('Form valsssssssssues:', this.reportForm.value);
     console.log('Selected report:', this.selectedReport);
-
     if (this.reportForm.valid && this.selectedReport && !this.isSaving) {
       this.isSaving = true;
       const updatedReport = {
@@ -106,9 +133,6 @@ export class ProjectReportListComponent implements OnInit {
           console.error('Error saving report:', error);
         }
       });
-    }else{
-      alert('Form is invalid or already saving');
-      this.isSaving = false;
     }
   }
 

@@ -22,7 +22,7 @@ db_config = {
  'host': 'localhost',
             'user': 'root',
             'password': '',
-            'database': 'club-sync'
+            'database': 'club-int3'
 }
 
 model_name = "gpt2-medium"

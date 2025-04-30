@@ -6,7 +6,7 @@ import { User } from "app/models/user.model";
 import { ProjetService } from 'app/services/projet.service';
 import { TaskService } from 'app/services/task.service';
 import { UserService } from 'app/services/user.service';
-import { finalize } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { Report } from 'app/models/report';
 import { ReportService } from 'app/services/report.service';
 import { MessageService } from 'app/services/message.service';
@@ -35,6 +35,7 @@ notStartedP:number;
 plannignP:number;
 inProgressP:number;
 completedP:number;
+private subscriptions: Subscription[] = [];
 
  
   constructor(    private projetService: ProjetService,
@@ -137,6 +138,31 @@ completedP:number;
       }
     });
   }
+
+  // ... (keep all your existing methods)
+
+  ngOnDestroy() {
+    // Clean up all subscriptions
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions = []; // Clear the array
+
+    // Reset any other properties that might hold references
+    this.projets = [];
+    this.tasks = {};
+    this.users = {};
+    this.reports = {};
+    this.messages = [];
+    this.reportsBy = [];
+
+    // Re-enable body scrolling if modal was open
+    if (this.showModal || this.showModalReport) {
+      document.body.style.overflow = '';
+    }
+
+    // Remove any event listeners that might have been added
+    // (The HostListener will be automatically removed by Angular)
+  }
+
   private loadAllReportss(): void {
     // Get unique project IDs to avoid duplicate requests
     const projectIds = [...new Set(this.projets.map(p => p.id))];

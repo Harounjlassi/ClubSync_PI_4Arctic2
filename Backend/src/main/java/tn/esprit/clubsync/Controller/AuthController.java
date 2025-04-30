@@ -49,7 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 @RequestMapping("/auth")
 @SecurityRequirement(name = "BearerAuth")
-@CrossOrigin(origins = {"http://localhost:5000", "http://localhost:4200"})
+@CrossOrigin(origins = {"http://localhost:5000","http://localhost:5200", "http://localhost:4200"})
 public class AuthController {
     private final Map<String, String> verificationCodes = new HashMap<>();
     private static final String CLIENT_ID = "376533833455-qgcjilh1un1k0cfunakdab8b328a0p9f.apps.googleusercontent.com";

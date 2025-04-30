@@ -215,7 +215,27 @@
   
             <div class="form-group">
               <label for="tacheTitre">Task Title</label>
-              <input type="text" id="tacheTitre" formControlName="TacheTitre" />
+              <select id="tacheTitre" formControlName="TacheTitre" required>
+                <option value="" disabled selected>Select a task</option>
+                <option *ngFor="let task of tasks" [value]="task.titre">
+                  {{ task.titre }}
+                </option>
+              </select>
+              <!-- <input type="text" id="tacheTitre" formControlName="TacheTitre" /> -->
+              <div
+              *ngIf="
+                reportForm.get('TacheTitre')?.errors &&
+                (reportForm.get('TacheTitre')?.touched ||
+                  reportForm.get('TacheTitre')?.dirty ||
+                  submitted)
+              "
+              class="error-message"
+            >
+              <span *ngIf="reportForm.get('TacheTitre')?.errors?.['required']"
+                >Task Title is required</span
+              >
+           
+            </div>
             </div>
           </div>
   

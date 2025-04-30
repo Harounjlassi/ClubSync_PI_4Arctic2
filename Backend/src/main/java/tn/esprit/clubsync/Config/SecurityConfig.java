@@ -81,7 +81,7 @@ public class SecurityConfig {
                                 "/taches/**",
                                 "/user/searchUserByUsername/**",
                                 "/init-auth",
-                                "/oauth-callback",
+                                "/oauth-callback/**",
                                 "/messages/**",
                                 "/reports/**",
                                 "/reclamations/**"
