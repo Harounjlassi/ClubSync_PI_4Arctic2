@@ -16,6 +16,9 @@ export const ROUTES: RouteInfo[] = [
     { path: '/user-list', title: 'User List', icon: 'groups', class: '' }, 
     { path: '/reclamation-list', title: 'reclamation List', icon: 'groups', class: '' }, 
     { path: '/projet', title: 'projects',  icon:'unarchive', class: '' },
+    { path: '/books', title: 'Book',  icon:'unarchive', class: '' },
+    { path: '/borrowings', title: 'Borrowings',  icon:'unarchive', class: '' },
+    { path: '/requests', title: 'Requests',  icon:'unarchive', class: '' },
 ];
 
 @Component({

@@ -24,6 +24,17 @@ import { ReclamationFormComponent } from './reclamationf/reclamation-form/reclam
 import { ClubHomeComponent } from './club-home/club-home.component';
 import { ProjetsComponent } from './projets/projets.component';
 import { UserReclamationComponent } from './user-reclamation/user-reclamation.component';
+import { BookListComponent } from './book-list/book-list.component';
+import { BookAddComponent } from './book-add/book-add.component';
+import { BookUpdateComponent } from './book-update/book-update.component';
+import { ReviewListComponent } from './review-list/review-list.component';  // Import your component here
+import { ReviewAddComponent } from './review-add/review-add.component'; // Import the ReviewAddComponent
+import { RequestListComponent } from './request-list/request-list.component';
+import { RequestAddComponent } from './request-add/request-add.component';
+import { BorrowingListComponent } from './borrowing-list/borrowing-list.component';
+import { ReviewAllComponent } from './review-all/review-all.component';
+import { BookListFrontComponent } from './book-list-front/book-list-front.component';
+
 const routes: Routes =[
   {
     path: '',
@@ -91,10 +102,14 @@ const routes: Routes =[
       { path: 'clubs', component: ClubsComponent },
       { path: 'jokes', component: JokeComponent },
       { path: 'club-home/:id', component: ClubHomeComponent },
-      { path: 'projects', component: ProjetsComponent }, 
-      
+      { path: 'projects', component: ProjetsComponent },
+      { path: 'books', component: BookListFrontComponent },
+      { path: 'reviews/:bookId', component: ReviewListComponent },  // Add this line
+      { path: 'add-review/:bookId', component: ReviewAddComponent },
+      { path: 'request-book', component: RequestAddComponent }, // For general requests
 
-     
+
+
     ]
   },
   { path: 'chat', component: ChatComponent },

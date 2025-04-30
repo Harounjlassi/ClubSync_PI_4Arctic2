@@ -29,6 +29,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "nuser", cascade = CascadeType.ALL)
     private List<Reclamation> reclamationsCreees;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Review> review;
+
     @ManyToMany(mappedBy = "members")
     @JsonIgnore
 

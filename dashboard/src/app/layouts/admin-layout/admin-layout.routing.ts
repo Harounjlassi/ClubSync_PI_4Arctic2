@@ -20,6 +20,12 @@ import { ProjectTaskListComponent } from 'app/project-task-list/project-task-lis
 import { ProjetMessageComponent } from 'app/projet-message/projet-message.component';
 import { ReclamationEditComponent } from 'app/reclamation/reclamation-edit/reclamation-edit.component';
 import { ReclamationDetailComponent } from 'app/reclamation/reclamation-detail/reclamation-detail.component';
+import { BookListComponent } from '../../book-list/book-list.component';
+import { BookAddComponent } from '../../book-add/book-add.component';
+import { BookUpdateComponent } from '../../book-update/book-update.component';
+import { RequestListComponent } from '../../request-list/request-list.component';
+import { BorrowingListComponent } from '../../borrowing-list/borrowing-list.component';
+import { ReviewAllComponent } from '../../review-all/review-all.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -76,7 +82,15 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'club-members/:clubId', component: ClubMembersComponent },
     { path: 'announcment-list', component: AnnouncementListComponent },
     { path: 'user-list', component: UserListComponent },
-    {path: 'user-register', component: UserRegisterDialogComponent},// Nouvelle route pour UserRegisterDialogComponent
+    {path: 'user-register', component: UserRegisterDialogComponent},
+    { path: 'books', component: BookListComponent },
+    { path: 'books', component: BookListComponent },
+    { path: 'requests', component: RequestListComponent },
+    { path: 'borrowings', component: BorrowingListComponent },
+    { path: 'add-book', component: BookAddComponent },
+    { path: 'reviews', component: ReviewAllComponent },
+    { path: 'update-book', component: BookUpdateComponent },  // Add this line
+    { path: 'update-book/:id', component: BookUpdateComponent },// Nouvelle route pour UserRegisterDialogComponent
     { 
         path: 'reclamation-list', 
         component: ReclamationListComponent 

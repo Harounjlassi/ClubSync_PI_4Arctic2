@@ -84,7 +84,12 @@ public class SecurityConfig {
                                 "/oauth-callback/**",
                                 "/messages/**",
                                 "/reports/**",
-                                "/reclamations/**"
+                                "/reclamations/**",
+                                "/books/**",
+                                "/borrowings/**",
+                                "/recommendations/**",
+                                "/book-requests/**",
+                                "/reviews/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -124,7 +129,7 @@ public class SecurityConfig {
 
                 "https://accounts.google.com"
         ));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);

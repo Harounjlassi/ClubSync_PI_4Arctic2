@@ -72,6 +72,16 @@ import { ProjectReportListComponent } from './project-report-list/project-report
 import { ProjetsComponent } from './projets/projets.component';
 import { ReclamationEditDialogComponent } from './reclamation-edit-dialog/reclamation-edit-dialog.component';
 import { UserReclamationComponent } from './user-reclamation/user-reclamation.component';
+import { BookListComponent } from './book-list/book-list.component';
+import { BookAddComponent } from './book-add/book-add.component';
+import { BookUpdateComponent } from './book-update/book-update.component';
+import { ReviewListComponent } from './review-list/review-list.component';
+import { ReviewAddComponent } from './review-add/review-add.component';
+import { RequestListComponent } from './request-list/request-list.component';
+import { RequestAddComponent } from './request-add/request-add.component';
+import { BorrowingListComponent } from './borrowing-list/borrowing-list.component';
+import { ReviewAllComponent } from './review-all/review-all.component';
+import { BookListFrontComponent } from './book-list-front/book-list-front.component';
 
 @NgModule({
   imports: [
@@ -154,7 +164,17 @@ import { UserReclamationComponent } from './user-reclamation/user-reclamation.co
     ProjectReportListComponent,
     ProjetListComponent,
     ReclamationEditDialogComponent,
-    UserReclamationComponent
+    UserReclamationComponent,
+    BookListComponent,
+    BookAddComponent,
+    BookUpdateComponent,
+    ReviewListComponent,
+    ReviewAddComponent,
+    RequestListComponent,
+    RequestAddComponent,
+    BorrowingListComponent,
+    ReviewAllComponent,
+    BookListFrontComponent,
    
   ],
   providers: [

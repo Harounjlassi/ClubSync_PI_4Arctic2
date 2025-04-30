@@ -1,0 +1,53 @@
+<div class="borrowing-container">
+  <h2>Borrowing Records</h2>
+
+  <div *ngIf="isLoading" class="loading">
+    Loading borrowings...
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage">
+    <div *ngIf="borrowings.length === 0" class="no-records">
+      No borrowing records found.
+    </div>
+
+    <table *ngIf="borrowings.length > 0" class="table">
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>User</th>
+          <th>Borrow Date</th>
+          <th>Return Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let borrowing of borrowings">
+          <td>{{ borrowing.book?.title }}</td>
+          <td>{{ borrowing.user?.firstname }}</td>
+          <td>{{ borrowing.borrowDate | date }}</td>
+          <td>{{ borrowing.returnDate | date }}</td>
+          <td>
+            <span [class.badge-success]="borrowing.returned" [class.badge-warning]="!borrowing.returned" class="badge">
+              {{ borrowing.returned ? 'Returned' : 'Borrowed' }}
+            </span>
+          </td>
+          <td>
+            <button *ngIf="!borrowing.returned" (click)="returnBook(borrowing.id!)" class="btn btn-sm btn-primary">
+              Return
+            </button>
+            <span *ngIf="borrowing.returned">-</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

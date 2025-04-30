@@ -1,0 +1,45 @@
+/* src/app/borrowing-list/borrowing-list.component.css */
+.borrowing-container {
+    padding: 20px;
+  }
+  
+  .loading, .no-records {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+  }
+  
+  .table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: white;
+  }
+  
+  .badge-success {
+    background-color: #28a745;
+  }
+  
+  .badge-warning {
+    background-color: #ffc107;
+  }
+  
+  .alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+  }
+  
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }

@@ -1,0 +1,57 @@
+<div class="wrapper">
+    <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+      <app-sidebar></app-sidebar>
+      <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
+    </div>
+    <div class="main-panel">
+      <app-navbar></app-navbar>
+  
+      <div class="review-container">
+        <div class="header">
+          <h2 class="page-title">Customer Reviews</h2>
+          <div class="total-reviews">{{reviews.length}} reviews</div>
+        </div>
+  
+        <div *ngIf="isLoading" class="loading-state">
+          <div class="spinner"></div>
+          <span>Loading reviews...</span>
+        </div>
+  
+        <div *ngIf="errorMessage" class="error-state">
+          <i class="error-icon">⚠️</i>
+          <span>{{ errorMessage }}</span>
+        </div>
+  
+        <div *ngIf="!isLoading && !errorMessage">
+          <div *ngIf="reviews.length === 0" class="empty-state">
+            <i class="empty-icon">📝</i>
+            <h3>No reviews yet</h3>
+            <p>Be the first to leave a review!</p>
+          </div>
+  
+          <div *ngIf="reviews.length > 0" class="review-list">
+            <div *ngFor="let review of reviews" class="review-card">
+              <div class="review-header">
+                <div class="book-info">
+                  <div class="book-title">{{ review.book?.title || 'Unknown Book' }}</div>
+                  <div class="review-date">{{ review.reviewDate | date:'mediumDate' }}</div>
+                </div>
+                <div class="rating-stars">
+                  <span *ngFor="let star of [1,2,3,4,5]" 
+                        [class.filled]="star <= review.rating">★</span>
+                  <span class="rating-value">{{review.rating}}/5</span>
+                </div>
+              </div>
+              
+              <div class="review-content">
+                <p class="review-comment">{{ review.comment || 'No comment provided' }}</p>
+                <div class="reviewer-info">
+                  <span class="reviewer-name">{{ review.user?.name || 'Anonymous' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

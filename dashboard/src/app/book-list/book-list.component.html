@@ -1,0 +1,71 @@
+<div class="book-container">
+  <h2 class="collection-title">Book Collection</h2>
+
+  <div class="actions">
+    <button class="btn add-book" (click)="navigateToAddBook()">
+      Add Book
+    </button>
+  </div>
+  <div *ngIf="isLoading" class="status-message loading">
+    <div class="spinner"></div>
+    <span>Loading books...</span>
+  </div>
+
+  <div *ngIf="errorMessage" class="status-message error">
+    <span class="icon">!</span>
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage">
+    <div *ngIf="books.length === 0" class="status-message no-books">
+      <span class="icon">📚</span>
+      No books available in the library.
+    </div>
+    <div *ngIf="books.length > 0" class="book-grid">
+      <div *ngFor="let book of books" class="book-card">
+        <div class="cover-container">
+          <img class="book-cover" [src]="getImageUrl(book)" [alt]="book.title" (error)="handleImageError($event)" />
+        </div>
+        <div class="book-details">
+          <h3 class="book-title">{{ book.title }}</h3>
+          <p class="author">By {{ book.author }}</p>
+
+          <div class="book-meta">
+            <span *ngIf="book.publicationDate" class="meta-item">
+              <span class="meta-icon">📅</span>
+              {{ formatDate(book.publicationDate) }}
+            </span>
+            <span *ngIf="book.genre" class="meta-item">
+              <span class="meta-icon">🏷️</span>
+              {{ book.genre }}
+            </span>
+            <span *ngIf="book.pageCount" class="meta-item">
+              <span class="meta-icon">📄</span>
+              {{ book.pageCount }} pages
+            </span>
+          </div>
+
+          <div class="availability" [class.unavailable]="!book.available">
+            <span class="availability-icon">{{ book.available ? '✓' : '✗' }}</span>
+            {{ book.available ? 'Available' : 'Checked Out' }}
+          </div>
+
+          <div class="actions">
+            <button class="btn borrow" (click)="borrowBook(book.id!)" [disabled]="!book.available">
+              <span class="btn-icon">🛒</span> Borrow
+            </button>
+            <button class="btn reviews" (click)="viewReviews(book.id!)">
+              <span class="btn-icon">📝</span> Reviews
+            </button>
+            <button class="btn-icon-only update" (click)="goToUpdatePage(book.id!)" title="Edit book">
+              ✏️
+            </button>
+            <button class="btn-icon-only delete" (click)="deleteBook(book.id!)" title="Delete book">
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

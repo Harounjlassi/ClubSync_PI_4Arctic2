@@ -1,0 +1,54 @@
+<h2>My Book Requests</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th>Feedback</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let request of requests">
+      <td>{{ request.title }}</td>
+      <td>{{ request.author }}</td>
+      <td>
+        <span *ngIf="editingRequestId !== request.id" [class]="getStatusClass(request.status)">
+          {{ request.status }}
+        </span>
+        <select *ngIf="editingRequestId === request.id" [(ngModel)]="selectedStatus" class="form-select form-select-sm">
+          <option *ngFor="let status of statusOptions" [value]="status">
+            {{ status }}
+          </option>
+        </select>
+      </td>
+      <td>{{ request.requestDate | date:'short' }}</td>
+      <td>
+        <span *ngIf="editingRequestId !== request.id">
+          {{ request.adminFeedback || '-' }}
+        </span>
+        <textarea *ngIf="editingRequestId === request.id" [(ngModel)]="feedback" class="form-control form-control-sm"
+          placeholder="Feedback (optional)"></textarea>
+      </td>
+      <td>
+        <div *ngIf="editingRequestId !== request.id">
+          <button (click)="startEdit(request)" class="btn btn-sm btn-info">
+            Edit
+          </button>
+        </div>
+        <div *ngIf="editingRequestId === request.id" class="d-flex gap-2">
+          <!-- Updated to pass no arguments since we're using the stored ID -->
+          <button (click)="updateStatus()" class="btn btn-sm btn-success">
+            Save
+          </button>
+          <button (click)="cancelEdit()" class="btn btn-sm btn-secondary">
+            Cancel
+          </button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,86 @@
+<div class="book-add-container">
+  <h2>Add a New Book</h2>
+
+  <form (ngSubmit)="addBook()" #bookForm="ngForm">
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" [(ngModel)]="newBook.title" name="title" required />
+    </div>
+
+    <div class="form-group">
+      <label>Author</label>
+      <input type="text" [(ngModel)]="newBook.author" name="author" required />
+    </div>
+
+    <div class="form-group">
+      <label>ISBN</label>
+      <input type="text" [(ngModel)]="newBook.isbn" name="isbn" />
+    </div>
+
+    <div class="form-group">
+      <label>Publisher</label>
+      <input type="text" [(ngModel)]="newBook.publisher" name="publisher" />
+    </div>
+
+    <div class="form-group">
+      <label>Publication Date</label>
+      <input type="date" [(ngModel)]="newBook.publicationDate" name="publicationDate" />
+    </div>
+
+    <div class="form-group">
+      <label>Genre</label>
+      <input type="text" [(ngModel)]="newBook.genre" name="genre" />
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea [(ngModel)]="newBook.description" name="description"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Language</label>
+      <input type="text" [(ngModel)]="newBook.language" name="language" />
+    </div>
+
+    <div class="form-group">
+      <label>Page Count</label>
+      <input type="number" [(ngModel)]="newBook.pageCount" name="pageCount" />
+    </div>
+
+    <div class="form-group">
+      <label>Total Copies</label>
+      <input type="number" [(ngModel)]="newBook.totalCopies" name="totalCopies" />
+    </div>
+
+    <div class="form-group">
+      <label>Available Copies</label>
+      <input type="number" [(ngModel)]="newBook.availableCopies" name="availableCopies" />
+    </div>
+
+    <div class="form-group">
+      <label>Cover Image</label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" #fileInput style="display: none">
+      <button type="button" (click)="fileInput.click()" class="btn-choose-image">Choose Image</button>
+
+      <div *ngIf="imagePreview" class="image-preview">
+        <img [src]="imagePreview" alt="Book cover preview">
+        <button type="button" (click)="removeImage()" class="btn-remove-image">×</button>
+      </div>
+
+      <div *ngIf="uploadProgress !== null" class="upload-progress">
+        Uploading: {{ uploadProgress }}%
+      </div>
+
+      <input type="hidden" [(ngModel)]="newBook.coverImageUrl" name="coverImageUrl">
+    </div>
+
+    <button type="submit" [disabled]="isSubmitting || bookForm.invalid">
+      {{ isSubmitting ? 'Uploading...' : 'Add Book' }}
+    </button>
+  </form>
+</div>
+  
