@@ -1,14 +1,22 @@
 package tn.esprit.clubsync.Services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import tn.esprit.clubsync.Repo.ProjetRepository;
 import tn.esprit.clubsync.entities.Projet;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class ProjetServiceImpl implements IProjetService {
+public class ProjetServiceImpl implements iProjetService {
 
     private final ProjetRepository projetRepository;
 
@@ -72,4 +80,5 @@ public class ProjetServiceImpl implements IProjetService {
 
         return projetRepository.findByNomContaining(nomP);
     }
+
 }

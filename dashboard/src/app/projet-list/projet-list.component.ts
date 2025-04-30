@@ -68,7 +68,7 @@ export class ProjetListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.setupSearch();
 
-    //this.listProjets();
+    this.listProjets();
   }
 
   ngOnDestroy(): void {
@@ -120,7 +120,7 @@ export class ProjetListComponent implements OnInit, OnDestroy {
   }
   private setupSearch(): void {
     this.searchTerms.pipe(
-      debounceTime(300),
+      debounceTime(10),
       distinctUntilChanged(),
       switchMap(term => {
         this.isLoading = true;

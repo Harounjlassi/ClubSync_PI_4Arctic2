@@ -12,7 +12,7 @@ class SimpleFacerec:
             host="localhost",
             user="root",
             password="",
-            database="club-sync"
+            database="club-int3"
         )
 
     def load_encoding_images(self, images_path):
@@ -21,18 +21,18 @@ class SimpleFacerec:
         valid_images = 0
 
         try:
-            cursor.execute("SELECT id, username FROM user")
+            cursor.execute("SELECT id_user, lastname FROM user")
             users = cursor.fetchall()
             
-            user_map = {user['username'].lower(): user for user in users}
+            user_map = {user['lastname'].lower(): user for user in users}
             
             for img_file in os.listdir(images_path):
                 if not img_file.lower().endswith(('.png', '.jpg', '.jpeg')):
                     continue
                 
                 base_name = os.path.splitext(img_file)[0]  # "haroun.3"
-                username_from_file = base_name.split('.')[0].lower()  # "haroun"                
-                user = user_map.get(username_from_file)
+                lastname_from_file = base_name.split('.')[0].lower()  # "haroun"                
+                user = user_map.get(lastname_from_file)
                 if not user:
                     print(f"Warning: No database user found for image {img_file}")
                     continue
@@ -51,13 +51,13 @@ class SimpleFacerec:
                     continue
                 
                 self.known_face_info.append({
-                    'user_id': user['id'],
-                    'name': user['username'],
+                    'user_id': user['id_user'],
+                    'name': user['lastname'],
                     'encoding': face_encodings[0]
                 })
                 self.known_face_encodings.append(face_encodings[0])
                 valid_images += 1
-                print(f"Mapped {img_file} to user {user['username']} (ID: {user['id']})")
+                print(f"Mapped {img_file} to user {user['lastname']} (ID: {user['id_user']})")
 
             if valid_images == 0:
                 raise ValueError("No valid face images could be mapped to users")

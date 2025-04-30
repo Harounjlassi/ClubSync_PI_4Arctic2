@@ -16,8 +16,7 @@ import tn.esprit.clubsync.entities.Announcement;
 import tn.esprit.clubsync.Services.AnnouncementService;
 import tn.esprit.clubsync.entities.Club;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -74,11 +73,35 @@ public class AnnouncementController {
     public void deleteAnnouncement(@PathVariable Long id) {
         announcementService.deleteAnnouncement(id);
     }
+
     @GetMapping("/all")
-    public List<Announcement> getAll() {
-        return announcementRepo.findAll().stream()
-                .peek(a -> Hibernate.initialize(a.getClub())) // Force le chargement
-                .collect(Collectors.toList());
+    public List<Map<String, Object>> getAllStandardized() {
+        List<Announcement> announcements = announcementRepo.findAll();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Announcement announcement : announcements) {
+            Map<String, Object> announcementMap = new HashMap<>();
+            announcementMap.put("id", announcement.getId());
+            announcementMap.put("title", announcement.getTitle());
+            announcementMap.put("content", announcement.getContent());
+            announcementMap.put("createdAt", announcement.getCreatedAt());
+
+            // Standardiser la façon dont le club est renvoyé
+            if (announcement.getClub() != null) {
+                Club club = announcement.getClub();
+                Map<String, Object> clubMap = new HashMap<>();
+                clubMap.put("id_club", club.getId_club());
+                clubMap.put("name", club.getName());
+                clubMap.put("description", club.getDescription());
+                // Ajouter d'autres propriétés essentielles du club
+
+                announcementMap.put("club", clubMap);
+            }
+
+            result.add(announcementMap);
+        }
+
+        return result;
     }
     @PutMapping("/update/{id}")
     public Announcement updateAnnouncement(@PathVariable Long id, @RequestBody Announcement announcement) {

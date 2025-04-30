@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.clubsync.Services.ProjetServiceImpl;
+import tn.esprit.clubsync.Services.iProjetService;
 import tn.esprit.clubsync.entities.Projet;
 
 import java.io.IOException;

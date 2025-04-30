@@ -75,19 +75,19 @@ class PriorityFaceDetector:
         valid_images = 0
 
         try:
-            cursor.execute("SELECT id, username FROM user")
+            cursor.execute("SELECT id_user, lastname FROM user")
             users = cursor.fetchall()
             
-            user_map = {user['username'].lower(): user for user in users}
+            user_map = {user['lastname'].lower(): user for user in users}
             
             for img_file in os.listdir(self.images_path):
                 if not img_file.lower().endswith(('.png', '.jpg', '.jpeg')):
                     continue
                 
                 base_name = os.path.splitext(img_file)[0]
-                username_from_file = base_name.split('.')[0].lower()
+                lastname_from_file = base_name.split('.')[0].lower()
                 
-                user = user_map.get(username_from_file)
+                user = user_map.get(lastname_from_file)
                 if not user:
                     print(f"Warning: No database user found for image {img_file}")
                     continue
@@ -107,13 +107,13 @@ class PriorityFaceDetector:
                 
                 with self.lock:
                     self.known_face_info.append({
-                        'user_id': user['id'],
-                        'username': user['username'],
+                        'user_id': user['id_user'],
+                        'lastname': user['lastname'],
                         'encoding': face_encodings[0]
                     })
                     self.known_face_encodings.append(face_encodings[0])
                     valid_images += 1
-                    print(f"Mapped {img_file} to user {user['username']} (ID: {user['id']})")
+                    print(f"Mapped {img_file} to user {user['lastname']} (ID: {user['id_user']})")
 
             if valid_images == 0:
                 raise ValueError("No valid face images could be mapped to users")
@@ -131,9 +131,9 @@ class PriorityFaceDetector:
         cursor = self.db_connection.cursor(dictionary=True)
         try:
             cursor.execute("""
-                SELECT u.id as user_id, t.priorite 
+                SELECT u.id_user as user_id, t.priorite 
                 FROM user u
-                LEFT JOIN projet_tache t ON u.id = t.assignee_id
+                LEFT JOIN projet_tache t ON u.id_user = t.assignee_id
             """)
             
             self.task_priorities = {}
@@ -169,7 +169,7 @@ class PriorityFaceDetector:
                 
                 if matches[best_match_index]:
                     matched_info = self.known_face_info[best_match_index]
-                    name = matched_info['username']
+                    name = matched_info['lastname']
                     user_id = matched_info['user_id']
                     priority = self.task_priorities.get(user_id, 'DEFAULT')
             
@@ -252,7 +252,7 @@ db_config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'club-sync'
+    'database': 'club-int3'
 }
 
 detector = PriorityFaceDetector(db_config, images_path="images/")

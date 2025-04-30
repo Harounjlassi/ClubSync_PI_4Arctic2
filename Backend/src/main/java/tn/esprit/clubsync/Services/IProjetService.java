@@ -5,7 +5,7 @@ import tn.esprit.clubsync.entities.Projet;
 import java.io.IOException;
 import java.util.List;
 
-public interface IProjetService {
+public interface iProjetService {
     Projet saveProjet (Projet Projet) throws IOException;
 
 

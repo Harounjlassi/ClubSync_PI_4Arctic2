@@ -62,13 +62,13 @@ public class SecurityConfig {
                                 "/joke/**",
                                 "/club/recommendation/**",
                                 "/chat/**",
-                                "/reclamations/**",
+
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/user/update/{id}",
                                 "/user/delete/{id}",
-                                "/reclamations/**",
+
                                 "/user/archive/{id}",
                                 "/user/restore/{id}",
                                 "/user/get/{id}",
@@ -83,7 +83,8 @@ public class SecurityConfig {
                                 "/init-auth",
                                 "/oauth-callback",
                                 "/messages/**",
-                                "/reports/**"
+                                "/reports/**",
+                                "/reclamations/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

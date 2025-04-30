@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class MessageServiceImpl implements IMessageService {
+public class MessageServiceImpl implements  iMessageService{
 
     private final MessageRepository messageRepository;
 

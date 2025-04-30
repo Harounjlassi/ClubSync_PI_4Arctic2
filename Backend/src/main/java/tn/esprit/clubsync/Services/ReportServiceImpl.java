@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class ReportServiceImpl implements IReportService {
+public class ReportServiceImpl implements iReportService {
 
 
     private final ReportRepository   reportRepository;

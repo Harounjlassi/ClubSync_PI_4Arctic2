@@ -5,7 +5,7 @@ import tn.esprit.clubsync.entities.Report;
 import java.io.IOException;
 import java.util.List;
 
-public interface IReportService {
+public interface iReportService {
     Report saveReport (Report Report) throws IOException;
 
 
