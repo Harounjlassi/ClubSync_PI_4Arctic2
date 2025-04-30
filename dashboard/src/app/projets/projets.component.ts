@@ -10,6 +10,8 @@ import { finalize, Subscription } from 'rxjs';
 import { Report } from 'app/models/report';
 import { ReportService } from 'app/services/report.service';
 import { MessageService } from 'app/services/message.service';
+import { StorageService } from 'app/services/storage.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -37,12 +39,17 @@ inProgressP:number;
 completedP:number;
 private subscriptions: Subscription[] = [];
 
- 
+isLoggedIn = false;
+userEmail: string = '';
+showDropdown = false;
+
   constructor(    private projetService: ProjetService,
     private userService: UserService,
     private taskService: TaskService,
     private reportService: ReportService,
     private messageService: MessageService,
+        private storageService: StorageService,
+        private router: Router,
 
     private cdRef: ChangeDetectorRef
   ){
@@ -62,8 +69,87 @@ private subscriptions: Subscription[] = [];
         preloader.style.display = 'none';
       }
       
-    }, 1000); // Small timeout to ensure content has loaded
+    }, 1000);
+    this.checkLoginStatus(); // Small timeout to ensure content has loaded
   
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const dropdown = document.querySelector('.user-dropdown-container');
+    
+    if (dropdown && !dropdown.contains(target) && this.showDropdown) {
+      this.showDropdown = false;
+    }
+  }
+
+  checkLoginStatus() {
+    // Use the storage service to check login status
+    this.isLoggedIn = this.storageService.isLoggedIn();
+    
+    if (this.isLoggedIn) {
+      const user = this.userService.user || this.storageService.getUser();
+      if (user) {
+        this.userEmail = user.email;
+      } else {
+        // If user data is not available, fetch it from the API
+        this.userService.getUserInfo().subscribe({
+          next: (userResponse) => {
+            this.userEmail = userResponse.email;
+          },
+          error: (err) => {
+            console.error('Error fetching user info:', err);
+          }
+        });
+      }
+    }
+  }
+
+  navigateToLogin() {
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  toggleDropdown(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation(); // Prevent document click from immediately closing dropdown
+    }
+    this.showDropdown = !this.showDropdown;
+  }
+
+  closeDropdown() {
+    this.showDropdown = false;
+  }
+
+  logout() {
+    this.userService.logout().subscribe({
+      next: () => {
+        this.storageService.clean(); // Make sure to clear storage
+        this.isLoggedIn = false;
+        this.userEmail = '';
+        this.closeDropdown();
+        this.router.navigate(['/front']);
+      },
+      error: (err) => {
+        console.error('Error during logout:', err);
+        // Even if there's an error, we clean up local state
+        this.storageService.clean();
+        this.isLoggedIn = false;
+        this.userEmail = '';
+        this.closeDropdown();
+        this.router.navigate(['/front']);
+      }
+    });
+  }
+
+  navigateToSettings() {
+    this.closeDropdown();
+    this.router.navigate(['/settings']);
+  }
+  navigateToRec() {
+    this.closeDropdown();
+    this.router.navigate(['/reclamationf']);
   }
   
 

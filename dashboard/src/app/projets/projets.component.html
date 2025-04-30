@@ -10,9 +10,106 @@
       rel="shortcut icon"
       type="image/x-icon"
       href="assets/img/favicon.ico"
+      
     />
+    <style>
+      /* User dropdown styles */
+      .user-dropdown-container {
+          position: relative;
+          display: inline-block;
+      }
+
+      .user-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: #ff1313;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+      }
+
+      .user-icon:hover {
+          background-color: #e60e0e;
+      }
+
+      .user-icon i {
+          font-size: 18px;
+      }
+
+      .dropdown-menu {
+  display: none;
+  position: absolute;
+  left: 0;  /* Changed from right: 0 to left: 0 */
+  top: 50px;
+  min-width: 220px;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 10px 0;
+  z-index: 999;
+  transform: translateX(-70%); /* This centers the dropdown relative to the user icon */
+}
+
+/* For mobile responsiveness, you might want to add: */
+@media (max-width: 400px) {
+  .dropdown-menu {
+      min-width: 200px;
+      transform: translateX(-70%); /* Adjust as needed for smaller screens */
+  }
+}
+
+      .dropdown-menu.show {
+          display: block;
+      }
+
+      .dropdown-email {
+          padding: 10px 15px;
+          font-weight: 500;
+          color: #333;
+          font-size: 14px;
+          word-break: break-all;
+          max-width: 350px;
+      }
+
+      .dropdown-divider {
+          height: 1px;
+          background-color: #eee;
+          margin: 5px 0;
+      }
+
+      .dropdown-item {
+          display: block;
+          padding: 8px 15px;
+          color: #333;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-decoration: none;
+      }
+
+      .dropdown-item i {
+          margin-right: 10px;
+          width: 16px;
+          text-align: center;
+      }
+
+      .dropdown-item:hover {
+          background-color: #f8f9fa;
+          color: #ff1313;
+      }
+
+      @media (max-width: 991px) {
+          .user-dropdown-container {
+              display: none;
+          }
+      }
+  </style>
   </head>
   <body>
+    
     <!-- ? Preloader Start -->
     <div id="preloader-active">
       <div class="preloader d-flex align-items-center justify-content-center">
@@ -40,41 +137,46 @@
                 </div>
               </div>
               <div class="col-xl-10 col-lg-10 col-md-10">
-                <div
-                  class="menu-main d-flex align-items-center justify-content-end"
-                >
-                  <!-- Main-menu -->
-                  <div class="main-menu f-right d-none d-lg-block">
-                    <nav>
-                      <ul id="navigation">
-                        <li><a routerLink="/front">Home</a></li>
-                        <li><a routerLink="/front/about">About</a></li>
-                        <li><a routerLink="/front/services">Services</a></li>
-                        <li><a routerLink="/front/schedule">Schedule</a></li>
-                        <li><a routerLink="/front/gallery">Gallery</a></li>
-                        <li>
-                          <a routerLink="/front/blog">Blog</a>
-                          <ul class="submenu">
-                            <li><a routerLink="/front/blog">Blog</a></li>
-                            <li>
-                              <a routerLink="/front/blog-details"
-                                >Blog Details</a
-                              >
-                            </li>
-                            <li><a routerLink="/front/elements">Element</a></li>
-                          </ul>
-                        </li>
-                        <li><a href="contact.html">Contact</a></li>
-                      </ul>
-                    </nav>
-                  </div>
-                  <!-- <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                    <a href="from.html" class="btn header-btn"
-                      >became a member</a
-                    >
-                  </div> -->
+                <div class="menu-main d-flex align-items-center justify-content-end">
+                    <!-- Main-menu -->
+                    <div class="main-menu f-right d-none d-lg-block">
+                        <nav>
+                            <ul id="navigation">
+                                <li><a routerLink="/front">Home</a></li>
+                                <li><a routerLink="/front/about">Books</a></li>
+                                <li><a routerLink="/front/projects">Projects</a></li>
+                                <li><a routerLink="/front/schedule">Forum</a></li>
+                                <li><a (click)="navigateToRec()">Reclamation</a></li>
+                                <li><a routerLink="/front/clubs">Clubs</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <!-- MODIFIED: Login button/user dropdown -->
+                    <div class="header-right-btn f-right d-none d-lg-block ml-30">
+                        <!-- Login button for logged out users -->
+                        <a *ngIf="!isLoggedIn" href="#" class="btn header-btn" (click)="navigateToLogin(); $event.preventDefault()">Login</a>
+                        
+                        <!-- User dropdown for logged in users -->
+                        <div *ngIf="isLoggedIn" class="user-dropdown-container">
+                            <div class="user-icon" (click)="toggleDropdown($event)">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            
+                            <div class="dropdown-menu" [class.show]="showDropdown">
+                                <div class="dropdown-email">{{ userEmail }}</div>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" (click)="navigateToSettings()">
+                                    <i class="fas fa-cog"></i> Settings
+                                </a>
+                                <a class="dropdown-item" (click)="logout()">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+            </div>   
               <!-- Mobile Menu -->
               <div class="col-12">
                 <div class="mobile_menu d-block d-lg-none"></div>

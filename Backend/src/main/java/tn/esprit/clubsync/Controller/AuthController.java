@@ -49,7 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 @RequestMapping("/auth")
 @SecurityRequirement(name = "BearerAuth")
-@CrossOrigin(origins = {"http://localhost:5000","http://localhost:5200", "http://localhost:4200"})
+@CrossOrigin(origins = {"http://localhost:5000","http://localhost:5001","http://localhost:5200","http://localhost:5100","http://localhost:5002", "http://localhost:4200"})
 public class AuthController {
     private final Map<String, String> verificationCodes = new HashMap<>();
     private static final String CLIENT_ID = "376533833455-qgcjilh1un1k0cfunakdab8b328a0p9f.apps.googleusercontent.com";
@@ -584,7 +584,7 @@ public class AuthController {
             }
 
             // Now call the Flask API with both the image and email for verification
-            String flaskApiUrl = "http://localhost:5000/recognize";
+            String flaskApiUrl = "http://localhost:5001/recognize";
 
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
@@ -660,7 +660,7 @@ public class AuthController {
             }
 
             // Call the Flask API to check if face is enrolled
-            String flaskApiUrl = "http://localhost:5000/check-enrollment";
+            String flaskApiUrl = "http://localhost:5001/check-enrollment";
 
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
@@ -739,7 +739,7 @@ public class AuthController {
             }
 
             // 4. Register with Flask face recognition
-            String flaskApiUrl = "http://localhost:5000/register";
+            String flaskApiUrl = "http://localhost:5001/register";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -794,7 +794,7 @@ public class AuthController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> syncFaces() {
         try {
-            String flaskApiUrl = "http://localhost:5000/sync-faces";
+            String flaskApiUrl = "http://localhost:5001/sync-faces";
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Map> response = restTemplate.getForEntity(flaskApiUrl, Map.class);
 
