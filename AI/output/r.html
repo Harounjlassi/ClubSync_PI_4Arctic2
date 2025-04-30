@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Dark Web Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #05d9e8;
+            --neon-pink: #ff2a6d;
+            --neon-purple: #d300c5;
+            --neon-green: #00ff9d;
+            --dark-bg: #0a0a12;
+            --darker-bg: #050508;
+            --text-light: #d1f7ff;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            perspective: 1000px;
+        }
+        
+        .cyber-container {
+            position: relative;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            transform-style: preserve-3d;
+        }
+        
+        .title-wrapper {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            margin: 0;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(5, 217, 232, 0.3);
+            letter-spacing: 4px;
+            position: relative;
+            display: inline-block;
+            animation: titleGlow 3s infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 10px var(--neon-blue); }
+            100% { text-shadow: 0 0 30px var(--neon-blue), 0 0 60px var(--neon-purple); }
+        }
+        
+        .title-underline {
+            height: 3px;
+            width: 300px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            margin: 20px auto;
+            box-shadow: 0 0 15px var(--neon-blue);
+            animation: underlinePulse 4s infinite;
+        }
+        
+        @keyframes underlinePulse {
+            0%, 100% { opacity: 0.7; width: 300px; }
+            50% { opacity: 1; width: 350px; }
+        }
+        
+        .tor-network {
+            background: rgba(10, 5, 20, 0.6);
+            border: 1px solid var(--neon-purple);
+            border-radius: 10px;
+            padding: 40px;
+            margin: 0 auto 60px;
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(50px);
+            box-shadow: 0 0 40px rgba(211, 0, 197, 0.2);
+            opacity: 0;
+            transform: translateY(50px) rotateX(-15deg);
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .tor-network.visible {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+        
+        .tor-network h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-purple);
+            font-size: 2.5rem;
+            margin: 0 0 15px;
+            text-shadow: 0 0 15px var(--neon-purple);
+            letter-spacing: 3px;
+        }
+        
+        .tor-network p {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .tor-network::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+            animation: borderFlow 6s linear infinite;
+        }
+        
+        @keyframes borderFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .layer {
+            background: rgba(15, 10, 30, 0.5);
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid rgba(5, 217, 232, 0.3);
+            backdrop-filter: blur(5px);
+            transform-style: preserve-3d;
+            transform: translateZ(30px);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .layer.visible {
+            opacity: 1;
+        }
+        
+        .layer:nth-child(1) { transition-delay: 0.2s; }
+        .layer:nth-child(2) { transition-delay: 0.4s; }
+        .layer:nth-child(3) { transition-delay: 0.6s; }
+        
+        .layer::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+            animation: borderFlow 8s linear infinite;
+        }
+        
+        .layer-header {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            font-size: 1.5rem;
+            margin: 0 0 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(5, 217, 232, 0.3);
+            letter-spacing: 2px;
+            position: relative;
+        }
+        
+        .component {
+            background: rgba(20, 15, 40, 0.7);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--neon-blue);
+            border-radius: 0 5px 5px 0;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            transform: translateX(-10px);
+            opacity: 0;
+        }
+        
+        .layer.visible .component {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .layer.visible .component:nth-child(1) { transition: all 0.5s ease 0.3s; }
+        .layer.visible .component:nth-child(2) { transition: all 0.5s ease 0.5s; }
+        .layer.visible .component:nth-child(3) { transition: all 0.5s ease 0.7s; }
+        .layer.visible .component:nth-child(4) { transition: all 0.5s ease 0.9s; }
+        
+        .component::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 157, 0.1), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .component:hover {
+            transform: translateX(5px) translateZ(10px);
+            border-left-color: var(--neon-green);
+            box-shadow: 0 5px 15px rgba(5, 217, 232, 0.2);
+            background: rgba(25, 20, 50, 0.8);
+        }
+        
+        .component:hover::before {
+            left: 100%;
+        }
+        
+        .security-layer {
+            grid-column: 1 / -1;
+            background: rgba(20, 5, 30, 0.7);
+            border-color: var(--neon-pink);
+            transform: translateY(50px);
+        }
+        
+        .security-layer.visible {
+            transform: translateY(0);
+        }
+        
+        .security-layer::after {
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple));
+        }
+        
+        .security-layer .layer-header {
+            color: var(--neon-pink);
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        .cyber-connector {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .connector-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, var(--neon-blue), transparent);
+            transform-origin: left center;
+            transform: scaleX(0);
+            opacity: 0.5;
+            box-shadow: 0 0 10px var(--neon-blue);
+            transition: transform 1.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .visible .connector-line {
+            transform: scaleX(1);
+        }
+        
+        .hacking-terminal {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--neon-green);
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .terminal-header {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 8px 15px;
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--neon-green);
+        }
+        
+        .terminal-content {
+            padding: 15px;
+            font-family: monospace;
+            color: var(--neon-green);
+            height: 150px;
+            overflow-y: auto;
+        }
+        
+        .terminal-line {
+            margin: 5px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3s steps(40) 1s 1 normal both;
+        }
+        
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        .terminal-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--neon-green);
+            color: black;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 101;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px var(--neon-green);
+            transition: all 0.3s ease;
+        }
+        
+        .terminal-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 1200px) {
+            .architecture-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .component-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hacking-terminal {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-container">
+        <div class="title-wrapper">
+            <h1>DARK WEB ARCHITECTURE</h1>
+            <div class="title-underline"></div>
+        </div>
+        
+        <div class="tor-network" id="tor-section">
+            <div class="particles" id="tor-particles"></div>
+            <h2>ONION ROUTING NETWORK</h2>
+            <p>Multi-layered encryption through volunteer-operated nodes</p>
+        </div>
+        
+        <div class="architecture-grid">
+            <div class="layer" id="fronting-layer">
+                <div class="cyber-connector">
+                    <div class="connector-line" style="width: calc(100% + 30px); top: 50%; left: 100%;"></div>
+                </div>
+                <div class="particles" id="fronting-particles"></div>
+                <h3 class="layer-header">FRONTING LAYER</h3>
+                <div class="component">Onion Proxies (.onion)</div>
+                <div class="component">Load Balancers</div>
+                <div class="component">Traffic Obfuscation</div>
+                <div class="component">DDoS Protection</div>
+            </div>
+            
+            <div class="layer" id="app-layer">
+                <div class="cyber-connector">
+                    <div class="connector-line" style="width: calc(100% + 30px); top: 50%; left: 100%;"></div>
+                </div>
+                <div class="particles" id="app-particles"></div>
+                <h3 class="layer-header">APPLICATION LAYER</h3>
+                <div class="component">Microservices</div>
+                <div class="component">PGP Authentication</div>
+                <div class="component">Cryptocurrency Payments</div>
+                <div class="component">Marketplace Engine</div>
+            </div>
+            
+            <div class="layer" id="data-layer">
+                <div class="particles" id="data-particles"></div>
+                <h3 class="layer-header">DATA LAYER</h3>
+                <div class="component">Encrypted Databases</div>
+                <div class="component">Distributed Storage</div>
+                <div class="component">Blockchain Anchors</div>
+                <div class="component">Ephemeral Caches</div>
+            </div>
+            
+            <div class="layer security-layer" id="security-layer">
+                <div class="particles" id="security-particles"></div>
+                <h3 class="layer-header">SECURITY LAYER</h3>
+                <div class="component-grid">
+                    <div class="component">Bulletproof Hosting</div>
+                    <div class="component">Honeypot Systems</div>
+                    <div class="component">Automated Failover</div>
+                    <div class="component">Global Nodes</div>
+                    <div class="component">Traffic Flood Protection</div>
+                    <div class="component">Zero-Knowledge Auth</div>
+                    <div class="component">VM Escape Detection</div>
+                    <div class="component">Tor Circuit Rotation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button class="terminal-toggle" id="terminalToggle">></button>
+    
+    <div class="hacking-terminal" id="terminal">
+        <div class="terminal-header">
+            <span>root@darkweb:~</span>
+            <span># security_terminal</span>
+        </div>
+        <div class="terminal-content">
+            <div class="terminal-line">Initializing dark web architecture visualization...</div>
+            <div class="terminal-line">> Loading TOR network nodes............ [DONE]</div>
+            <div class="terminal-line">> Establishing encrypted connections.. [DONE]</div>
+            <div class="terminal-line">> Deploying onion proxies............ [DONE]</div>
+            <div class="terminal-line">> Configuring microservices.......... [DONE]</div>
+            <div class="terminal-line">> Encrypting data stores............. [DONE]</div>
+            <div class="terminal-line">> Activating security measures...... [DONE]</div>
+            <div class="terminal-line">System ready. All layers operational.</div>
+            <div class="terminal-line">> Monitoring network traffic........ [ACTIVE]</div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create particles for all sections
+            function createParticles(containerId, count, color) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                for (let i = 0; i < count; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // Random properties
+                    const size = Math.random() * 3 + 1;
+                    const posX = Math.random() * 100;
+                    const delay = Math.random() * 15;
+                    const duration = 10 + Math.random() * 20;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${posX}%`;
+                    particle.style.bottom = `-10px`;
+                    particle.style.animationDelay = `${delay}s`;
+                    particle.style.animationDuration = `${duration}s`;
+                    particle.style.background = color || getRandomColor();
+                    
+                    container.appendChild(particle);
+                }
+            }
+            
+            function getRandomColor() {
+                const colors = ['#05d9e8', '#ff2a6d', '#d300c5', '#00ff9d'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            // Create particles for each section
+            createParticles('tor-particles', 30, '#d300c5');
+            createParticles('fronting-particles', 20, '#05d9e8');
+            createParticles('app-particles', 20, '#00ff9d');
+            createParticles('data-particles', 20, '#ff2a6d');
+            createParticles('security-particles', 30, '#ff2a6d');
+            
+            // Intersection Observer for animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.2 });
+            
+            // Observe all animated elements
+            document.querySelectorAll('.tor-network, .layer').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Terminal toggle functionality
+            const terminal = document.getElementById('terminal');
+            const terminalToggle = document.getElementById('terminalToggle');
+            
+            terminalToggle.addEventListener('click', function() {
+                if (terminal.style.transform === 'translateY(0%)') {
+                    terminal.style.transform = 'translateY(100%)';
+                    terminalToggle.textContent = '>';
+                } else {
+                    terminal.style.transform = 'translateY(0%)';
+                    terminalToggle.textContent = 'X';
+                }
+            });
+            
+            // Simulate typing animation for terminal lines
+            const terminalLines = document.querySelectorAll('.terminal-line');
+            terminalLines.forEach((line, index) => {
+                line.style.animationDelay = `${index * 0.5}s`;
+            });
+            
+            // Animate connector lines when layers become visible
+            const frontingLayer = document.getElementById('fronting-layer');
+            const appLayer = document.getElementById('app-layer');
+            
+            const connectorObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const connectorLine = entry.target.querySelector('.connector-line');
+                        if (connectorLine) {
+                            setTimeout(() => {
+                                connectorLine.style.transform = 'scaleX(1)';
+                            }, 500);
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            connectorObserver.observe(frontingLayer);
+            connectorObserver.observe(appLayer);
+            
+            // Initial animation trigger for title
+            setTimeout(() => {
+                document.querySelector('.tor-network').classList.add('visible');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

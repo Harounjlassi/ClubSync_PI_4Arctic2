@@ -1,0 +1,82 @@
+{
+  "assigned_blocks": [
+    "Bloc A",
+    "Bloc C"
+  ],
+  "events": [
+    {
+      "block": "Bloc A",
+      "room": "A101",
+      "date": "2025-04-10",
+      "time": "14:00-16:00",
+      "club": "Robotique"
+    },
+    {
+      "block": "Bloc C",
+      "room": "C203",
+      "date": "2025-04-11",
+      "time": "10:00-12:00",
+      "club": "Informatique"
+    }
+  ],
+  "blocks": {
+    "Bloc A": {
+      "rooms": [
+        "A101",
+        "A102",
+        "A103"
+      ],
+      "coordinates": [
+        100,
+        120
+      ]
+    },
+    "Bloc B": {
+      "rooms": [
+        "B201",
+        "B202"
+      ],
+      "coordinates": [
+        200,
+        80
+      ]
+    },
+    "Bloc C": {
+      "rooms": [
+        "C203",
+        "C204"
+      ],
+      "coordinates": [
+        150,
+        200
+      ]
+    },
+    "Bloc D": {
+      "rooms": [
+        "D301",
+        "D302"
+      ],
+      "coordinates": [
+        50,
+        180
+      ]
+    }
+  },
+  "clubs": [
+    {
+      "name": "Robotique",
+      "members": 30,
+      "preferred_blocks": [
+        "Bloc A",
+        "Bloc B"
+      ]
+    },
+    {
+      "name": "Musique",
+      "members": 20,
+      "preferred_blocks": [
+        "Bloc C"
+      ]
+    }
+  ]
+}
