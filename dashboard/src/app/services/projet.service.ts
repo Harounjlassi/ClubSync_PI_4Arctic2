@@ -33,6 +33,20 @@ export class ProjetService {
 
 
   }
+  searchProjetsByName(nom: string): Observable<Projet[]> {
+    const searchUrl = `${this.baseUrl}/findProjetByNom/${encodeURIComponent(nom)}`;
+    return this.httpClient.get<Projet[]>(searchUrl).pipe(
+      map(response => {
+        console.log("Search API Response:", response);
+        // Handle both single project (backend returns Projet) and array (Projet[])
+        return Array.isArray(response) ? response : [response];
+      }),
+      catchError(error => {
+        console.error("Search API Error:", error);
+        return throwError(() => new Error(error.message || "Search API Error"));
+      })
+    );
+  }
   startFaceDetTask(){
     return this.httpClient.post(this.faceDetTaskUrl + 'start-detection', {});
   }

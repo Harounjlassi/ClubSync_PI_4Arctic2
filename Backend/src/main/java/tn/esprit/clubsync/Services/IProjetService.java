@@ -5,7 +5,7 @@ import tn.esprit.clubsync.entities.Projet;
 import java.io.IOException;
 import java.util.List;
 
-public interface iProjetService {
+public interface IProjetService {
     Projet saveProjet (Projet Projet) throws IOException;
 
 
@@ -14,6 +14,8 @@ public interface iProjetService {
     void deleteProjetById (Long id);
     List<Projet> findProjets();
     Projet findById(Long id) ;
+    List<Projet> findProjetByNom(String nomP) ;
+
 
 
 }

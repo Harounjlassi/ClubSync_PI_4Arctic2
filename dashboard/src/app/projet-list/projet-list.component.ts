@@ -10,7 +10,7 @@ import { FaceRecognitionService } from "app/services/face-recognition.service";
 import { MessageService } from "app/services/message.service";
 import { ProjetService } from "app/services/projet.service";
 import { UserService } from "app/services/user.service";
-import { Subject, takeUntil } from "rxjs";
+import { catchError, debounceTime, distinctUntilChanged, finalize, of, Subject, switchMap, takeUntil, tap } from "rxjs";
 // import { AppProjetMessageComponent } from '../projet-message/projet-message.component'; // Import the component
 
 
@@ -36,6 +36,12 @@ export class ProjetListComponent implements OnInit, OnDestroy {
   showMessagesModal = false;
   newMessage = "";
   selectedProjectForMessages: Projet;
+
+  searchTerm: string = '';
+  private searchTerms = new Subject<string>();
+  searchResults: Projet[] = [];
+  isLoading: boolean = false;
+
   // projectMessages: {text: string, date: Date}[] = [
   //   {text: 'Message 1', date: new Date()},
   //   {text: 'Message 2', date: new Date()},
@@ -60,7 +66,9 @@ export class ProjetListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.listProjets();
+    this.setupSearch();
+
+    //this.listProjets();
   }
 
   ngOnDestroy(): void {
@@ -110,7 +118,41 @@ export class ProjetListComponent implements OnInit, OnDestroy {
         }
       );
   }
-
+  private setupSearch(): void {
+    this.searchTerms.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(term => {
+        this.isLoading = true;
+        
+        if (!term.trim()) {
+          this.listProjets();
+          return of([]);
+        }
+        
+        return this.projetService.searchProjetsByName(term).pipe(
+          tap(data => {
+            console.log("Received projecppppts:", data);
+            this.projets = [];
+            this.projets = data || [];
+            this.projectsWithColors = this.projets.map((project) => ({
+              ...project,
+              cardColor: this.getRandomColor(),
+              progressColor: this.generateProgressColor(project), // Modified to be deterministic
+            }));
+          }),
+          catchError(error => {
+            console.error("Search error:", error);
+            return of([]); // Return empty array on error
+          }),
+          finalize(() => this.isLoading = false)
+        );
+      })
+    ).subscribe();
+  }
+  onSearchInput(): void {
+    this.searchTerms.next(this.searchTerm.trim());
+  }
   // Generate unique IDs (simple implementation)
   private generateMessageId(): number {
     return this.projectMessages.length > 0 

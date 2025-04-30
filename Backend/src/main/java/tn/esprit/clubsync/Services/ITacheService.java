@@ -5,7 +5,7 @@ import tn.esprit.clubsync.entities.ProjetTache;
 import java.io.IOException;
 import java.util.List;
 
-public interface iTacheService {
+public interface ITacheService {
     ProjetTache saveProjetTache (ProjetTache ProjetTache) throws IOException;
 
 

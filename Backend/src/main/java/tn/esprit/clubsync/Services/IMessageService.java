@@ -5,7 +5,7 @@ import tn.esprit.clubsync.entities.Message;
 import java.io.IOException;
 import java.util.List;
 
-public interface iMessageService {
+public interface IMessageService {
     Message saveMessage (Message Message) throws IOException;
 
 

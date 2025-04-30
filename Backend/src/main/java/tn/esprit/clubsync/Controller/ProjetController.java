@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.clubsync.Services.ProjetServiceImpl;
-import tn.esprit.clubsync.Services.iProjetService;
 import tn.esprit.clubsync.entities.Projet;
 
 import java.io.IOException;
@@ -99,5 +98,22 @@ public class ProjetController {
         } catch (RuntimeException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping("/findProjetByNom/{nomP}")
+    public ResponseEntity<?> findProjetByNom(@PathVariable String nomP) {
+        List<Projet> projets = projetService.findProjetByNom(nomP);
+
+        // Log the response
+        System.out.println("Response: " + projets);
+
+        if (projets.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Return first match if you only expect one result
+        return ResponseEntity.ok(projets.get(0));
+
+        // OR return all matches if multiple projects can have same name
+        // return ResponseEntity.ok(projets);
     }
 }

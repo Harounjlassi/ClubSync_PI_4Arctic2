@@ -30,4 +30,7 @@ public interface ProjetRepository extends JpaRepository<Projet, Long> {
     // Projection query
     @Query("SELECT p.nom FROM Projet p WHERE p.id = :id")
     Optional<String> findNomById(@Param("id") Long id);
+
+    @Query("SELECT p FROM Projet p WHERE p.nom LIKE %:nom%")
+    List<Projet> findByNomContaining(@Param("nom") String nom);
 }
